@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess.JP</title>
+    <link rel="stylesheet" href="./styles.css?v=20260526-loading-safe" />
+  </head>
+  <body class="is-loading">
+    <div id="loadingScreen" class="loading-screen" aria-live="polite" aria-label="Loading Chess.JP">
+      <div class="loading-board" aria-hidden="true">
+        <span>♜</span>
+        <span>♞</span>
+        <span>♝</span>
+        <span>♛</span>
+        <span>♔</span>
+        <span>♗</span>
+        <span>♘</span>
+        <span>♖</span>
+      </div>
+      <div class="loading-copy">
+        <p class="loading-title" data-i18n="loadingTitle">Chess.JP</p>
+        <p class="loading-status" data-i18n="loadingStatus">Preparing the board...</p>
+      </div>
+      <div class="loading-progress" aria-hidden="true">
+        <strong id="loadingPercent">0%</strong>
+        <div class="loading-meter"><span id="loadingMeterFill"></span></div>
+      </div>
+    </div>
+    <script>
+      (() => {
+        const percent = document.querySelector("#loadingPercent");
+        const fill = document.querySelector("#loadingMeterFill");
+        let progress = 0;
+        const setProgress = (value) => {
+          progress = Math.max(0, Math.min(100, Math.round(value)));
+          if (percent) percent.textContent = `${progress}%`;
+          if (fill) fill.style.width = `${progress}%`;
+        };
+        const timer = window.setInterval(() => {
+          setProgress(progress + 7);
+          if (progress >= 100) {
+            window.clearInterval(timer);
+            document.body.classList.add("loading-done");
+            document.body.classList.remove("is-loading");
+          }
+        }, 70);
+        window.setTimeout(() => {
+          window.clearInterval(timer);
+          setProgress(100);
+          document.body.classList.add("loading-done");
+          document.body.classList.remove("is-loading");
+        }, 1300);
+      })();
+    </script>
+    <main class="shell">
+      <section class="game" aria-label="チェス盤" data-i18n-aria="boardRegion">
+        <div class="board-frame">
+          <div class="files top" aria-hidden="true"></div>
+          <div class="board-wrap">
+            <div class="ranks left" aria-hidden="true"></div>
+            <div id="board" class="board" role="grid" aria-label="チェス盤" data-i18n-aria="boardRegion"></div>
+            <div class="ranks right" aria-hidden="true"></div>
+          </div>
+          <div class="files bottom" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <aside class="panel" aria-label="ゲーム情報" data-i18n-aria="gameInfo">
+        <header class="panel-head">
+          <p class="eyebrow">Classical-chess.jp</p>
+          <h1 data-i18n="title">Chess.JP</h1>
+          <p id="status" class="status">読み込み中...</p>
+        </header>
+
+        <section class="mode-panel" aria-label="モード" data-i18n-aria="mode">
+          <div class="segmented" role="radiogroup" aria-label="対局モード" data-i18n-aria="gameMode">
+            <button id="modeHuman" class="active" type="button" role="radio" aria-checked="true" data-i18n="humanMode">対人戦</button>
+            <button id="modeBot" type="button" role="radio" aria-checked="false" data-i18n="botMode">Bot戦</button>
+            <button id="modeOnline" type="button" role="radio" aria-checked="false" data-i18n="onlineMode">Match Online</button>
+            <button id="modeBuilder" type="button" role="radio" aria-checked="false" data-i18n="builderMode">Board Maker</button>
+            <button id="modeCustom" type="button" role="radio" aria-checked="false" data-i18n="customMode">個人ルール</button>
+          </div>
+
+          <div class="players">
+            <label>
+              <span data-i18n="white">白</span>
+              <input id="whiteName" type="text" value="白" maxlength="16" autocomplete="off" />
+            </label>
+            <label>
+              <span data-i18n="black">黒</span>
+              <input id="blackName" type="text" value="黒" maxlength="16" autocomplete="off" />
+            </label>
+          </div>
+
+          <div id="botSettings" class="bot-settings" hidden>
+            <label for="botSideSelect" data-i18n="botSide">Side</label>
+            <select id="botSideSelect">
+              <option value="w" data-i18n="playWhite" selected>White</option>
+              <option value="b" data-i18n="playBlack">Black</option>
+            </select>
+            <label for="difficultySelect" data-i18n="difficulty">難易度</label>
+            <select id="difficultySelect">
+              <option value="beginner" data-i18n="beginner">Beginner</option>
+              <option value="novice" data-i18n="novice">Novice</option>
+              <option value="intermediate" selected data-i18n="intermediate">Intermediate</option>
+              <option value="advanced" data-i18n="advanced">Advanced</option>
+              <option value="grandmaster" data-i18n="grandmaster">Grandmaster</option>
+            </select>
+            <div class="elo-box">
+              <span data-i18n="elo">ELO</span>
+              <strong id="eloValue">1200</strong>
+            </div>
+          </div>
+
+          <div id="onlinePanel" class="online-panel" hidden>
+            <div class="account-row">
+              <label for="onlineUsername" data-i18n="account">Account</label>
+              <input id="onlineUsername" type="text" maxlength="18" autocomplete="off" />
+              <button id="saveOnlineAccount" type="button" data-i18n="save">Save</button>
+            </div>
+            <div class="online-account-stats">
+              <div>
+                <span data-i18n="accountId">Account ID</span>
+                <strong id="accountId">-</strong>
+              </div>
+              <div>
+                <span data-i18n="onlineElo">Online ELO</span>
+                <strong id="onlineElo">1200</strong>
+              </div>
+            </div>
+            <div class="online-count">
+              <span data-i18n="onlineNow">Online now</span>
+              <strong id="onlineCount">0</strong>
+            </div>
+            <button id="findOnlineMatch" type="button" data-i18n="findMatch">Find match</button>
+            <div class="online-result-buttons">
+              <button id="demoOnlineWin" type="button" data-i18n="demoWin">Demo win +15</button>
+              <button id="demoOnlineLoss" type="button" data-i18n="demoLoss">Demo loss -10</button>
+            </div>
+            <p id="onlineStatus" data-i18n="onlineDemo">Demo lobby: connect a realtime server to fight real internet players.</p>
+          </div>
+
+          <div id="customRules" class="custom-rules" hidden>
+            <label>
+              <input id="ruleNoCastle" type="checkbox" />
+              <span data-i18n="noCastle">キャスリングなし</span>
+            </label>
+            <label>
+              <input id="ruleNoEnPassant" type="checkbox" />
+              <span data-i18n="noEnPassant">アンパッサンなし</span>
+            </label>
+            <label>
+              <input id="ruleQueensOnly" type="checkbox" />
+              <span data-i18n="queensOnly">昇格はクイーンのみ</span>
+            </label>
+          </div>
+
+          <div id="builderPanel" class="builder-panel" hidden>
+            <span data-i18n="piecePalette">Piece palette</span>
+            <div id="piecePalette" class="piece-palette" aria-label="Piece palette">
+              <button type="button" data-piece="wp">♙</button>
+              <button type="button" data-piece="wn">♘</button>
+              <button type="button" data-piece="wb">♗</button>
+              <button type="button" data-piece="wr">♖</button>
+              <button type="button" data-piece="wq">♕</button>
+              <button type="button" data-piece="wk">♔</button>
+              <button type="button" data-piece="bp">♟</button>
+              <button type="button" data-piece="bn">♞</button>
+              <button type="button" data-piece="bb">♝</button>
+              <button type="button" data-piece="br">♜</button>
+              <button type="button" data-piece="bq">♛</button>
+              <button type="button" data-piece="bk">♚</button>
+              <button id="builderErase" type="button" data-piece="erase" data-i18n="erase">Erase</button>
+            </div>
+            <div class="builder-actions">
+              <button id="builderClear" type="button" data-i18n="clearBoard">Clear board</button>
+              <button id="builderLoadCurrent" type="button" data-i18n="loadCurrent">Load current</button>
+            </div>
+            <div class="builder-save-row">
+              <label for="builderBoardName" data-i18n="boardName">Board name</label>
+              <input id="builderBoardName" type="text" maxlength="24" autocomplete="off" />
+              <button id="builderSave" type="button" data-i18n="saveBoard">Save board</button>
+            </div>
+            <div class="builder-save-row">
+              <label for="savedBoardSelect" data-i18n="savedBoards">Saved boards</label>
+              <select id="savedBoardSelect"></select>
+              <button id="builderLoadSaved" type="button" data-i18n="loadBoard">Load board</button>
+            </div>
+            <div class="builder-actions">
+              <button id="builderPlay" type="button" data-i18n="playBoard">Play board</button>
+              <button id="builderDelete" type="button" data-i18n="deleteBoard">Delete board</button>
+            </div>
+            <p id="builderMessage" class="builder-message"></p>
+          </div>
+        </section>
+
+        <section class="settings" aria-label="設定" data-i18n-aria="settings">
+          <div class="setting-row">
+            <label for="languageSelect" data-i18n="language">言語</label>
+            <select id="languageSelect">
+              <option value="ja">日本語</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="themeSelect" data-i18n="light">ライト</label>
+            <select id="themeSelect">
+              <option value="classic" data-i18n="classicLight">クラシック</option>
+              <option value="bright" data-i18n="brightLight">明るめ</option>
+              <option value="night" data-i18n="nightLight">ナイト</option>
+            </select>
+          </div>
+          <div class="sound-row">
+            <label>
+              <input id="soundToggle" type="checkbox" checked />
+              <span data-i18n="soundFx">効果音</span>
+            </label>
+            <div class="music-select-row">
+              <label for="musicSelect" data-i18n="bgm">BGM</label>
+              <select id="musicSelect">
+                <option value="playMusic" data-i18n="playMusic" selected>Play Music</option>
+              </select>
+            </div>
+          </div>
+          <label class="volume-row">
+            <span data-i18n="volume">音量</span>
+            <input id="volumeRange" type="range" min="0" max="100" value="35" />
+          </label>
+        </section>
+
+        <section class="rating-panel" aria-label="手の評価" data-i18n-aria="moveRating">
+          <span data-i18n="moveRating">手の評価</span>
+          <strong id="moveRating">-</strong>
+        </section>
+
+        <div class="toolbar" aria-label="操作" data-i18n-aria="actions">
+          <button id="newGame" class="icon-button" type="button" title="新規対局" aria-label="新規対局" data-i18n-title="newGame" data-i18n-aria="newGame">↻</button>
+          <button id="reloadBoard" class="icon-button" type="button" title="盤面を再読込" aria-label="盤面を再読込" data-i18n-title="reloadBoard" data-i18n-aria="reloadBoard">⟳</button>
+          <button id="undoMove" class="icon-button" type="button" title="一手戻す" aria-label="一手戻す" data-i18n-title="undo" data-i18n-aria="undo">↶</button>
+          <button id="flipBoard" class="icon-button" type="button" title="盤面反転" aria-label="盤面反転" data-i18n-title="flip" data-i18n-aria="flip">⇅</button>
+          <button id="resignGame" class="icon-button" type="button" title="投了" aria-label="投了" data-i18n-title="resign" data-i18n-aria="resign">⚑</button>
+          <button id="copyFen" class="icon-button" type="button" title="FENをコピー" aria-label="FENをコピー" data-i18n-title="copyFen" data-i18n-aria="copyFen">⧉</button>
+        </div>
+
+        <form id="fenForm" class="fen-form">
+          <label for="fenInput">FEN</label>
+          <div class="fen-row">
+            <input id="fenInput" type="text" autocomplete="off" spellcheck="false" />
+            <button type="submit" data-i18n="load">読込</button>
+          </div>
+          <p id="fenMessage" class="message" aria-live="polite"></p>
+        </form>
+
+        <section class="captured" aria-label="取られた駒" data-i18n-aria="captured">
+          <div>
+            <span data-i18n="whiteCaptured">白が取った駒</span>
+            <p id="whiteCaptured"></p>
+          </div>
+          <div>
+            <span data-i18n="blackCaptured">黒が取った駒</span>
+            <p id="blackCaptured"></p>
+          </div>
+        </section>
+
+        <section class="moves" aria-label="棋譜" data-i18n-aria="moves">
+          <div class="moves-head">
+            <h2 data-i18n="moves">棋譜</h2>
+            <span id="moveCount">0手</span>
+          </div>
+          <ol id="moveList"></ol>
+        </section>
+      </aside>
+    </main>
+
+    <dialog id="promotionDialog" class="promotion-dialog">
+      <form method="dialog">
+        <h2 data-i18n="promotion">昇格</h2>
+        <div class="promotion-options">
+          <button value="q" type="submit">♕</button>
+          <button value="r" type="submit">♖</button>
+          <button value="b" type="submit">♗</button>
+          <button value="n" type="submit">♘</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
+
+    <script type="module" src="./app.js?v=20260526-loading-safe"></script>
+  </body>
+</html>
