@@ -1214,6 +1214,20 @@ function appendCheckmatedEffect(effect) {
   }
 }
 
+function appendCheckmatedAccent() {
+  const accent = randomItem(["sad-face", "down-arrows", "crumbling-castles"]);
+  if (accent === "sad-face") {
+    celebrationLayer.append(makeCelebrationPiece("checkmated-accent-sad", ":(", 50, 700));
+  } else if (accent === "down-arrows") {
+    for (let i = 0; i < 9; i += 1) {
+      celebrationLayer.append(makeCelebrationPiece("checkmated-accent-arrow", "↓", 18 + i * 8, 540 + i * 55));
+    }
+  } else {
+    celebrationLayer.append(makeCelebrationPiece("checkmated-accent-castle left", "♜", 38, 620));
+    celebrationLayer.append(makeCelebrationPiece("checkmated-accent-castle right", "♖", 62, 760));
+  }
+}
+
 function nonKingPieceCount(color) {
   return files.reduce(
     (total, file) =>
@@ -1236,7 +1250,10 @@ function triggerCheckmateCelebration(result) {
   celebrationLayer.append(makeCelebrationPiece("checkmate-banner", "CHECKMATE", 50, 0));
   celebrationLayer.append(makeCelebrationPiece("fallen-king", losingKing, 50, 420));
   if (playerWasCheckmated) appendCheckmatedEffect(effect);
-  else appendCheckmateEffect(effect);
+  else {
+    appendCheckmateEffect(effect);
+    appendCheckmatedAccent();
+  }
 
   window.setTimeout(clearCelebration, 4200);
 }
