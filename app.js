@@ -1,4 +1,5 @@
-import { Chess } from "https://esm.sh/chess.js@1.2.0";
+(async () => {
+const { Chess } = await import("https://esm.sh/chess.js@1.2.0");
 
 const game = new Chess();
 const board = document.querySelector("#board");
@@ -2064,3 +2065,10 @@ fenForm.addEventListener("submit", (event) => {
 document.body.dataset.theme = themeSelect.value;
 applyLanguage();
 render();
+})().catch((error) => {
+  console.error(error);
+  document.body.classList.add("loading-done");
+  document.body.classList.remove("is-loading");
+  const status = document.querySelector("#status");
+  if (status) status.textContent = "Chess engine could not load. Please open the HTTPS site or localhost.";
+});
