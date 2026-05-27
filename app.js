@@ -14,6 +14,7 @@ const promotionDialog = document.querySelector("#promotionDialog");
 const whiteCaptured = document.querySelector("#whiteCaptured");
 const blackCaptured = document.querySelector("#blackCaptured");
 const celebrationLayer = document.querySelector("#celebrationLayer");
+const openingScreen = document.querySelector("#openingScreen");
 const loadingScreen = document.querySelector("#loadingScreen");
 const loadingPercent = document.querySelector("#loadingPercent");
 const loadingMeterFill = document.querySelector("#loadingMeterFill");
@@ -1093,6 +1094,10 @@ function hideLoadingScreen() {
   document.body.classList.remove("is-loading");
 }
 
+function dismissOpeningScreen() {
+  openingScreen?.classList.add("dismissed");
+}
+
 function makeCelebrationPiece(className, text, left, delay = 0) {
   const piece = document.createElement("span");
   piece.className = className;
@@ -2044,6 +2049,8 @@ musicSelect.addEventListener("change", () => {
 document.addEventListener("pointerdown", startMusicAfterGesture);
 document.addEventListener("click", startMusicAfterGesture);
 document.addEventListener("keydown", startMusicAfterGesture);
+openingScreen?.addEventListener("click", dismissOpeningScreen);
+window.setTimeout(dismissOpeningScreen, 2700);
 
 volumeRange.addEventListener("input", () => {
   if (!masterGain) return;

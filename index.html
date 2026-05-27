@@ -4,9 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chess.JP</title>
-    <link rel="stylesheet" href="./styles.css?v=20260527-no-startup-loader" />
+    <link rel="stylesheet" href="./styles.css?v=20260527-opening-screen" />
   </head>
   <body>
+    <div id="openingScreen" class="opening-screen" aria-label="Leoleoship presents Chess.JP">
+      <div class="opening-board" aria-hidden="true">
+        <span>♜</span>
+        <span>♞</span>
+        <span>♝</span>
+        <span>♛</span>
+        <span>♚</span>
+        <span>♙</span>
+        <span>♘</span>
+        <span>♗</span>
+        <span>♕</span>
+        <span>♔</span>
+      </div>
+      <div class="opening-copy">
+        <p class="opening-presenter">Leoleoship presents...</p>
+        <p class="opening-title">Chess.JP</p>
+      </div>
+    </div>
     <div id="loadingScreen" class="loading-screen" aria-live="polite" aria-label="Loading Chess.JP">
       <div class="loading-board" aria-hidden="true">
         <span>♜</span>
@@ -261,6 +279,6 @@
 
     <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 
-    <script src="./app.js?v=20260527-file-load-fix"></script>
+    <script src="./app.js?v=20260527-opening-screen"></script>
   </body>
 </html>
