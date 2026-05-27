@@ -1249,10 +1249,11 @@ function triggerCheckmateCelebration(result) {
   celebrationLayer.classList.add("active", playerWasCheckmated ? "checkmated-result" : "checkmate-result", effect);
   celebrationLayer.append(makeCelebrationPiece("checkmate-banner", "CHECKMATE", 50, 0));
   celebrationLayer.append(makeCelebrationPiece("fallen-king", losingKing, 50, 420));
-  if (playerWasCheckmated) appendCheckmatedEffect(effect);
-  else {
-    appendCheckmateEffect(effect);
+  if (playerWasCheckmated) {
+    appendCheckmatedEffect(effect);
     appendCheckmatedAccent();
+  } else {
+    appendCheckmateEffect(effect);
   }
 
   window.setTimeout(clearCelebration, 4200);
