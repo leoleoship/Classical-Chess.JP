@@ -2061,7 +2061,6 @@ fenForm.addEventListener("submit", (event) => {
   }
 });
 
-showLoadingScreen(900);
 document.body.dataset.theme = themeSelect.value;
 applyLanguage();
 render();

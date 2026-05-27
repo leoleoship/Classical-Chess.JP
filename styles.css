@@ -65,6 +65,9 @@ body[data-theme="night"] {
   inset: 0;
   z-index: 50;
   display: grid;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
   place-items: center;
   align-content: center;
   gap: 24px;
@@ -82,6 +85,7 @@ body[data-theme="night"] {
 body.is-loading .loading-screen {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
 }
 
 body.loading-done .loading-screen {

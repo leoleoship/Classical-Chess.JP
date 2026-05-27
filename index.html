@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chess.JP</title>
-    <link rel="stylesheet" href="./styles.css?v=20260526-loading-safe" />
+    <link rel="stylesheet" href="./styles.css?v=20260527-no-startup-loader" />
   </head>
-  <body class="is-loading">
+  <body>
     <div id="loadingScreen" class="loading-screen" aria-live="polite" aria-label="Loading Chess.JP">
       <div class="loading-board" aria-hidden="true">
         <span>♜</span>
@@ -27,32 +27,6 @@
         <div class="loading-meter"><span id="loadingMeterFill"></span></div>
       </div>
     </div>
-    <script>
-      (() => {
-        const percent = document.querySelector("#loadingPercent");
-        const fill = document.querySelector("#loadingMeterFill");
-        let progress = 0;
-        const setProgress = (value) => {
-          progress = Math.max(0, Math.min(100, Math.round(value)));
-          if (percent) percent.textContent = `${progress}%`;
-          if (fill) fill.style.width = `${progress}%`;
-        };
-        const timer = window.setInterval(() => {
-          setProgress(progress + 7);
-          if (progress >= 100) {
-            window.clearInterval(timer);
-            document.body.classList.add("loading-done");
-            document.body.classList.remove("is-loading");
-          }
-        }, 70);
-        window.setTimeout(() => {
-          window.clearInterval(timer);
-          setProgress(100);
-          document.body.classList.add("loading-done");
-          document.body.classList.remove("is-loading");
-        }, 1300);
-      })();
-    </script>
     <main class="shell">
       <section class="game" aria-label="チェス盤" data-i18n-aria="boardRegion">
         <div class="board-frame">
@@ -287,6 +261,6 @@
 
     <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 
-    <script type="module" src="./app.js?v=20260526-loading-safe"></script>
+    <script type="module" src="./app.js?v=20260527-no-startup-loader"></script>
   </body>
 </html>
