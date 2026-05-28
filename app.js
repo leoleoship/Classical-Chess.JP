@@ -470,7 +470,7 @@ function adjustElo(delta) {
 }
 
 function settleEloIfGameOver() {
-  if (mode !== "bot" || gameSettled || !game.isGameOver()) return;
+  if (mode !== "bot" || gameSettled || !isPlayableGameOver()) return;
   gameSettled = true;
 
   if (!game.isCheckmate()) return;
@@ -504,6 +504,14 @@ function filteredAllMoves() {
     if (rules.noEnPassant && move.flags.includes("e")) return false;
     return true;
   });
+}
+
+function isStalemateDraw() {
+  return !game.isCheckmate() && !game.isCheck() && filteredAllMoves().length === 0;
+}
+
+function isPlayableGameOver() {
+  return game.isCheckmate() || isStalemateDraw();
 }
 
 function moveTargetsKing(move) {
@@ -679,7 +687,7 @@ function playerName(color) {
 }
 
 function isBotTurn() {
-  return mode === "bot" && game.turn() === botColor && !game.isGameOver() && !resignation;
+  return mode === "bot" && game.turn() === botColor && !isPlayableGameOver() && !resignation;
 }
 
 function movePayload(move) {
@@ -1260,7 +1268,7 @@ function triggerCheckmateCelebration(result) {
 }
 
 function triggerDrawCelebration(perspectiveColor = "w") {
-  if (!game.isDraw()) return;
+  if (!isStalemateDraw()) return;
   clearCelebration();
   const playerPieces = nonKingPieceCount(perspectiveColor);
   const opponentPieces = nonKingPieceCount(perspectiveColor === "w" ? "b" : "w");
@@ -1281,11 +1289,11 @@ function triggerDrawCelebration(perspectiveColor = "w") {
 
 function triggerGameOverCelebration(result) {
   if (game.isCheckmate()) triggerCheckmateCelebration(result);
-  else if (game.isDraw()) triggerDrawCelebration(mode === "bot" ? playerColor() : result?.color || "w");
+  else if (isStalemateDraw()) triggerDrawCelebration(mode === "bot" ? playerColor() : result?.color || "w");
 }
 
 function triggerMoveMoment(result) {
-  if (!result || game.isGameOver()) return;
+  if (!result || isPlayableGameOver()) return;
 
   let effect = null;
   const isSwordCheck = game.isCheck() && ["q", "r"].includes(result.piece);
@@ -1329,7 +1337,7 @@ function triggerMoveMoment(result) {
 }
 
 function triggerTacticMoment(type, result) {
-  if (!result || game.isGameOver()) return;
+  if (!result || isPlayableGameOver()) return;
   clearCelebration();
   celebrationLayer.classList.add("active", "small-moment", `moment-${type}`);
 
@@ -1352,7 +1360,7 @@ function triggerTacticMoment(type, result) {
 }
 
 function triggerPostMoveTactics(result, context = {}) {
-  if (!result || game.isGameOver()) return;
+  if (!result || isPlayableGameOver()) return;
   if (context.movedSkeweredPiece) {
     triggerTacticMoment("skewer-bomb", result);
   } else if (result.flags.includes("k") || result.flags.includes("q")) {
@@ -1738,7 +1746,7 @@ function updateStatus() {
 
   if (game.isCheckmate()) {
     text = t("checkmate", { side });
-  } else if (game.isDraw()) {
+  } else if (isStalemateDraw()) {
     text = t("draw");
   } else if (game.isCheck()) {
     text = t("check", { mode: modeLabel, side });
@@ -1864,7 +1872,7 @@ function reloadCurrentBoard() {
 }
 
 function resignCurrentSide() {
-  if (mode === "builder" || resignation || game.isGameOver()) return;
+  if (mode === "builder" || resignation || isPlayableGameOver()) return;
   clearTimeout(botTimer);
   botThinking = false;
   const loser = game.turn();
