@@ -829,6 +829,125 @@ function builderSquareAttackedBy(square, attackerColor) {
   );
 }
 
+function gamePathIsClear(from, to) {
+  const fromFile = files.indexOf(from[0]);
+  const toFile = files.indexOf(to[0]);
+  const fromRank = Number(from[1]);
+  const toRank = Number(to[1]);
+  const fileStep = Math.sign(toFile - fromFile);
+  const rankStep = Math.sign(toRank - fromRank);
+  let file = fromFile + fileStep;
+  let rank = fromRank + rankStep;
+
+  while (file !== toFile || rank !== toRank) {
+    if (game.get(`${files[file]}${rank}`)) return false;
+    file += fileStep;
+    rank += rankStep;
+  }
+
+  return true;
+}
+
+function gamePieceAttacksSquare(from, piece, to) {
+  const fromFile = files.indexOf(from[0]);
+  const toFile = files.indexOf(to[0]);
+  const fromRank = Number(from[1]);
+  const toRank = Number(to[1]);
+  const fileDistance = Math.abs(toFile - fromFile);
+  const rankDistance = Math.abs(toRank - fromRank);
+  const fileDelta = toFile - fromFile;
+  const rankDelta = toRank - fromRank;
+
+  if (piece.type === "p") {
+    const direction = piece.color === "w" ? 1 : -1;
+    return rankDelta === direction && fileDistance === 1;
+  }
+  if (piece.type === "n") return (fileDistance === 1 && rankDistance === 2) || (fileDistance === 2 && rankDistance === 1);
+  if (piece.type === "b") return fileDistance === rankDistance && gamePathIsClear(from, to);
+  if (piece.type === "r") return (fileDistance === 0 || rankDistance === 0) && gamePathIsClear(from, to);
+  if (piece.type === "q") {
+    const diagonal = fileDistance === rankDistance;
+    const straight = fileDistance === 0 || rankDistance === 0;
+    return (diagonal || straight) && gamePathIsClear(from, to);
+  }
+  if (piece.type === "k") return Math.max(fileDistance, rankDistance) === 1;
+  return false;
+}
+
+function squareDefendedBy(square, color) {
+  return files.some((file) =>
+    ranks.some((rank) => {
+      const from = `${file}${rank}`;
+      if (from === square) return false;
+      const piece = game.get(from);
+      return piece?.color === color && gamePieceAttacksSquare(from, piece, square);
+    }),
+  );
+}
+
+function squareAttackedBy(square, attackerColor) {
+  return files.some((file) =>
+    ranks.some((rank) => {
+      const from = `${file}${rank}`;
+      if (from === square) return false;
+      const piece = game.get(from);
+      return piece?.color === attackerColor && gamePieceAttacksSquare(from, piece, square);
+    }),
+  );
+}
+
+function valuableTargetsAttackedFrom(square, color) {
+  const piece = game.get(square);
+  if (!piece) return 0;
+  const enemyColor = color === "w" ? "b" : "w";
+  return files.reduce(
+    (total, file) =>
+      total +
+      ranks.reduce((rankTotal, rank) => {
+        const targetSquare = `${file}${rank}`;
+        const target = game.get(targetSquare);
+        if (!target || target.color !== enemyColor) return rankTotal;
+        const targetValue = target.type === "k" ? 100 : pieceValues[target.type] || 0;
+        const movedValue = piece.type === "k" ? 100 : pieceValues[piece.type] || 0;
+        return rankTotal + (targetValue >= movedValue && gamePieceAttacksSquare(square, piece, targetSquare) ? 1 : 0);
+      }, 0),
+    0,
+  );
+}
+
+function createsLineTacticFrom(square, color) {
+  const attacker = game.get(square);
+  if (!attacker || !["b", "r", "q"].includes(attacker.type)) return false;
+  const directions = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+    [1, 1],
+    [1, -1],
+    [-1, 1],
+    [-1, -1],
+  ];
+
+  return directions.some(([fileStep, rankStep]) => {
+    if (!canSlideAlong(attacker.type, fileStep, rankStep)) return false;
+    const seen = [];
+    let cursor = square;
+    for (let distance = 0; distance < 7; distance += 1) {
+      const next = pieceAtOffset(cursor, fileStep, rankStep);
+      if (!next) break;
+      cursor = next.square;
+      if (!next.piece) continue;
+      seen.push(next.piece);
+      if (seen.length >= 2) break;
+    }
+
+    const [first, second] = seen;
+    if (!first || !second || first.color === color || second.color !== first.color) return false;
+    return second.type === "k" || (first.type === "k" && pieceValues[second.type] >= 5);
+  });
+}
+
 function validateBuilderPlayable() {
   const whiteKings = Object.entries(builderBoard).filter(([, piece]) => piece === "wk");
   const blackKings = Object.entries(builderBoard).filter(([, piece]) => piece === "bk");
@@ -943,6 +1062,14 @@ function analyzeMove(move) {
   const isMate = game.isCheckmate();
   const givesCheck = game.isCheck();
   const opponentReply = bestReplyScore(game.turn());
+  const protectedDestination = squareDefendedBy(result.to, color);
+  const usefulProtectedMove =
+    protectedDestination &&
+    (Boolean(result.captured) || Boolean(result.promotion) || givesCheck || after - before >= 45 || valuableTargetsAttackedFrom(result.to, color) > 0);
+  const createsFork = result.piece === "n" && knightForkTargetCount(result.to, color) >= 2;
+  const createsLineTactic = createsLineTacticFrom(result.to, color);
+  const createsTactic = createsFork || createsLineTactic;
+  const tacticCanBeCaptured = createsTactic && squareAttackedBy(result.to, game.turn());
   game.undo();
 
   const piece = game.get(playedMove.from);
@@ -955,6 +1082,10 @@ function analyzeMove(move) {
 
   if ((isMate && (isSacrifice || movedValue >= 900)) || (isSacrifice && givesCheck && swing > 250)) {
     key = "brilliant";
+  } else if (tacticCanBeCaptured) {
+    key = movedValue >= 300 || opponentReply >= 220 || swing <= -180 ? "mistake" : "bad";
+  } else if (usefulProtectedMove || createsTactic) {
+    key = "good";
   } else if (loss >= 260 || swing <= -320 || (opponentReply >= 260 && loss >= 160)) {
     key = "mistake";
   }
@@ -965,6 +1096,9 @@ function analyzeMove(move) {
     color,
     sacrifice: isSacrifice,
     swing: Math.round(swing),
+    protected: usefulProtectedMove,
+    tactic: createsTactic,
+    tacticCanBeCaptured,
   };
 }
 
