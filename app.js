@@ -317,6 +317,7 @@ let audioContext = null;
 let masterGain = null;
 let musicTimer = null;
 let musicNotesPlayed = 0;
+let celebrationTimer = null;
 let loadingTimer = null;
 let loadingHideTimer = null;
 let loadingProgress = 0;
@@ -1065,8 +1066,18 @@ function startMusicAfterGesture() {
 }
 
 function clearCelebration() {
+  clearTimeout(celebrationTimer);
+  celebrationTimer = null;
   celebrationLayer.replaceChildren();
   celebrationLayer.className = "celebration-layer";
+}
+
+function scheduleCelebrationClear(duration) {
+  clearTimeout(celebrationTimer);
+  celebrationTimer = window.setTimeout(() => {
+    celebrationTimer = null;
+    clearCelebration();
+  }, duration);
 }
 
 function setLoadingProgress(value) {
@@ -1264,7 +1275,7 @@ function triggerCheckmateCelebration(result) {
     appendCheckmateEffect(effect);
   }
 
-  window.setTimeout(clearCelebration, 4200);
+  scheduleCelebrationClear(4200);
 }
 
 function triggerDrawCelebration(perspectiveColor = "w") {
@@ -1284,7 +1295,7 @@ function triggerDrawCelebration(perspectiveColor = "w") {
   else if (checkmatedEffects.includes(effect)) appendCheckmatedEffect(effect);
   else appendCheckmateEffect(effect);
 
-  window.setTimeout(clearCelebration, 4200);
+  scheduleCelebrationClear(4200);
 }
 
 function triggerGameOverCelebration(result) {
@@ -1333,7 +1344,7 @@ function triggerMoveMoment(result) {
     celebrationLayer.append(makeCelebrationPiece("moment-capture-pop", "", 50, 90));
   }
 
-  window.setTimeout(clearCelebration, 1450);
+  scheduleCelebrationClear(1450);
 }
 
 function triggerTacticMoment(type, result) {
@@ -1356,7 +1367,7 @@ function triggerTacticMoment(type, result) {
     celebrationLayer.append(makeCelebrationPiece("moment-skewer-bomb", "BOOM", 50, 0));
   }
 
-  window.setTimeout(clearCelebration, 1500);
+  scheduleCelebrationClear(1500);
 }
 
 function triggerPostMoveTactics(result, context = {}) {
