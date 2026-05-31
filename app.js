@@ -1035,6 +1035,37 @@ function bestReplyScore(color) {
   return Math.max(...opponentMoves.map((reply) => scoreMoveForRating(reply, color)));
 }
 
+function probeMovePayload(move) {
+  const payload = { from: move.from, to: move.to };
+  if (move.promotion || move.flags?.includes("p")) payload.promotion = move.promotion || "q";
+  return payload;
+}
+
+function moveWouldCheckmate(move) {
+  const result = game.move(movePayload(move));
+  const isMate = Boolean(result && game.isCheckmate());
+  if (result) game.undo();
+  return isMate;
+}
+
+function fenForTurn(fen, color) {
+  const parts = fen.split(" ");
+  parts[1] = color;
+  return parts.join(" ");
+}
+
+function hasMateInOneFromFen(fen, color) {
+  const probe = new Chess(fenForTurn(fen, color));
+  const moves = probe.moves({ verbose: true });
+  return moves.some((move) => {
+    if (probe.get(move.to)?.type === "k") return false;
+    const result = probe.move(probeMovePayload(move));
+    const isMate = Boolean(result && probe.isCheckmate());
+    if (result) probe.undo();
+    return isMate;
+  });
+}
+
 function analyzeMove(move) {
   if (moveTargetsKing(move)) return null;
   const color = game.turn();
@@ -1053,6 +1084,10 @@ function analyzeMove(move) {
     };
   }
 
+  const hadMateInOne = moves.some((candidate) => moveWouldCheckmate(candidate));
+  const playedWasMateInOne = moveWouldCheckmate(playedMove);
+  const opponentColor = color === "w" ? "b" : "w";
+  const opponentHadMateThreat = hasMateInOneFromFen(game.fen(), opponentColor);
   const playedScore = scoreMoveForRating(playedMove, color);
   const bestScore = Math.max(...moves.map((candidate) => scoreMoveForRating(candidate, color)));
   const before = evaluateBoard(color);
@@ -1070,6 +1105,7 @@ function analyzeMove(move) {
   const createsLineTactic = createsLineTacticFrom(result.to, color);
   const createsTactic = createsFork || createsLineTactic;
   const tacticCanBeCaptured = createsTactic && squareAttackedBy(result.to, game.turn());
+  const opponentStillHasMateThreat = opponentHadMateThreat && hasMateInOneFromFen(game.fen(), game.turn());
   game.undo();
 
   const piece = game.get(playedMove.from);
@@ -1078,10 +1114,14 @@ function analyzeMove(move) {
   const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
   const swing = after - before;
   const loss = bestScore - playedScore;
+  const missedMateInOne = hadMateInOne && !playedWasMateInOne;
+  const missedCheckmateThreat = !isMate && opponentHadMateThreat && opponentStillHasMateThreat;
   let key = loss <= 35 ? "good" : loss <= 140 ? "soso" : "bad";
 
   if ((isMate && (isSacrifice || movedValue >= 900)) || (isSacrifice && givesCheck && swing > 250)) {
     key = "brilliant";
+  } else if (missedMateInOne || missedCheckmateThreat) {
+    key = "mistake";
   } else if (tacticCanBeCaptured) {
     key = movedValue >= 300 || opponentReply >= 220 || swing <= -180 ? "mistake" : "bad";
   } else if (usefulProtectedMove || createsTactic) {
@@ -1099,6 +1139,8 @@ function analyzeMove(move) {
     protected: usefulProtectedMove,
     tactic: createsTactic,
     tacticCanBeCaptured,
+    missedMateInOne,
+    missedCheckmateThreat,
   };
 }
 
