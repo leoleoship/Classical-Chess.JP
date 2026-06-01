@@ -1066,6 +1066,56 @@ function hasMateInOneFromFen(fen, color) {
   });
 }
 
+function bestCurrentTurnFollowUp(color, baselineScore) {
+  const moves = game.moves({ verbose: true }).filter((reply) => !moveTargetsKing(reply));
+  if (!moves.length) return { gain: game.isCheckmate() ? -2400 : evaluateBoard(color) - baselineScore, mate: false };
+
+  return moves.reduce(
+    (best, move) => {
+      const result = game.move(movePayload(move));
+      if (!result) return best;
+      const mate = game.isCheckmate();
+      const gain = mate ? 2400 : evaluateBoard(color) - baselineScore;
+      game.undo();
+      if (mate || gain > best.gain) return { gain, mate };
+      return best;
+    },
+    { gain: -9999, mate: false },
+  );
+}
+
+function findHiddenBrilliantContinuation(color, playedResult, baselineScore, apparentLoss) {
+  if (!apparentLoss) return { brilliant: false, gain: 0, mate: false };
+
+  const opponentMoves = game.moves({ verbose: true }).filter((reply) => !moveTargetsKing(reply));
+  if (!opponentMoves.length) return { brilliant: false, gain: 0, mate: false };
+
+  let baitWorks = false;
+  let everyLineStaysStrong = true;
+  let bestGain = -9999;
+  let mateFound = false;
+
+  opponentMoves.forEach((reply) => {
+    const looksLikePunish = reply.to === playedResult.to || Boolean(reply.captured);
+    const result = game.move(movePayload(reply));
+    if (!result) return;
+
+    const followUp = bestCurrentTurnFollowUp(color, baselineScore);
+    game.undo();
+
+    bestGain = Math.max(bestGain, followUp.gain);
+    mateFound = mateFound || followUp.mate;
+    if (looksLikePunish && (followUp.mate || followUp.gain >= 220)) baitWorks = true;
+    if (!followUp.mate && followUp.gain < 120) everyLineStaysStrong = false;
+  });
+
+  return {
+    brilliant: baitWorks || (everyLineStaysStrong && (mateFound || bestGain >= 260)),
+    gain: bestGain,
+    mate: mateFound,
+  };
+}
+
 function analyzeMove(move) {
   if (moveTargetsKing(move)) return null;
   const color = game.turn();
@@ -1091,11 +1141,17 @@ function analyzeMove(move) {
   const playedScore = scoreMoveForRating(playedMove, color);
   const bestScore = Math.max(...moves.map((candidate) => scoreMoveForRating(candidate, color)));
   const before = evaluateBoard(color);
+  const piece = game.get(playedMove.from);
+  const movedValue = piece && piece.type !== "k" ? pieceValues[piece.type] * 100 : 0;
   const result = game.move(movePayload(playedMove));
   if (!result) return null;
   const after = evaluateBoard(color);
   const isMate = game.isCheckmate();
   const givesCheck = game.isCheck();
+  const capturedValue = result.captured ? pieceValues[result.captured] * 100 : 0;
+  const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
+  const apparentLoss = isSacrifice || after - before <= -180;
+  const hiddenBrilliant = findHiddenBrilliantContinuation(color, result, before, apparentLoss);
   const opponentReply = bestReplyScore(game.turn());
   const protectedDestination = squareDefendedBy(result.to, color);
   const usefulProtectedMove =
@@ -1108,17 +1164,13 @@ function analyzeMove(move) {
   const opponentStillHasMateThreat = opponentHadMateThreat && hasMateInOneFromFen(game.fen(), game.turn());
   game.undo();
 
-  const piece = game.get(playedMove.from);
-  const movedValue = piece && piece.type !== "k" ? pieceValues[piece.type] * 100 : 0;
-  const capturedValue = result.captured ? pieceValues[result.captured] * 100 : 0;
-  const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
   const swing = after - before;
   const loss = bestScore - playedScore;
   const missedMateInOne = hadMateInOne && !playedWasMateInOne;
   const missedCheckmateThreat = !isMate && opponentHadMateThreat && opponentStillHasMateThreat;
   let key = loss <= 35 ? "good" : loss <= 140 ? "soso" : "bad";
 
-  if ((isMate && (isSacrifice || movedValue >= 900)) || (isSacrifice && givesCheck && swing > 250)) {
+  if ((isMate && (isSacrifice || movedValue >= 900)) || (isSacrifice && givesCheck && swing > 250) || hiddenBrilliant.brilliant) {
     key = "brilliant";
   } else if (missedMateInOne || missedCheckmateThreat) {
     key = "mistake";
@@ -1141,6 +1193,8 @@ function analyzeMove(move) {
     tacticCanBeCaptured,
     missedMateInOne,
     missedCheckmateThreat,
+    hiddenBrilliant: hiddenBrilliant.brilliant,
+    hiddenGain: Math.round(hiddenBrilliant.gain),
   };
 }
 
