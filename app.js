@@ -1,6 +1,10 @@
 (async () => {
 const { Chess } = await import("https://esm.sh/chess.js@1.2.0");
 
+const SUPABASE_URL = "https://dwyoebbskkhayjcutzvb.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3eW9lYmJza2toYXlqY3V0enZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTg3ODIsImV4cCI6MjA5NTg3NDc4Mn0.xg_k7Um4WW4zFLj_h5nuwlJoLJMNYLOwi2Yjt2yqsOM";
+
 const game = new Chess();
 const board = document.querySelector("#board");
 const statusEl = document.querySelector("#status");
@@ -145,14 +149,19 @@ const i18n = {
     noEnPassant: "アンパッサンなし",
     novice: "Novice",
     findMatch: "マッチ検索",
-    onlineDemo: "デモロビー: 本当にネット対戦するにはリアルタイムサーバーを接続してください。",
+    onlineDemo: "オンラインロビー: 名前を保存してマッチ検索を押してください。",
     onlineElo: "Online ELO",
-    onlineFound: "デモマッチが見つかりました。実プレイヤー接続にはサーバーが必要です。",
+    onlineFound: "オンライン対戦が見つかりました。あなたは{side}です。",
+    onlineJoined: "オンラインロビーに接続しました。",
     onlineLoss: "オンラインELOが10下がりました。",
     onlineMode: "オンライン",
     onlineNow: "オンライン",
+    onlineNotReady: "オンライン接続を準備しています...",
+    onlineOpponentResigned: "相手が投了しました。あなたの勝ちです。",
     onlineSaved: "オンラインアカウントを保存しました。",
     onlineSearching: "対戦相手を探しています...",
+    onlineSyncError: "オンライン接続に失敗しました。Supabase設定を確認してください。",
+    onlineTurnWait: "相手の手番です。",
     onlineWin: "オンラインELOが15上がりました。",
     piecePalette: "駒パレット",
     playMusic: "Play Music",
@@ -240,14 +249,19 @@ const i18n = {
     noEnPassant: "No en passant",
     novice: "Novice",
     findMatch: "Find match",
-    onlineDemo: "Demo lobby: connect a realtime server to fight real internet players.",
+    onlineDemo: "Online lobby: save your name, then press Find match.",
     onlineElo: "Online ELO",
-    onlineFound: "Demo match found. Real player pairing needs a server.",
+    onlineFound: "Online match found. You are {side}.",
+    onlineJoined: "Connected to the online lobby.",
     onlineLoss: "Online ELO decreased by 10.",
     onlineMode: "Match Online",
     onlineNow: "Online now",
+    onlineNotReady: "Preparing online connection...",
+    onlineOpponentResigned: "Opponent resigned. You win.",
     onlineSaved: "Online account saved.",
     onlineSearching: "Searching for an opponent...",
+    onlineSyncError: "Online connection failed. Check the Supabase settings.",
+    onlineTurnWait: "Waiting for your opponent.",
     onlineWin: "Online ELO increased by 15.",
     piecePalette: "Piece palette",
     playMusic: "Play Music",
@@ -328,8 +342,14 @@ let selectedBuilderPiece = "wq";
 let playerElo = Number(localStorage.getItem("chessTableElo")) || 1200;
 let gameSettled = false;
 let resignation = null;
-let onlineCountTimer = null;
-let onlinePlayers = 18 + Math.floor(Math.random() * 27);
+let supabaseClient = null;
+let lobbyChannel = null;
+let matchChannel = null;
+let onlinePlayers = 0;
+let onlineSearching = false;
+let onlineMatch = null;
+let onlineMyColor = null;
+let onlineSearchNonce = "";
 const onlineAccount = JSON.parse(
   localStorage.getItem("chessJpOnlineAccount") ||
     `{"id":"JP-${Math.random().toString(36).slice(2, 8).toUpperCase()}","username":"Guest","elo":1200}`
@@ -425,6 +445,10 @@ function updateOnlineCount() {
   onlineCount.textContent = String(onlinePlayers);
 }
 
+function onlineSideName(color) {
+  return t(color === "w" ? "white" : "black");
+}
+
 function saveOnlineProfile() {
   localStorage.setItem("chessJpOnlineAccount", JSON.stringify(onlineAccount));
 }
@@ -442,18 +466,212 @@ function adjustOnlineElo(delta) {
   onlineStatus.textContent = delta > 0 ? t("onlineWin") : t("onlineLoss");
 }
 
-function startOnlineCount() {
-  updateOnlineCount();
-  clearInterval(onlineCountTimer);
-  onlineCountTimer = window.setInterval(() => {
-    onlinePlayers = Math.max(1, onlinePlayers + Math.floor(Math.random() * 5) - 2);
-    updateOnlineCount();
-  }, 3500);
+function ownOnlinePayload() {
+  return {
+    id: onlineAccount.id,
+    username: onlineAccount.username || "Guest",
+    elo: onlineAccount.elo,
+    joinedAt: Date.now(),
+  };
 }
 
-function stopOnlineCount() {
-  clearInterval(onlineCountTimer);
-  onlineCountTimer = null;
+async function getSupabaseClient() {
+  if (supabaseClient) return supabaseClient;
+  const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2.45.4");
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  return supabaseClient;
+}
+
+function updatePresenceCount() {
+  if (!lobbyChannel) return;
+  const state = lobbyChannel.presenceState();
+  const presenceCount = Object.values(state).reduce((total, presences) => total + presences.length, 0);
+  onlinePlayers = Math.max(1, presenceCount);
+  updateOnlineCount();
+}
+
+async function ensureOnlineLobby() {
+  if (lobbyChannel) return;
+  onlineStatus.textContent = t("onlineNotReady");
+  try {
+    const client = await getSupabaseClient();
+    lobbyChannel = client
+      .channel("chess-jp-lobby", {
+        config: {
+          broadcast: { self: true },
+          presence: { key: onlineAccount.id },
+        },
+      })
+      .on("presence", { event: "sync" }, updatePresenceCount)
+      .on("broadcast", { event: "match_request" }, ({ payload }) => handleOnlineMatchRequest(payload))
+      .on("broadcast", { event: "match_found" }, ({ payload }) => handleOnlineMatchFound(payload))
+      .subscribe(async (status) => {
+        if (status !== "SUBSCRIBED") return;
+        await lobbyChannel.track(ownOnlinePayload());
+        updatePresenceCount();
+        if (mode === "online" && !onlineMatch) onlineStatus.textContent = t("onlineJoined");
+      });
+  } catch (error) {
+    console.error(error);
+    onlineStatus.textContent = t("onlineSyncError");
+  }
+}
+
+async function stopOnlineServices() {
+  onlineSearching = false;
+  onlineSearchNonce = "";
+  onlineMatch = null;
+  onlineMyColor = null;
+  if (!supabaseClient) return;
+  if (matchChannel) await supabaseClient.removeChannel(matchChannel);
+  if (lobbyChannel) await supabaseClient.removeChannel(lobbyChannel);
+  matchChannel = null;
+  lobbyChannel = null;
+  onlinePlayers = 0;
+}
+
+function handleOnlineMatchRequest(payload) {
+  if (!payload || payload.id === onlineAccount.id || !onlineSearching || onlineMatch) return;
+  const players = [onlineAccount.id, payload.id].sort();
+  const colors = {
+    [players[0]]: "w",
+    [players[1]]: "b",
+  };
+  const roomId = `room-${payload.nonce}-${players.join("-")}`;
+  lobbyChannel?.send({
+    type: "broadcast",
+    event: "match_found",
+    payload: {
+      roomId,
+      players,
+      colors,
+      names: {
+        [onlineAccount.id]: onlineAccount.username || "Guest",
+        [payload.id]: payload.username || "Guest",
+      },
+    },
+  });
+}
+
+function handleOnlineMatchFound(payload) {
+  if (!payload?.players?.includes(onlineAccount.id) || onlineMatch) return;
+  joinOnlineMatch(payload);
+}
+
+function applyOnlineNames(match) {
+  const opponentId = match.players.find((id) => id !== onlineAccount.id);
+  const myName = onlineAccount.username || "Guest";
+  const opponentName = match.names?.[opponentId] || "Opponent";
+  if (onlineMyColor === "w") {
+    whiteName.value = myName;
+    blackName.value = opponentName;
+  } else {
+    whiteName.value = opponentName;
+    blackName.value = myName;
+  }
+}
+
+function joinOnlineMatch(match) {
+  onlineSearching = false;
+  onlineMatch = match;
+  onlineMyColor = match.colors?.[onlineAccount.id] || "w";
+  applyOnlineNames(match);
+  flipped = onlineMyColor === "b";
+  game.reset();
+  resetPlayableState();
+  subscribeOnlineMatch(match.roomId);
+  onlineStatus.textContent = t("onlineFound", { side: onlineSideName(onlineMyColor) });
+  render();
+}
+
+async function subscribeOnlineMatch(roomId) {
+  const client = await getSupabaseClient();
+  if (matchChannel) await client.removeChannel(matchChannel);
+  matchChannel = client
+    .channel(`chess-jp-match-${roomId}`, { config: { broadcast: { self: false } } })
+    .on("broadcast", { event: "move" }, ({ payload }) => applyRemoteOnlineMove(payload))
+    .on("broadcast", { event: "resign" }, ({ payload }) => applyRemoteOnlineResign(payload))
+    .on("broadcast", { event: "new_game" }, () => resetOnlineBoard(false))
+    .subscribe();
+}
+
+function isOnlinePlayerTurn() {
+  return mode === "online" && onlineMatch && onlineMyColor === game.turn();
+}
+
+function broadcastOnlineMove(result) {
+  if (!matchChannel || !onlineMatch || !result) return;
+  matchChannel.send({
+    type: "broadcast",
+    event: "move",
+    payload: {
+      playerId: onlineAccount.id,
+      move: {
+        from: result.from,
+        to: result.to,
+        promotion: result.promotion,
+      },
+      fen: game.fen(),
+      moveCount: game.history().length,
+    },
+  });
+}
+
+function applyRemoteOnlineMove(payload) {
+  if (!payload || payload.playerId === onlineAccount.id || mode !== "online" || !onlineMatch) return;
+  if (payload.moveCount <= game.history().length) return;
+  playMove(payload.move, { remote: true });
+  if (payload.fen && game.fen() !== payload.fen) {
+    try {
+      game.load(payload.fen);
+      resetCapturedFromHistory();
+      markTacticalMarkersDirty();
+      render();
+    } catch {
+      onlineStatus.textContent = t("onlineSyncError");
+    }
+  }
+}
+
+function applyRemoteOnlineResign(payload) {
+  if (!payload || payload.playerId === onlineAccount.id || mode !== "online") return;
+  resignation = { loser: payload.color, winner: payload.color === "w" ? "b" : "w" };
+  gameSettled = true;
+  adjustOnlineElo(15);
+  onlineStatus.textContent = t("onlineOpponentResigned");
+  render();
+}
+
+function resetOnlineBoard(broadcast = true) {
+  game.reset();
+  resetPlayableState();
+  if (broadcast && matchChannel) {
+    matchChannel.send({
+      type: "broadcast",
+      event: "new_game",
+      payload: { playerId: onlineAccount.id },
+    });
+  }
+  render();
+}
+
+async function startOnlineSearch() {
+  await ensureOnlineLobby();
+  if (!lobbyChannel) return;
+  onlineSearching = true;
+  onlineMatch = null;
+  onlineMyColor = null;
+  onlineSearchNonce = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  onlineStatus.textContent = t("onlineSearching");
+  await lobbyChannel.track(ownOnlinePayload());
+  await lobbyChannel.send({
+    type: "broadcast",
+    event: "match_request",
+    payload: {
+      ...ownOnlinePayload(),
+      nonce: onlineSearchNonce,
+    },
+  });
 }
 
 function playerColor() {
@@ -471,12 +689,19 @@ function adjustElo(delta) {
 }
 
 function settleEloIfGameOver() {
-  if (mode !== "bot" || gameSettled || !isPlayableGameOver()) return;
-  gameSettled = true;
+  if (gameSettled || !isPlayableGameOver()) return;
 
-  if (!game.isCheckmate()) return;
-  if (game.turn() === botColor) adjustElo(15);
-  else adjustElo(-10);
+  if (mode === "bot") {
+    gameSettled = true;
+    if (!game.isCheckmate()) return;
+    if (game.turn() === botColor) adjustElo(15);
+    else adjustElo(-10);
+  } else if (mode === "online" && onlineMyColor) {
+    gameSettled = true;
+    if (!game.isCheckmate()) return;
+    const winner = game.turn() === "w" ? "b" : "w";
+    adjustOnlineElo(winner === onlineMyColor ? 15 : -10);
+  }
 }
 
 function activeRules() {
@@ -1752,6 +1977,10 @@ async function handleSquareClick(square) {
   }
 
   if (resignation || isBotTurn() || botThinking) return;
+  if (mode === "online" && !isOnlinePlayerTurn()) {
+    onlineStatus.textContent = onlineMatch ? t("onlineTurnWait") : t("onlineNotReady");
+    return;
+  }
 
   const piece = game.get(square);
 
@@ -1781,7 +2010,7 @@ async function handleSquareClick(square) {
   render();
 }
 
-function playMove(move) {
+function playMove(move, options = {}) {
   try {
     if (moveTargetsKing(move)) {
       selected = null;
@@ -1825,6 +2054,7 @@ function playMove(move) {
     triggerGameOverCelebration(result);
     triggerMoveMoment(result);
     triggerPostMoveTactics(result, context);
+    if (mode === "online" && !options.remote) broadcastOnlineMove(result);
     scheduleBotMove();
   } catch {
     selected = null;
@@ -1979,7 +2209,7 @@ function updateStatus() {
   }
 
   const side = playerName(game.turn());
-  const modeLabels = { human: t("humanMode"), bot: t("botMode"), custom: t("customMode") };
+  const modeLabels = { human: t("humanMode"), bot: t("botMode"), custom: t("customMode"), online: t("onlineMode") };
   const modeLabel = modeLabels[mode];
   let text = botThinking ? t("thinking", { mode: modeLabel }) : t("turn", { mode: modeLabel, side });
 
@@ -2043,8 +2273,11 @@ function setMode(nextMode) {
   clearTimeout(botTimer);
   botThinking = false;
   syncBotSide();
-  if (mode === "online") startOnlineCount();
-  else stopOnlineCount();
+  if (mode === "online") {
+    ensureOnlineLobby();
+  } else {
+    stopOnlineServices();
+  }
   selected = null;
   legalMoves = [];
   gameSettled = false;
@@ -2114,13 +2347,21 @@ function resignCurrentSide() {
   if (mode === "builder" || resignation || isPlayableGameOver()) return;
   clearTimeout(botTimer);
   botThinking = false;
-  const loser = game.turn();
+  const loser = mode === "online" && onlineMyColor ? onlineMyColor : game.turn();
   const winner = loser === "w" ? "b" : "w";
   resignation = { loser, winner };
   selected = null;
   legalMoves = [];
   gameSettled = true;
   if (mode === "bot") adjustElo(loser === botColor ? 15 : -10);
+  if (mode === "online") {
+    adjustOnlineElo(-10);
+    matchChannel?.send({
+      type: "broadcast",
+      event: "resign",
+      payload: { playerId: onlineAccount.id, color: loser },
+    });
+  }
   clearCelebration();
   render();
 }
@@ -2128,6 +2369,10 @@ function resignCurrentSide() {
 document.querySelector("#newGame").addEventListener("click", () => {
   clearTimeout(botTimer);
   botThinking = false;
+  if (mode === "online" && onlineMatch) {
+    resetOnlineBoard(true);
+    return;
+  }
   game.reset();
   resetPlayableState();
   render();
@@ -2143,6 +2388,10 @@ board.addEventListener("click", (event) => {
 });
 
 document.querySelector("#undoMove").addEventListener("click", () => {
+  if (mode === "online") {
+    onlineStatus.textContent = t("onlineTurnWait");
+    return;
+  }
   clearTimeout(botTimer);
   botThinking = false;
   const undone = game.undo();
@@ -2246,11 +2495,8 @@ builderPlay.addEventListener("click", () => {
 });
 
 findOnlineMatch.addEventListener("click", () => {
-  showLoadingScreen(900);
-  onlineStatus.textContent = t("onlineSearching");
-  window.setTimeout(() => {
-    if (mode === "online") onlineStatus.textContent = t("onlineFound");
-  }, 900);
+  showLoadingScreen(700);
+  startOnlineSearch();
 });
 
 saveOnlineAccount.addEventListener("click", () => {
@@ -2258,6 +2504,7 @@ saveOnlineAccount.addEventListener("click", () => {
   saveOnlineProfile();
   updateOnlineAccountUI();
   onlineStatus.textContent = t("onlineSaved");
+  if (lobbyChannel) lobbyChannel.track(ownOnlinePayload());
 });
 
 demoOnlineWin.addEventListener("click", () => adjustOnlineElo(15));

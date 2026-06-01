@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chess.JP</title>
-    <link rel="stylesheet" href="./styles.css?v=20260527-player-checkmated-only" />
+    <link rel="stylesheet" href="./styles.css?v=20260601-supabase-online" />
   </head>
   <body>
     <div id="openingScreen" class="opening-screen" aria-label="Leoleoship presents Chess.JP">
@@ -126,11 +126,11 @@
               <strong id="onlineCount">0</strong>
             </div>
             <button id="findOnlineMatch" type="button" data-i18n="findMatch">Find match</button>
-            <div class="online-result-buttons">
+            <div class="online-result-buttons" hidden>
               <button id="demoOnlineWin" type="button" data-i18n="demoWin">Demo win +15</button>
               <button id="demoOnlineLoss" type="button" data-i18n="demoLoss">Demo loss -10</button>
             </div>
-            <p id="onlineStatus" data-i18n="onlineDemo">Demo lobby: connect a realtime server to fight real internet players.</p>
+            <p id="onlineStatus" data-i18n="onlineDemo">Online lobby: save your name, then press Find match.</p>
           </div>
 
           <div id="customRules" class="custom-rules" hidden>
@@ -279,6 +279,6 @@
 
     <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 
-    <script src="./app.js?v=20260601-stricter-brilliant"></script>
+    <script src="./app.js?v=20260601-supabase-online"></script>
   </body>
 </html>
