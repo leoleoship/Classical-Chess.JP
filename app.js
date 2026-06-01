@@ -22,6 +22,7 @@ const openingScreen = document.querySelector("#openingScreen");
 const loadingScreen = document.querySelector("#loadingScreen");
 const loadingPercent = document.querySelector("#loadingPercent");
 const loadingMeterFill = document.querySelector("#loadingMeterFill");
+const onlineWaitingOverlay = document.querySelector("#onlineWaitingOverlay");
 const modeHuman = document.querySelector("#modeHuman");
 const modeBot = document.querySelector("#modeBot");
 const modeOnline = document.querySelector("#modeOnline");
@@ -158,6 +159,7 @@ const i18n = {
     onlineNow: "オンライン",
     onlineNotReady: "オンライン接続を準備しています...",
     onlineOpponentResigned: "相手が投了しました。あなたの勝ちです。",
+    onlineRejoined: "オンライン対戦に戻りました。最新局面を同期しています...",
     onlineSaved: "オンラインアカウントを保存しました。",
     onlineSearching: "対戦相手を探しています...",
     onlineSyncError: "オンライン接続に失敗しました。Supabase設定を確認してください。",
@@ -258,6 +260,7 @@ const i18n = {
     onlineNow: "Online now",
     onlineNotReady: "Preparing online connection...",
     onlineOpponentResigned: "Opponent resigned. You win.",
+    onlineRejoined: "Rejoined your online match. Syncing the latest board...",
     onlineSaved: "Online account saved.",
     onlineSearching: "Searching for an opponent...",
     onlineSyncError: "Online connection failed. Check the Supabase settings.",
@@ -350,6 +353,7 @@ let onlineSearching = false;
 let onlineMatch = null;
 let onlineMyColor = null;
 let onlineSearchNonce = "";
+const onlineMatchStorageKey = "chessJpActiveOnlineMatch";
 const onlineAccount = JSON.parse(
   localStorage.getItem("chessJpOnlineAccount") ||
     `{"id":"JP-${Math.random().toString(36).slice(2, 8).toUpperCase()}","username":"Guest","elo":1200}`
@@ -464,6 +468,58 @@ function adjustOnlineElo(delta) {
   saveOnlineProfile();
   updateOnlineAccountUI();
   onlineStatus.textContent = delta > 0 ? t("onlineWin") : t("onlineLoss");
+  if (delta > 0) triggerOnlineEloGain(delta);
+}
+
+function saveActiveOnlineMatch() {
+  if (!onlineMatch || !onlineMyColor) return;
+  localStorage.setItem(
+    onlineMatchStorageKey,
+    JSON.stringify({
+      match: onlineMatch,
+      color: onlineMyColor,
+      fen: game.fen(),
+      ply: currentOnlinePly(),
+      savedAt: Date.now(),
+      status: onlineStatus.textContent,
+    }),
+  );
+}
+
+function clearActiveOnlineMatch() {
+  localStorage.removeItem(onlineMatchStorageKey);
+}
+
+function plyFromFen(fen) {
+  const parts = fen.split(" ");
+  const turn = parts[1] || "w";
+  const fullmove = Math.max(1, Number(parts[5]) || 1);
+  return (fullmove - 1) * 2 + (turn === "b" ? 1 : 0);
+}
+
+function currentOnlinePly() {
+  return plyFromFen(game.fen());
+}
+
+function loadActiveOnlineMatch() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(onlineMatchStorageKey) || "null");
+    if (!saved?.match?.roomId || !saved.color) return null;
+    const maxAge = 1000 * 60 * 60 * 8;
+    if (Date.now() - Number(saved.savedAt || 0) > maxAge) {
+      clearActiveOnlineMatch();
+      return null;
+    }
+    return saved;
+  } catch {
+    clearActiveOnlineMatch();
+    return null;
+  }
+}
+
+function updateOnlineWaitingOverlay() {
+  if (!onlineWaitingOverlay) return;
+  onlineWaitingOverlay.hidden = !(mode === "online" && onlineSearching && !onlineMatch);
 }
 
 function ownOnlinePayload() {
@@ -522,6 +578,7 @@ async function stopOnlineServices() {
   onlineSearchNonce = "";
   onlineMatch = null;
   onlineMyColor = null;
+  updateOnlineWaitingOverlay();
   if (!supabaseClient) return;
   if (matchChannel) await supabaseClient.removeChannel(matchChannel);
   if (lobbyChannel) await supabaseClient.removeChannel(lobbyChannel);
@@ -571,16 +628,30 @@ function applyOnlineNames(match) {
   }
 }
 
-function joinOnlineMatch(match) {
+function joinOnlineMatch(match, options = {}) {
   onlineSearching = false;
   onlineMatch = match;
-  onlineMyColor = match.colors?.[onlineAccount.id] || "w";
+  onlineMyColor = options.color || match.colors?.[onlineAccount.id] || "w";
   applyOnlineNames(match);
   flipped = onlineMyColor === "b";
-  game.reset();
-  resetPlayableState();
+  if (options.fen) {
+    try {
+      game.load(options.fen);
+      resetCapturedFromHistory();
+      markTacticalMarkersDirty();
+    } catch {
+      game.reset();
+      resetPlayableState();
+    }
+  } else if (options.keepBoard) {
+    resetCapturedFromHistory();
+  } else {
+    game.reset();
+    resetPlayableState();
+  }
   subscribeOnlineMatch(match.roomId);
-  onlineStatus.textContent = t("onlineFound", { side: onlineSideName(onlineMyColor) });
+  onlineStatus.textContent = options.rejoined ? t("onlineRejoined") : t("onlineFound", { side: onlineSideName(onlineMyColor) });
+  saveActiveOnlineMatch();
   render();
 }
 
@@ -592,7 +663,11 @@ async function subscribeOnlineMatch(roomId) {
     .on("broadcast", { event: "move" }, ({ payload }) => applyRemoteOnlineMove(payload))
     .on("broadcast", { event: "resign" }, ({ payload }) => applyRemoteOnlineResign(payload))
     .on("broadcast", { event: "new_game" }, () => resetOnlineBoard(false))
-    .subscribe();
+    .on("broadcast", { event: "sync_request" }, ({ payload }) => handleOnlineSyncRequest(payload))
+    .on("broadcast", { event: "sync_state" }, ({ payload }) => applyOnlineSyncState(payload))
+    .subscribe((status) => {
+      if (status === "SUBSCRIBED" && onlineMatch) requestOnlineSync();
+    });
 }
 
 function isOnlinePlayerTurn() {
@@ -612,20 +687,60 @@ function broadcastOnlineMove(result) {
         promotion: result.promotion,
       },
       fen: game.fen(),
-      moveCount: game.history().length,
+      moveCount: currentOnlinePly(),
     },
   });
 }
 
+function requestOnlineSync() {
+  if (!matchChannel || !onlineMatch) return;
+  matchChannel.send({
+    type: "broadcast",
+    event: "sync_request",
+    payload: {
+      playerId: onlineAccount.id,
+      moveCount: currentOnlinePly(),
+    },
+  });
+}
+
+function handleOnlineSyncRequest(payload) {
+  if (!payload || payload.playerId === onlineAccount.id || !matchChannel || !onlineMatch) return;
+  matchChannel.send({
+    type: "broadcast",
+    event: "sync_state",
+    payload: {
+      playerId: onlineAccount.id,
+      fen: game.fen(),
+      moveCount: currentOnlinePly(),
+    },
+  });
+}
+
+function applyOnlineSyncState(payload) {
+  if (!payload || payload.playerId === onlineAccount.id || mode !== "online" || !onlineMatch) return;
+  if (payload.moveCount < currentOnlinePly() || !payload.fen) return;
+  try {
+    game.load(payload.fen);
+    resetCapturedFromHistory();
+    markTacticalMarkersDirty();
+    saveActiveOnlineMatch();
+    render();
+  } catch {
+    onlineStatus.textContent = t("onlineSyncError");
+  }
+}
+
 function applyRemoteOnlineMove(payload) {
   if (!payload || payload.playerId === onlineAccount.id || mode !== "online" || !onlineMatch) return;
-  if (payload.moveCount <= game.history().length) return;
+  if (payload.moveCount <= currentOnlinePly()) return;
   playMove(payload.move, { remote: true });
   if (payload.fen && game.fen() !== payload.fen) {
     try {
       game.load(payload.fen);
       resetCapturedFromHistory();
       markTacticalMarkersDirty();
+      saveActiveOnlineMatch();
       render();
     } catch {
       onlineStatus.textContent = t("onlineSyncError");
@@ -637,6 +752,7 @@ function applyRemoteOnlineResign(payload) {
   if (!payload || payload.playerId === onlineAccount.id || mode !== "online") return;
   resignation = { loser: payload.color, winner: payload.color === "w" ? "b" : "w" };
   gameSettled = true;
+  clearActiveOnlineMatch();
   adjustOnlineElo(15);
   onlineStatus.textContent = t("onlineOpponentResigned");
   render();
@@ -645,6 +761,7 @@ function applyRemoteOnlineResign(payload) {
 function resetOnlineBoard(broadcast = true) {
   game.reset();
   resetPlayableState();
+  saveActiveOnlineMatch();
   if (broadcast && matchChannel) {
     matchChannel.send({
       type: "broadcast",
@@ -663,6 +780,7 @@ async function startOnlineSearch() {
   onlineMyColor = null;
   onlineSearchNonce = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   onlineStatus.textContent = t("onlineSearching");
+  updateOnlineWaitingOverlay();
   await lobbyChannel.track(ownOnlinePayload());
   await lobbyChannel.send({
     type: "broadcast",
@@ -672,6 +790,32 @@ async function startOnlineSearch() {
       nonce: onlineSearchNonce,
     },
   });
+}
+
+async function restoreActiveOnlineMatch() {
+  const saved = loadActiveOnlineMatch();
+  if (!saved) return false;
+  mode = "online";
+  onlineSearching = false;
+  onlineMatch = saved.match;
+  onlineMyColor = saved.color;
+  if (saved.fen) {
+    try {
+      game.load(saved.fen);
+      resetCapturedFromHistory();
+      markTacticalMarkersDirty();
+    } catch {
+      game.reset();
+      resetPlayableState();
+    }
+  }
+  applyOnlineNames(onlineMatch);
+  flipped = onlineMyColor === "b";
+  onlineStatus.textContent = t("onlineRejoined");
+  await ensureOnlineLobby();
+  await subscribeOnlineMatch(onlineMatch.roomId);
+  saveActiveOnlineMatch();
+  return true;
 }
 
 function playerColor() {
@@ -701,6 +845,7 @@ function settleEloIfGameOver() {
     if (!game.isCheckmate()) return;
     const winner = game.turn() === "w" ? "b" : "w";
     adjustOnlineElo(winner === onlineMyColor ? 15 : -10);
+    clearActiveOnlineMatch();
   }
 }
 
@@ -1756,6 +1901,19 @@ function triggerGameOverCelebration(result) {
   else if (isStalemateDraw()) triggerDrawCelebration(mode === "bot" ? playerColor() : result?.color || "w");
 }
 
+function triggerOnlineEloGain(delta) {
+  clearCelebration();
+  celebrationLayer.classList.add("active", "elo-gain-result");
+  celebrationLayer.append(makeCelebrationPiece("elo-gain-title", `ELO +${delta}`, 50, 0));
+  celebrationLayer.append(makeCelebrationPiece("elo-gain-crown", "♕", 50, 140));
+  for (let i = 0; i < 14; i += 1) {
+    const token = makeCelebrationPiece("elo-gain-token", i % 2 ? "▲" : "✦", 10 + Math.random() * 80, i * 55);
+    token.style.top = `${18 + Math.random() * 64}%`;
+    celebrationLayer.append(token);
+  }
+  scheduleCelebrationClear(2300);
+}
+
 function triggerMoveMoment(result) {
   if (!result || isPlayableGameOver()) return;
 
@@ -2054,6 +2212,7 @@ function playMove(move, options = {}) {
     triggerGameOverCelebration(result);
     triggerMoveMoment(result);
     triggerPostMoveTactics(result, context);
+    if (mode === "online" && !gameSettled) saveActiveOnlineMatch();
     if (mode === "online" && !options.remote) broadcastOnlineMove(result);
     scheduleBotMove();
   } catch {
@@ -2263,6 +2422,7 @@ function render() {
     updateOnlineAccountUI();
     updateOnlineCount();
   }
+  updateOnlineWaitingOverlay();
   updateBuilderPalette();
   updateSavedBoardSelect();
   fenMessage.textContent = "";
@@ -2356,6 +2516,7 @@ function resignCurrentSide() {
   if (mode === "bot") adjustElo(loser === botColor ? 15 : -10);
   if (mode === "online") {
     adjustOnlineElo(-10);
+    clearActiveOnlineMatch();
     matchChannel?.send({
       type: "broadcast",
       event: "resign",
@@ -2583,6 +2744,7 @@ fenForm.addEventListener("submit", (event) => {
 
 document.body.dataset.theme = themeSelect.value;
 applyLanguage();
+await restoreActiveOnlineMatch();
 render();
 })().catch((error) => {
   console.error(error);
