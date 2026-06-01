@@ -1091,7 +1091,6 @@ function findHiddenBrilliantContinuation(color, playedResult, baselineScore, app
   if (!opponentMoves.length) return { brilliant: false, gain: 0, mate: false };
 
   let baitWorks = false;
-  let everyLineStaysStrong = true;
   let bestGain = -9999;
   let mateFound = false;
 
@@ -1105,12 +1104,11 @@ function findHiddenBrilliantContinuation(color, playedResult, baselineScore, app
 
     bestGain = Math.max(bestGain, followUp.gain);
     mateFound = mateFound || followUp.mate;
-    if (looksLikePunish && (followUp.mate || followUp.gain >= 220)) baitWorks = true;
-    if (!followUp.mate && followUp.gain < 120) everyLineStaysStrong = false;
+    if (looksLikePunish && (followUp.mate || followUp.gain >= 420)) baitWorks = true;
   });
 
   return {
-    brilliant: baitWorks || (everyLineStaysStrong && (mateFound || bestGain >= 260)),
+    brilliant: baitWorks,
     gain: bestGain,
     mate: mateFound,
   };
@@ -1150,7 +1148,7 @@ function analyzeMove(move) {
   const givesCheck = game.isCheck();
   const capturedValue = result.captured ? pieceValues[result.captured] * 100 : 0;
   const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
-  const apparentLoss = isSacrifice || after - before <= -180;
+  const apparentLoss = isSacrifice || after - before <= -280;
   const hiddenBrilliant = findHiddenBrilliantContinuation(color, result, before, apparentLoss);
   const opponentReply = bestReplyScore(game.turn());
   const protectedDestination = squareDefendedBy(result.to, color);
