@@ -1519,7 +1519,6 @@ function analyzeMove(move) {
   const capturedValue = result.captured ? pieceValues[result.captured] * 100 : 0;
   const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
   const isMajorSacrifice = movedValue >= 500 && capturedValue + 180 < movedValue;
-  const isQueenSacrifice = movedValue >= 900 && capturedValue + 250 < movedValue;
   const hiddenBrilliant = findHiddenBrilliantContinuation(color, result, before, isMajorSacrifice);
   const opponentReply = bestReplyScore(game.turn());
   const protectedDestination = squareDefendedBy(result.to, color);
@@ -1539,7 +1538,7 @@ function analyzeMove(move) {
   const missedCheckmateThreat = !isMate && opponentHadMateThreat && opponentStillHasMateThreat;
   let key = loss <= 35 ? "good" : loss <= 140 ? "soso" : "bad";
 
-  if ((isMate && (isQueenSacrifice || (isMajorSacrifice && givesCheck))) || (isMajorSacrifice && givesCheck && swing > 500) || hiddenBrilliant.brilliant) {
+  if ((isMate && isMajorSacrifice && givesCheck) || (isMajorSacrifice && givesCheck && swing > 500) || hiddenBrilliant.brilliant) {
     key = "brilliant";
   } else if (missedMateInOne || missedCheckmateThreat) {
     key = "mistake";
