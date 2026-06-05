@@ -1536,12 +1536,20 @@ function analyzeMove(move) {
   const loss = bestScore - playedScore;
   const missedMateInOne = hadMateInOne && !playedWasMateInOne;
   const missedCheckmateThreat = !isMate && opponentHadMateThreat && opponentStillHasMateThreat;
+  const failedSacrifice =
+    isSacrifice &&
+    !isMate &&
+    !hiddenBrilliant.brilliant &&
+    swing < 120 &&
+    (loss >= 90 || swing <= -120 || opponentReply >= 180);
   let key = loss <= 35 ? "good" : loss <= 140 ? "soso" : "bad";
 
   if ((isMate && isMajorSacrifice && givesCheck) || (isMajorSacrifice && givesCheck && swing > 500) || hiddenBrilliant.brilliant) {
     key = "brilliant";
   } else if (missedMateInOne || missedCheckmateThreat) {
     key = "mistake";
+  } else if (failedSacrifice) {
+    key = isMajorSacrifice || swing <= -260 || opponentReply >= 260 ? "mistake" : "bad";
   } else if (tacticCanBeCaptured) {
     key = movedValue >= 300 || opponentReply >= 220 || swing <= -180 ? "mistake" : "bad";
   } else if (usefulProtectedMove || createsTactic) {
@@ -1561,6 +1569,7 @@ function analyzeMove(move) {
     tacticCanBeCaptured,
     missedMateInOne,
     missedCheckmateThreat,
+    failedSacrifice,
     hiddenBrilliant: hiddenBrilliant.brilliant,
     hiddenGain: Math.round(hiddenBrilliant.gain),
   };
