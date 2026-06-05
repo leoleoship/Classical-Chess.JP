@@ -1266,6 +1266,63 @@ function squareAttackedBy(square, attackerColor) {
   );
 }
 
+function attackingPiecesForSquare(square, attackerColor) {
+  const attackers = [];
+  files.forEach((file) => {
+    ranks.forEach((rank) => {
+      const from = `${file}${rank}`;
+      if (from === square) return;
+      const piece = game.get(from);
+      if (piece?.color === attackerColor && gamePieceAttacksSquare(from, piece, square)) {
+        attackers.push({ square: from, type: piece.type });
+      }
+    });
+  });
+  return attackers;
+}
+
+function adjacentSquares(square) {
+  const fileIndex = files.indexOf(square[0]);
+  const rank = Number(square[1]);
+  const squares = [];
+  for (let fileStep = -1; fileStep <= 1; fileStep += 1) {
+    for (let rankStep = -1; rankStep <= 1; rankStep += 1) {
+      if (!fileStep && !rankStep) continue;
+      const nextFile = files[fileIndex + fileStep];
+      const nextRank = rank + rankStep;
+      if (nextFile && nextRank >= 1 && nextRank <= 8) squares.push(`${nextFile}${nextRank}`);
+    }
+  }
+  return squares;
+}
+
+function kingSquareFor(color) {
+  for (const file of files) {
+    for (const rank of ranks) {
+      const square = `${file}${rank}`;
+      const piece = game.get(square);
+      if (piece?.color === color && piece.type === "k") return square;
+    }
+  }
+  return null;
+}
+
+function coordinatedMateNet(attackerColor, defenderColor) {
+  const kingSquare = kingSquareFor(defenderColor);
+  if (!kingSquare) return false;
+
+  const attackers = new Map();
+  [kingSquare, ...adjacentSquares(kingSquare)].forEach((square) => {
+    attackingPiecesForSquare(square, attackerColor).forEach((attacker) => {
+      attackers.set(attacker.square, attacker.type);
+    });
+  });
+
+  const types = [...attackers.values()];
+  const minorCount = types.filter((type) => type === "n" || type === "b").length;
+  return attackers.size >= 3 && minorCount >= 2;
+}
+
 function valuableTargetsAttackedFrom(square, color) {
   const piece = game.get(square);
   if (!piece) return 0;
@@ -1519,6 +1576,7 @@ function analyzeMove(move) {
   const capturedValue = result.captured ? pieceValues[result.captured] * 100 : 0;
   const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
   const isMajorSacrifice = movedValue >= 500 && capturedValue + 180 < movedValue;
+  const isCoordinatedMateNet = isMate && isMajorSacrifice && coordinatedMateNet(color, game.turn());
   const hiddenBrilliant = findHiddenBrilliantContinuation(color, result, before, isMajorSacrifice);
   const opponentReply = bestReplyScore(game.turn());
   const protectedDestination = squareDefendedBy(result.to, color);
@@ -1544,7 +1602,7 @@ function analyzeMove(move) {
     (loss >= 90 || swing <= -120 || opponentReply >= 180);
   let key = loss <= 35 ? "good" : loss <= 140 ? "soso" : "bad";
 
-  if ((isMate && isMajorSacrifice && givesCheck) || (isMajorSacrifice && givesCheck && swing > 500) || hiddenBrilliant.brilliant) {
+  if (isCoordinatedMateNet || (isMate && isMajorSacrifice && givesCheck) || (isMajorSacrifice && givesCheck && swing > 500) || hiddenBrilliant.brilliant) {
     key = "brilliant";
   } else if (missedMateInOne || missedCheckmateThreat) {
     key = "mistake";
@@ -1570,6 +1628,7 @@ function analyzeMove(move) {
     missedMateInOne,
     missedCheckmateThreat,
     failedSacrifice,
+    coordinatedMateNet: isCoordinatedMateNet,
     hiddenBrilliant: hiddenBrilliant.brilliant,
     hiddenGain: Math.round(hiddenBrilliant.gain),
   };
