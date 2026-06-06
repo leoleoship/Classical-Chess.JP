@@ -1320,7 +1320,7 @@ function coordinatedMateNet(attackerColor, defenderColor) {
 
   const types = [...attackers.values()];
   const minorCount = types.filter((type) => type === "n" || type === "b").length;
-  return attackers.size >= 3 && minorCount >= 2;
+  return minorCount >= 2 || (attackers.size >= 3 && minorCount >= 1);
 }
 
 function valuableTargetsAttackedFrom(square, color) {
@@ -1574,17 +1574,18 @@ function analyzeMove(move) {
   const isMate = game.isCheckmate();
   const givesCheck = game.isCheck();
   const capturedValue = result.captured ? pieceValues[result.captured] * 100 : 0;
-  const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
-  const isMajorSacrifice = movedValue >= 500 && capturedValue + 180 < movedValue;
+  const pieceIsOffered = squareAttackedBy(result.to, game.turn());
+  const isSacrifice = pieceIsOffered && movedValue >= 300 && capturedValue + 120 < movedValue;
+  const isMajorSacrifice = pieceIsOffered && movedValue >= 500 && capturedValue + 180 < movedValue;
   const recentOwnRatings = moveRatings.filter((rating) => rating?.color === color).slice(-5);
   let sacrificeMoveIndex = -1;
   recentOwnRatings.forEach((rating, index) => {
-    if (rating.majorSacrifice) sacrificeMoveIndex = index;
+    if (rating.sacrifice) sacrificeMoveIndex = index;
   });
   const sacrificeMovesAgo = sacrificeMoveIndex < 0 ? null : recentOwnRatings.length - sacrificeMoveIndex;
-  const recentMajorSacrifice = sacrificeMovesAgo !== null;
+  const recentSacrifice = sacrificeMovesAgo !== null;
   const isCoordinatedMateNet =
-    isMate && (isMajorSacrifice || recentMajorSacrifice) && coordinatedMateNet(color, game.turn());
+    isMate && (isSacrifice || recentSacrifice) && coordinatedMateNet(color, game.turn());
   const hiddenBrilliant = findHiddenBrilliantContinuation(color, result, before, isMajorSacrifice);
   const opponentReply = bestReplyScore(game.turn());
   const protectedDestination = squareDefendedBy(result.to, color);
@@ -1630,8 +1631,9 @@ function analyzeMove(move) {
     color,
     sacrifice: isSacrifice,
     majorSacrifice: isMajorSacrifice,
-    recentMajorSacrifice,
+    recentSacrifice,
     sacrificeMovesAgo,
+    pieceIsOffered,
     swing: Math.round(swing),
     protected: usefulProtectedMove,
     tactic: createsTactic,
