@@ -1576,8 +1576,13 @@ function analyzeMove(move) {
   const capturedValue = result.captured ? pieceValues[result.captured] * 100 : 0;
   const isSacrifice = movedValue >= 300 && capturedValue + 120 < movedValue;
   const isMajorSacrifice = movedValue >= 500 && capturedValue + 180 < movedValue;
-  const previousOwnRating = [...moveRatings].reverse().find((rating) => rating?.color === color);
-  const recentMajorSacrifice = Boolean(previousOwnRating?.majorSacrifice);
+  const recentOwnRatings = moveRatings.filter((rating) => rating?.color === color).slice(-5);
+  let sacrificeMoveIndex = -1;
+  recentOwnRatings.forEach((rating, index) => {
+    if (rating.majorSacrifice) sacrificeMoveIndex = index;
+  });
+  const sacrificeMovesAgo = sacrificeMoveIndex < 0 ? null : recentOwnRatings.length - sacrificeMoveIndex;
+  const recentMajorSacrifice = sacrificeMovesAgo !== null;
   const isCoordinatedMateNet =
     isMate && (isMajorSacrifice || recentMajorSacrifice) && coordinatedMateNet(color, game.turn());
   const hiddenBrilliant = findHiddenBrilliantContinuation(color, result, before, isMajorSacrifice);
@@ -1626,6 +1631,7 @@ function analyzeMove(move) {
     sacrifice: isSacrifice,
     majorSacrifice: isMajorSacrifice,
     recentMajorSacrifice,
+    sacrificeMovesAgo,
     swing: Math.round(swing),
     protected: usefulProtectedMove,
     tactic: createsTactic,
