@@ -2317,15 +2317,64 @@ function scoreBotMove(move) {
   return score;
 }
 
-function scoreBotMoveWithLookahead(move) {
-  const baseScore = scoreBotMove(move);
-  game.move(movePayload(move));
-  const opponentMoves = game.moves({ verbose: true }).filter((reply) => !moveTargetsKing(reply));
-  const replyPenalty = opponentMoves.length
-    ? Math.max(...opponentMoves.map((reply) => scoreMoveForRating(reply, "w"))) / 18
-    : 0;
+function botPositionScore() {
+  if (game.isCheckmate()) return game.turn() === botColor ? -100000 : 100000;
+  if (isStalemateDraw()) return 0;
+
+  let score = evaluateBoard(botColor);
+  if (game.isCheck()) score += game.turn() === botColor ? -55 : 55;
+  return score;
+}
+
+function orderedBotSearchMoves() {
+  return game
+    .moves({ verbose: true })
+    .filter((move) => !moveTargetsKing(move))
+    .sort((a, b) => {
+      const value = (move) =>
+        (move.captured ? pieceValues[move.captured] * 100 : 0) +
+        (move.promotion ? pieceValues[move.promotion] * 80 : 0) +
+        (move.san?.includes("#") ? 10000 : move.san?.includes("+") ? 40 : 0);
+      return value(b) - value(a);
+    });
+}
+
+function searchBotPosition(depth, alpha, beta) {
+  if (depth <= 0 || isPlayableGameOver()) return botPositionScore();
+
+  const maximizing = game.turn() === botColor;
+  const moves = orderedBotSearchMoves();
+  if (!moves.length) return botPositionScore();
+
+  if (maximizing) {
+    let best = -Infinity;
+    for (const move of moves) {
+      game.move(movePayload(move));
+      best = Math.max(best, searchBotPosition(depth - 1, alpha, beta));
+      game.undo();
+      alpha = Math.max(alpha, best);
+      if (beta <= alpha) break;
+    }
+    return best;
+  }
+
+  let best = Infinity;
+  for (const move of moves) {
+    game.move(movePayload(move));
+    best = Math.min(best, searchBotPosition(depth - 1, alpha, beta));
+    game.undo();
+    beta = Math.min(beta, best);
+    if (beta <= alpha) break;
+  }
+  return best;
+}
+
+function scoreBotMoveWithLookahead(move, depth) {
+  const result = game.move(movePayload(move));
+  if (!result) return -Infinity;
+  const score = searchBotPosition(depth - 1, -Infinity, Infinity);
   game.undo();
-  return baseScore - replyPenalty;
+  return score;
 }
 
 function pickRandomMove(moves) {
@@ -2339,26 +2388,25 @@ function chooseBotMove() {
   const difficulty = difficultySelect.value;
   if (difficulty === "beginner") return pickRandomMove(moves);
 
+  const searchDepth = difficulty === "grandmaster" ? 3 : difficulty === "advanced" ? 2 : 1;
   const scored = moves
     .map((move) => ({
       move,
-      score:
-        difficulty === "grandmaster"
-          ? scoreBotMoveWithLookahead(move)
-          : scoreBotMove(move) + Math.random() * 0.5,
+      score: searchDepth > 1 ? scoreBotMoveWithLookahead(move, searchDepth) : scoreBotMove(move) + Math.random() * 0.35,
     }))
     .sort((a, b) => b.score - a.score);
 
   if (difficulty === "novice") {
-    return Math.random() < 0.65 ? pickRandomMove(moves) : scored[0].move;
+    const topHalf = scored.slice(0, Math.max(2, Math.ceil(scored.length / 2)));
+    return Math.random() < 0.45 ? pickRandomMove(topHalf).move : scored[0].move;
   }
   if (difficulty === "intermediate") {
-    const topHalf = scored.slice(0, Math.max(1, Math.ceil(scored.length / 2)));
-    return Math.random() < 0.35 ? pickRandomMove(topHalf).move : scored[0].move;
+    const topFive = scored.slice(0, Math.min(5, scored.length));
+    return Math.random() < 0.22 ? pickRandomMove(topFive).move : scored[0].move;
   }
   if (difficulty === "advanced") {
-    const topThree = scored.slice(0, Math.min(3, scored.length));
-    return Math.random() < 0.18 ? pickRandomMove(topThree).move : scored[0].move;
+    const topTwo = scored.slice(0, Math.min(2, scored.length));
+    return Math.random() < 0.08 ? pickRandomMove(topTwo).move : scored[0].move;
   }
 
   return scored[0].move;
