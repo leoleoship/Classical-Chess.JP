@@ -1493,6 +1493,44 @@ function hasMateInOneFromFen(fen, color) {
   });
 }
 
+function attackerForcesMate(probe, attackerColor, pliesLeft, memo, budget) {
+  if (probe.isCheckmate()) return probe.turn() !== attackerColor;
+  if (probe.isDraw() || pliesLeft <= 0 || budget.nodes <= 0) return false;
+
+  const key = `${probe.fen()}|${attackerColor}|${pliesLeft}`;
+  if (memo.has(key)) return memo.get(key);
+  budget.nodes -= 1;
+
+  const moves = probe.moves({ verbose: true });
+  if (!moves.length) return false;
+  const attackerTurn = probe.turn() === attackerColor;
+  let forced = attackerTurn ? false : true;
+
+  for (const move of moves) {
+    const result = probe.move(probeMovePayload(move));
+    if (!result) continue;
+    const childForced = attackerForcesMate(probe, attackerColor, pliesLeft - 1, memo, budget);
+    probe.undo();
+
+    if (attackerTurn && childForced) {
+      forced = true;
+      break;
+    }
+    if (!attackerTurn && !childForced) {
+      forced = false;
+      break;
+    }
+  }
+
+  memo.set(key, forced);
+  return forced;
+}
+
+function hasUnavoidableMateFromFen(fen, attackerColor, plies = 4) {
+  const probe = new Chess(fen);
+  return attackerForcesMate(probe, attackerColor, plies, new Map(), { nodes: 2200 });
+}
+
 function bestCurrentTurnFollowUp(color, baselineScore) {
   const moves = game.moves({ verbose: true }).filter((reply) => !moveTargetsKing(reply));
   if (!moves.length) return { gain: game.isCheckmate() ? -2400 : evaluateBoard(color) - baselineScore, mate: false };
@@ -1563,6 +1601,8 @@ function analyzeMove(move) {
   const playedWasMateInOne = moveWouldCheckmate(playedMove);
   const opponentColor = color === "w" ? "b" : "w";
   const opponentHadMateThreat = hasMateInOneFromFen(game.fen(), opponentColor);
+  const forcedMateAgainstPlayer =
+    (game.isCheck() || opponentHadMateThreat) && hasUnavoidableMateFromFen(game.fen(), opponentColor);
   const playedScore = scoreMoveForRating(playedMove, color);
   const bestScore = Math.max(...moves.map((candidate) => scoreMoveForRating(candidate, color)));
   const before = evaluateBoard(color);
@@ -1613,6 +1653,8 @@ function analyzeMove(move) {
 
   if (isCoordinatedMateNet || (isMate && isMajorSacrifice && givesCheck) || (isMajorSacrifice && givesCheck && swing > 500) || hiddenBrilliant.brilliant) {
     key = "brilliant";
+  } else if (forcedMateAgainstPlayer) {
+    key = "forced";
   } else if (missedMateInOne || missedCheckmateThreat) {
     key = "mistake";
   } else if (failedSacrifice) {
@@ -1640,6 +1682,7 @@ function analyzeMove(move) {
     tacticCanBeCaptured,
     missedMateInOne,
     missedCheckmateThreat,
+    forcedMateAgainstPlayer,
     failedSacrifice,
     coordinatedMateNet: isCoordinatedMateNet,
     hiddenBrilliant: hiddenBrilliant.brilliant,
