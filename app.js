@@ -26,8 +26,19 @@ const onlineWaitingOverlay = document.querySelector("#onlineWaitingOverlay");
 const modeHuman = document.querySelector("#modeHuman");
 const modeBot = document.querySelector("#modeBot");
 const modeOnline = document.querySelector("#modeOnline");
+const modePuzzle = document.querySelector("#modePuzzle");
 const modeBuilder = document.querySelector("#modeBuilder");
 const modeCustom = document.querySelector("#modeCustom");
+const puzzlePanel = document.querySelector("#puzzlePanel");
+const puzzleDifficulty = document.querySelector("#puzzleDifficulty");
+const puzzlePicker = document.querySelector("#puzzlePicker");
+const puzzleProgress = document.querySelector("#puzzleProgress");
+const puzzleNumber = document.querySelector("#puzzleNumber");
+const puzzleTitle = document.querySelector("#puzzleTitle");
+const puzzleObjective = document.querySelector("#puzzleObjective");
+const puzzleMessage = document.querySelector("#puzzleMessage");
+const puzzleRestart = document.querySelector("#puzzleRestart");
+const puzzleNext = document.querySelector("#puzzleNext");
 const customRules = document.querySelector("#customRules");
 const builderPanel = document.querySelector("#builderPanel");
 const piecePalette = document.querySelector("#piecePalette");
@@ -173,6 +184,16 @@ const i18n = {
     onlineSyncError: "オンライン接続に失敗しました。Supabase設定を確認してください。",
     onlineTurnWait: "相手の手番です。",
     onlineWin: "オンラインELOが15上がりました。",
+    puzzleMode: "パズル",
+    puzzleNumber: "パズル {number}",
+    puzzleObjective: "白番。{moves}手でメイト。",
+    puzzleProgress: "{solved} / 25クリア",
+    puzzleCorrect: "正解。そのまま続けてください。",
+    puzzleReply: "相手が応手しています...",
+    puzzleSolved: "クリア！ チェックメイトです。",
+    puzzleWrong: "その手ではありません。局面を戻します。",
+    restartPuzzle: "やり直す",
+    nextPuzzle: "次のパズル",
     piecePalette: "駒パレット",
     playMusic: "Play Music",
     playWhite: "白で遊ぶ",
@@ -278,6 +299,16 @@ const i18n = {
     onlineSyncError: "Online connection failed. Check the Supabase settings.",
     onlineTurnWait: "Waiting for your opponent.",
     onlineWin: "Online ELO increased by 15.",
+    puzzleMode: "Puzzles",
+    puzzleNumber: "Puzzle {number}",
+    puzzleObjective: "White to move. Mate in {moves}.",
+    puzzleProgress: "{solved} / 25 solved",
+    puzzleCorrect: "Correct. Keep going.",
+    puzzleReply: "Opponent is replying...",
+    puzzleSolved: "Solved! Checkmate.",
+    puzzleWrong: "That is not the move. Resetting the position.",
+    restartPuzzle: "Restart",
+    nextPuzzle: "Next puzzle",
     piecePalette: "Piece palette",
     playMusic: "Play Music",
     playWhite: "Play White",
@@ -314,6 +345,38 @@ const musicModes = {
   },
 };
 
+const chessPuzzles = [
+  { id: "beginner-1", difficulty: "beginner", name: { en: "First-rank finish", ja: "最終ランクの一撃" }, fen: "5k2/3Q1p2/5R2/p5K1/8/8/8/8 w - - 0 1", line: ["d7f7"] },
+  { id: "beginner-2", difficulty: "beginner", name: { en: "Diagonal seal", ja: "斜線の封鎖" }, fen: "K6k/8/8/8/1Q6/8/2Br4/8 w - - 0 1", line: ["b4f8"] },
+  { id: "beginner-3", difficulty: "beginner", name: { en: "Rook lift", ja: "ルークの上昇" }, fen: "6k1/4Q3/8/2p5/R7/K1p5/8/8 w - - 0 1", line: ["a4a8"] },
+  { id: "beginner-4", difficulty: "beginner", name: { en: "Queen and knight", ja: "クイーンとナイト" }, fen: "8/3p4/8/3K2p1/8/4N3/7k/5Q2 w - - 0 1", line: ["f1g2"] },
+  { id: "beginner-5", difficulty: "beginner", name: { en: "Back-rank door", ja: "バックランクの扉" }, fen: "5k2/p1R5/8/6Q1/8/2Kp4/8/8 w - - 0 1", line: ["g5d8"] },
+
+  { id: "novice-1", difficulty: "novice", name: { en: "Twin rooks", ja: "二台のルーク" }, fen: "5k2/8/7p/1R6/8/2K5/8/R7 w - - 0 1", line: ["b5b7", "f8g8", "a1a8"] },
+  { id: "novice-2", difficulty: "novice", name: { en: "Long rook turn", ja: "長いルークの旋回" }, fen: "8/8/8/7R/8/K7/8/1k3B2 w - - 0 1", line: ["h5c5", "b1a1", "c5c1"] },
+  { id: "novice-3", difficulty: "novice", name: { en: "King approach", ja: "キングの接近" }, fen: "2k5/5Q2/8/7p/4K3/8/8/4R3 w - - 0 1", line: ["e4f5", "c8d8", "e1e8"] },
+  { id: "novice-4", difficulty: "novice", name: { en: "Bishop curtain", ja: "ビショップの幕" }, fen: "3B3k/8/4Q3/8/5K2/7p/8/8 w - - 0 1", line: ["e6f7", "h3h2", "d8f6"] },
+  { id: "novice-5", difficulty: "novice", name: { en: "Crossfire", ja: "クロスファイア" }, fen: "8/1k6/7Q/8/8/1K3R2/4n3/8 w - - 0 1", line: ["f3f7", "b7c8", "h6h8"] },
+
+  { id: "intermediate-1", difficulty: "intermediate", name: { en: "King steps first", ja: "キングが先に進む" }, fen: "3K4/k7/8/2R5/8/7R/8/4n3 w - - 0 1", line: ["d8c7", "a7a8", "c5a5"] },
+  { id: "intermediate-2", difficulty: "intermediate", name: { en: "Promotion relay", ja: "昇格リレー" }, fen: "k7/5P2/4K3/1p6/8/8/p6Q/8 w - - 0 1", line: ["h2c7", "b5b4", "f7f8q"] },
+  { id: "intermediate-3", difficulty: "intermediate", name: { en: "Quiet queen transfer", ja: "静かなクイーン移動" }, fen: "2k5/8/3K4/8/8/6Q1/8/8 w - - 0 1", line: ["g3b3", "c8d8", "b3g8"] },
+  { id: "intermediate-4", difficulty: "intermediate", name: { en: "Rook exchange net", ja: "ルーク交換の網" }, fen: "8/4K3/8/8/8/7R/1r5R/4k3 w - - 0 1", line: ["h2b2", "e1f1", "h3h1"] },
+  { id: "intermediate-5", difficulty: "intermediate", name: { en: "Hidden battery", ja: "隠れたバッテリー" }, fen: "6k1/8/p5pR/6K1/8/8/1Q6/8 w - - 0 1", line: ["h6h8", "g8f7", "b2f6"] },
+
+  { id: "advanced-1", difficulty: "advanced", name: { en: "Rook staircase", ja: "ルークの階段" }, fen: "1k6/3pR3/8/8/8/8/8/4R2K w - - 0 1", line: ["e7d7", "b8c8", "e1e7", "c8b8", "e7e8"] },
+  { id: "advanced-2", difficulty: "advanced", name: { en: "Knight compass", ja: "ナイトの羅針盤" }, fen: "8/1N5k/5K2/8/8/8/8/6R1 w - - 0 1", line: ["b7d8", "h7h8", "d8f7", "h8h7", "g1g7"] },
+  { id: "advanced-3", difficulty: "advanced", name: { en: "Corner knight route", ja: "隅からのナイトルート" }, fen: "N7/5k2/8/6QK/8/5p2/8/8 w - - 0 1", line: ["a8c7", "f7f8", "h5h6", "f8f7", "g5g7"] },
+  { id: "advanced-4", difficulty: "advanced", name: { en: "Queen across the board", ja: "盤を横切るクイーン" }, fen: "8/k2K4/8/8/8/8/7Q/6n1 w - - 0 1", line: ["d7c6", "a7a8", "h2h7", "a8b8", "h7b7"] },
+  { id: "advanced-5", difficulty: "advanced", name: { en: "Split-rook pursuit", ja: "二方向のルーク追撃" }, fen: "8/k4K2/8/8/4R2R/4p3/8/8 w - - 0 1", line: ["h4h6", "a7b8", "e4e7", "b8c8", "h6h8"] },
+
+  { id: "grandmaster-1", difficulty: "grandmaster", name: { en: "The queen decoy", ja: "クイーンの囮" }, fen: "r2qkbnr/ppp2ppp/2np4/4p3/2B1P1b1/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 2 5", line: ["f3e5", "g4d1", "c4f7", "e8e7", "c3d5"] },
+  { id: "grandmaster-2", difficulty: "grandmaster", name: { en: "Rook removal maze", ja: "ルーク除去の迷路" }, fen: "6Q1/k2K4/2B5/8/6r1/8/8/8 w - - 0 1", line: ["g8g4", "a7b6", "d7d6", "b6a7", "d6c7", "a7a6", "g4a4"] },
+  { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Bishop clearance", ja: "ビショップのクリアランス" }, fen: "8/8/8/1k1K2R1/8/R1b5/8/8 w - - 0 1", line: ["a3c3", "b5b6", "c3b3", "b6c7", "g5g8", "c7d7", "b3b7"] },
+  { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Knight geometry", ja: "ナイトの幾何学" }, fen: "1k6/7N/8/2K3R1/8/8/2n5/8 w - - 0 1", line: ["c5b6", "b8c8", "h7f6", "c8d8", "g5e5", "d8c8", "e5e8"] },
+  { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "The silent net", ja: "静かな包囲網" }, fen: "2B5/3R4/8/8/8/8/3K4/5k2 w - - 0 1", line: ["d7g7", "f1f2", "c8b7", "f2f1", "d2e3", "f1e1", "g7g1"] },
+];
+
 const checkmateEffects = [
   "confetti",
   "bomb",
@@ -334,6 +397,12 @@ let lastMoveVector = null;
 let mode = "human";
 let botTimer = null;
 let botThinking = false;
+let puzzleIndex = 0;
+let puzzlePly = 0;
+let puzzleThinking = false;
+let puzzleSolved = false;
+let puzzleTimer = null;
+let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV1") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
 let enPassantBoardSquares = [];
@@ -1083,6 +1152,143 @@ function knightForkTargetCount(square, color) {
   }).length;
 }
 
+function currentPuzzle() {
+  return chessPuzzles[puzzleIndex] || chessPuzzles[0];
+}
+
+function puzzleMoveCount(puzzle = currentPuzzle()) {
+  return Math.ceil(puzzle.line.length / 2);
+}
+
+function puzzleMoveKey(move) {
+  return `${move.from}${move.to}${move.promotion || ""}`;
+}
+
+function saveSolvedPuzzles() {
+  localStorage.setItem("chessJpSolvedPuzzlesV1", JSON.stringify([...solvedPuzzles]));
+}
+
+function renderPuzzlePanel() {
+  if (mode !== "puzzle") return;
+  const puzzle = currentPuzzle();
+  const difficultyPuzzles = chessPuzzles.filter((item) => item.difficulty === puzzleDifficulty.value);
+  puzzlePicker.replaceChildren();
+
+  difficultyPuzzles.forEach((item, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = String(index + 1);
+    button.dataset.puzzleId = item.id;
+    button.classList.toggle("active", item.id === puzzle.id);
+    button.classList.toggle("solved", solvedPuzzles.has(item.id));
+    button.setAttribute("aria-label", `${t("puzzleNumber", { number: index + 1 })}: ${item.name[language] || item.name.en}`);
+    puzzlePicker.append(button);
+  });
+
+  const number = difficultyPuzzles.findIndex((item) => item.id === puzzle.id) + 1;
+  puzzleProgress.textContent = t("puzzleProgress", { solved: solvedPuzzles.size });
+  puzzleNumber.textContent = t("puzzleNumber", { number });
+  puzzleTitle.textContent = puzzle.name[language] || puzzle.name.en;
+  puzzleObjective.textContent = t("puzzleObjective", { moves: puzzleMoveCount(puzzle) });
+  puzzleNext.disabled = !puzzleSolved;
+}
+
+function loadPuzzle(index = puzzleIndex) {
+  clearTimeout(puzzleTimer);
+  puzzleTimer = null;
+  puzzleIndex = Math.max(0, Math.min(chessPuzzles.length - 1, index));
+  const puzzle = currentPuzzle();
+  puzzleDifficulty.value = puzzle.difficulty;
+  game.load(puzzle.fen);
+  resetPlayableState();
+  puzzlePly = 0;
+  puzzleThinking = false;
+  puzzleSolved = false;
+  flipped = game.turn() === "b";
+  puzzleMessage.textContent = "";
+  puzzleMessage.className = "puzzle-message";
+  render();
+}
+
+function finishPuzzle(result) {
+  const puzzle = currentPuzzle();
+  puzzleSolved = true;
+  puzzleThinking = false;
+  solvedPuzzles.add(puzzle.id);
+  saveSolvedPuzzles();
+  puzzleMessage.textContent = t("puzzleSolved");
+  puzzleMessage.className = "puzzle-message success";
+  render();
+  triggerGameOverCelebration(result);
+  triggerMoveMoment(result);
+}
+
+function applyPuzzlePly(move, playerMove) {
+  const result = game.move(move);
+  if (!result) return null;
+  markTacticalMarkersDirty();
+  if (result.captured) captured[result.color].push(result.captured);
+  lastMove = { from: result.from, to: result.to };
+  lastMoveVector = moveVector(result.from, result.to);
+  selected = null;
+  legalMoves = [];
+  puzzlePly += 1;
+  playMoveSound(null);
+  render();
+
+  if (puzzlePly >= currentPuzzle().line.length && game.isCheckmate()) {
+    finishPuzzle(result);
+    return result;
+  }
+
+  triggerMoveMoment(result);
+  if (playerMove) {
+    puzzleMessage.textContent = t("puzzleCorrect");
+    puzzleMessage.className = "puzzle-message success";
+  }
+  return result;
+}
+
+function schedulePuzzleReply() {
+  if (mode !== "puzzle" || puzzleSolved || puzzlePly >= currentPuzzle().line.length) return;
+  puzzleThinking = true;
+  render();
+  puzzleTimer = window.setTimeout(() => {
+    const move = currentPuzzle().line[puzzlePly];
+    const payload = { from: move.slice(0, 2), to: move.slice(2, 4) };
+    if (move.length > 4) payload.promotion = move[4];
+    applyPuzzlePly(payload, false);
+    puzzleThinking = false;
+    puzzleTimer = null;
+    render();
+  }, 520);
+}
+
+function playPuzzleMove(move) {
+  const expected = currentPuzzle().line[puzzlePly];
+  if (puzzleMoveKey(move) !== expected) {
+    selected = null;
+    legalMoves = [];
+    puzzleMessage.textContent = t("puzzleWrong");
+    puzzleMessage.className = "puzzle-message error";
+    render();
+    clearTimeout(puzzleTimer);
+    puzzleTimer = window.setTimeout(() => loadPuzzle(puzzleIndex), 850);
+    return;
+  }
+
+  const result = applyPuzzlePly(move, true);
+  if (result && !puzzleSolved) schedulePuzzleReply();
+}
+
+function selectNextPuzzle() {
+  const puzzle = currentPuzzle();
+  const group = chessPuzzles.filter((item) => item.difficulty === puzzle.difficulty);
+  const groupIndex = group.findIndex((item) => item.id === puzzle.id);
+  const next = group[(groupIndex + 1) % group.length];
+  loadPuzzle(chessPuzzles.findIndex((item) => item.id === next.id));
+}
+
 function playerName(color) {
   const value = color === "w" ? whiteName.value.trim() : blackName.value.trim();
   if (mode === "bot" && color === botColor) return "Bot";
@@ -1417,6 +1623,8 @@ function validateBuilderPlayable() {
 }
 
 function resetPlayableState() {
+  clearTimeout(puzzleTimer);
+  puzzleTimer = null;
   captured.w = [];
   captured.b = [];
   selected = null;
@@ -2290,6 +2498,7 @@ async function handleSquareClick(square) {
     return;
   }
 
+  if (mode === "puzzle" && (puzzleThinking || puzzleSolved || puzzlePly % 2 === 1)) return;
   if (resignation || isBotTurn() || botThinking) return;
   if (mode === "online" && !isOnlinePlayerTurn()) {
     onlineStatus.textContent = onlineMatch ? t("onlineTurnWait") : t("onlineNotReady");
@@ -2308,7 +2517,9 @@ async function handleSquareClick(square) {
           : isPromotion
             ? await requestPromotion()
             : undefined;
-      playMove({ from: selected, to: square, promotion });
+      const move = { from: selected, to: square, promotion };
+      if (mode === "puzzle") playPuzzleMove(move);
+      else playMove(move);
       return;
     }
   }
@@ -2562,6 +2773,14 @@ function updateStatus() {
     return;
   }
 
+  if (mode === "puzzle") {
+    if (puzzleSolved) statusEl.textContent = t("puzzleSolved");
+    else if (puzzleThinking) statusEl.textContent = t("puzzleReply");
+    else statusEl.textContent = t("puzzleObjective", { moves: puzzleMoveCount() });
+    fenInput.value = game.fen();
+    return;
+  }
+
   if (resignation) {
     statusEl.textContent = t("resigned", {
       loser: playerName(resignation.loser),
@@ -2572,7 +2791,7 @@ function updateStatus() {
   }
 
   const side = playerName(game.turn());
-  const modeLabels = { human: t("humanMode"), bot: t("botMode"), custom: t("customMode"), online: t("onlineMode") };
+  const modeLabels = { human: t("humanMode"), bot: t("botMode"), custom: t("customMode"), online: t("onlineMode"), puzzle: t("puzzleMode") };
   const modeLabel = modeLabels[mode];
   let text = botThinking ? t("thinking", { mode: modeLabel }) : t("turn", { mode: modeLabel, side });
 
@@ -2617,6 +2836,7 @@ function updateCaptured() {
 function render() {
   renderBoard();
   updateModeUI();
+  renderPuzzlePanel();
   updateStatus();
   updateMoves();
   updateCaptured();
@@ -2635,7 +2855,10 @@ function render() {
 function setMode(nextMode) {
   mode = nextMode;
   clearTimeout(botTimer);
+  clearTimeout(puzzleTimer);
+  puzzleTimer = null;
   botThinking = false;
+  puzzleThinking = false;
   syncBotSide();
   if (mode === "online") {
     ensureOnlineLobby();
@@ -2645,6 +2868,10 @@ function setMode(nextMode) {
   selected = null;
   legalMoves = [];
   gameSettled = false;
+  if (mode === "puzzle") {
+    loadPuzzle(puzzleIndex);
+    return;
+  }
   render();
   scheduleBotMove();
 }
@@ -2653,20 +2880,24 @@ function updateModeUI() {
   const custom = mode === "custom";
   const bot = mode === "bot";
   const online = mode === "online";
+  const puzzle = mode === "puzzle";
   const builder = mode === "builder";
   modeHuman.classList.toggle("active", mode === "human");
   modeBot.classList.toggle("active", bot);
   modeOnline.classList.toggle("active", online);
+  modePuzzle.classList.toggle("active", puzzle);
   modeBuilder.classList.toggle("active", builder);
   modeCustom.classList.toggle("active", custom);
   modeHuman.setAttribute("aria-checked", String(mode === "human"));
   modeBot.setAttribute("aria-checked", String(bot));
   modeOnline.setAttribute("aria-checked", String(online));
+  modePuzzle.setAttribute("aria-checked", String(puzzle));
   modeBuilder.setAttribute("aria-checked", String(builder));
   modeCustom.setAttribute("aria-checked", String(custom));
   customRules.hidden = !custom;
   botSettings.hidden = !bot;
   onlinePanel.hidden = !online;
+  puzzlePanel.hidden = !puzzle;
   builderPanel.hidden = !builder;
 }
 
@@ -2686,6 +2917,10 @@ function resetCapturedFromHistory() {
 }
 
 function reloadCurrentBoard() {
+  if (mode === "puzzle") {
+    loadPuzzle(puzzleIndex);
+    return;
+  }
   selected = null;
   legalMoves = [];
   tacticalPins.clear();
@@ -2708,7 +2943,7 @@ function reloadCurrentBoard() {
 }
 
 function resignCurrentSide() {
-  if (mode === "builder" || resignation || isPlayableGameOver()) return;
+  if (mode === "builder" || mode === "puzzle" || resignation || isPlayableGameOver()) return;
   clearTimeout(botTimer);
   botThinking = false;
   const loser = mode === "online" && onlineMyColor ? onlineMyColor : game.turn();
@@ -2734,6 +2969,10 @@ function resignCurrentSide() {
 document.querySelector("#newGame").addEventListener("click", () => {
   clearTimeout(botTimer);
   botThinking = false;
+  if (mode === "puzzle") {
+    loadPuzzle(puzzleIndex);
+    return;
+  }
   if (mode === "online" && onlineMatch) {
     resetOnlineBoard(true);
     return;
@@ -2753,6 +2992,10 @@ board.addEventListener("click", (event) => {
 });
 
 document.querySelector("#undoMove").addEventListener("click", () => {
+  if (mode === "puzzle") {
+    loadPuzzle(puzzleIndex);
+    return;
+  }
   if (mode === "online") {
     onlineStatus.textContent = t("onlineTurnWait");
     return;
@@ -2792,8 +3035,24 @@ document.querySelector("#copyFen").addEventListener("click", async () => {
 modeHuman.addEventListener("click", () => setMode("human"));
 modeBot.addEventListener("click", () => setMode("bot"));
 modeOnline.addEventListener("click", () => setMode("online"));
+modePuzzle.addEventListener("click", () => setMode("puzzle"));
 modeBuilder.addEventListener("click", () => setMode("builder"));
 modeCustom.addEventListener("click", () => setMode("custom"));
+
+puzzleDifficulty.addEventListener("change", () => {
+  const index = chessPuzzles.findIndex((puzzle) => puzzle.difficulty === puzzleDifficulty.value);
+  loadPuzzle(index);
+});
+
+puzzlePicker.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-puzzle-id]");
+  if (!button) return;
+  const index = chessPuzzles.findIndex((puzzle) => puzzle.id === button.dataset.puzzleId);
+  loadPuzzle(index);
+});
+
+puzzleRestart.addEventListener("click", () => loadPuzzle(puzzleIndex));
+puzzleNext.addEventListener("click", selectNextPuzzle);
 
 piecePalette.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-piece]");
@@ -2913,6 +3172,7 @@ languageSelect.addEventListener("change", () => {
   language = languageSelect.value;
   syncDefaultNames();
   applyLanguage();
+  renderPuzzlePanel();
 });
 
 themeSelect.addEventListener("change", () => {
@@ -2945,6 +3205,7 @@ volumeRange.addEventListener("input", () => {
 fenForm.addEventListener("submit", (event) => {
   event.preventDefault();
   try {
+    if (mode === "puzzle") mode = "human";
     game.load(fenInput.value.trim());
     resetPlayableState();
     render();

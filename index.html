@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chess.JP</title>
-    <link rel="stylesheet" href="./styles.css?v=20260610-compact-custom-rules" />
+    <link rel="stylesheet" href="./styles.css?v=20260610-chess-puzzles" />
   </head>
   <body>
     <div id="openingScreen" class="opening-screen" aria-label="Leoleoship presents Chess.JP">
@@ -81,6 +81,7 @@
             <button id="modeHuman" class="active" type="button" role="radio" aria-checked="true" data-i18n="humanMode">対人戦</button>
             <button id="modeBot" type="button" role="radio" aria-checked="false" data-i18n="botMode">Bot戦</button>
             <button id="modeOnline" type="button" role="radio" aria-checked="false" data-i18n="onlineMode">Match Online</button>
+            <button id="modePuzzle" type="button" role="radio" aria-checked="false" data-i18n="puzzleMode">Puzzles</button>
             <button id="modeBuilder" type="button" role="radio" aria-checked="false" data-i18n="builderMode">Board Maker</button>
             <button id="modeCustom" type="button" role="radio" aria-checked="false" data-i18n="customMode">個人ルール</button>
           </div>
@@ -173,6 +174,33 @@
               <input id="ruleNoRepeatPiece" type="checkbox" />
               <span data-i18n="noRepeatPiece">同じ駒を連続で動かせない</span>
             </label>
+          </div>
+
+          <div id="puzzlePanel" class="puzzle-panel" hidden>
+            <div class="puzzle-heading">
+              <label for="puzzleDifficulty" data-i18n="difficulty">難易度</label>
+              <select id="puzzleDifficulty">
+                <option value="beginner" data-i18n="beginner">Beginner</option>
+                <option value="novice" data-i18n="novice">Novice</option>
+                <option value="intermediate" data-i18n="intermediate">Intermediate</option>
+                <option value="advanced" data-i18n="advanced">Advanced</option>
+                <option value="grandmaster" data-i18n="grandmaster">Grandmaster</option>
+              </select>
+              <strong id="puzzleProgress">0 / 25</strong>
+            </div>
+            <div id="puzzlePicker" class="puzzle-picker" aria-label="Puzzle selection"></div>
+            <div class="puzzle-brief">
+              <div>
+                <span id="puzzleNumber">Puzzle 1</span>
+                <strong id="puzzleTitle">First rank</strong>
+              </div>
+              <p id="puzzleObjective">White to move. Mate in 1.</p>
+            </div>
+            <p id="puzzleMessage" class="puzzle-message" aria-live="polite"></p>
+            <div class="puzzle-actions">
+              <button id="puzzleRestart" type="button" data-i18n="restartPuzzle">Restart</button>
+              <button id="puzzleNext" type="button" data-i18n="nextPuzzle">Next puzzle</button>
+            </div>
           </div>
 
           <div id="builderPanel" class="builder-panel" hidden>
@@ -306,6 +334,6 @@
 
     <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 
-    <script src="./app.js?v=20260610-expanded-custom-rules"></script>
+    <script src="./app.js?v=20260610-chess-puzzles-v2"></script>
   </body>
 </html>

@@ -1172,7 +1172,7 @@ h1 {
 
 .segmented {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
@@ -1212,6 +1212,7 @@ h1 {
 .online-account-stats span,
 .builder-panel > span,
 .builder-save-row label,
+.puzzle-heading label,
 .custom-rules label,
 .settings label,
 .rating-panel span {
@@ -1371,6 +1372,120 @@ h1 {
   display: none;
 }
 
+.puzzle-panel {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbf4e5;
+}
+
+.puzzle-panel[hidden] {
+  display: none;
+}
+
+.puzzle-heading {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.puzzle-heading select {
+  min-width: 0;
+}
+
+.puzzle-heading strong {
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.puzzle-picker {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.puzzle-picker button,
+.puzzle-actions button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff8e8;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.puzzle-picker button.active {
+  border-color: #405f58;
+  background: #59736d;
+  color: #fffdf7;
+}
+
+.puzzle-picker button.solved::after {
+  content: "✓";
+  margin-left: 4px;
+  color: #25713e;
+}
+
+.puzzle-picker button.active.solved::after {
+  color: #dff7d9;
+}
+
+.puzzle-brief {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.puzzle-brief div {
+  display: grid;
+  gap: 2px;
+}
+
+.puzzle-brief span,
+.puzzle-brief p,
+.puzzle-message {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.puzzle-brief strong {
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+.puzzle-brief p {
+  max-width: 48%;
+  text-align: right;
+  line-height: 1.25;
+}
+
+.puzzle-message {
+  min-height: 18px;
+}
+
+.puzzle-message.success {
+  color: #25713e;
+}
+
+.puzzle-message.error {
+  color: var(--danger);
+}
+
+.puzzle-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
 .piece-palette {
   display: grid;
   grid-template-columns: repeat(7, minmax(34px, 1fr));
@@ -1485,6 +1600,7 @@ body[data-theme="night"] .bot-settings,
 body[data-theme="night"] .online-panel,
 body[data-theme="night"] .online-account-stats div,
 body[data-theme="night"] .builder-panel,
+body[data-theme="night"] .puzzle-panel,
 body[data-theme="night"] .captured div {
   background: rgb(31 38 37 / 70%);
 }
@@ -1544,6 +1660,8 @@ body[data-theme="night"] .fen-row button,
 body[data-theme="night"] .online-panel button,
 body[data-theme="night"] .piece-palette button,
 body[data-theme="night"] .builder-actions button,
+body[data-theme="night"] .puzzle-picker button,
+body[data-theme="night"] .puzzle-actions button,
 body[data-theme="night"] .promotion-options button,
 body[data-theme="night"] .segmented {
   background: #303b38;
@@ -3534,7 +3652,8 @@ body[data-theme="night"] .segmented {
   .online-account-stats,
   .online-result-buttons,
   .builder-save-row,
-  .builder-actions {
+  .builder-actions,
+  .puzzle-actions {
     grid-template-columns: 1fr;
   }
 
