@@ -1122,6 +1122,8 @@ select {
   flex-direction: column;
   min-height: min(720px, calc(100vh - 64px));
   max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
   padding: 24px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1797,8 +1799,8 @@ body[data-theme="night"] .segmented {
 
 .moves {
   display: flex;
-  min-height: 0;
-  flex: 1;
+  min-height: 160px;
+  flex: 1 0 160px;
   flex-direction: column;
   border-top: 1px solid var(--line);
   padding-top: 16px;
@@ -3615,6 +3617,8 @@ body[data-theme="night"] .segmented {
   .panel {
     min-height: auto;
     max-height: none;
+    overflow-y: visible;
+    scrollbar-gutter: auto;
   }
 }
 
