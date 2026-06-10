@@ -61,6 +61,10 @@ const eloValue = document.querySelector("#eloValue");
 const ruleNoCastle = document.querySelector("#ruleNoCastle");
 const ruleNoEnPassant = document.querySelector("#ruleNoEnPassant");
 const ruleQueensOnly = document.querySelector("#ruleQueensOnly");
+const ruleOneStepSliders = document.querySelector("#ruleOneStepSliders");
+const ruleNoPawnDouble = document.querySelector("#ruleNoPawnDouble");
+const ruleMandatoryCapture = document.querySelector("#ruleMandatoryCapture");
+const ruleNoRepeatPiece = document.querySelector("#ruleNoRepeatPiece");
 const languageSelect = document.querySelector("#languageSelect");
 const themeSelect = document.querySelector("#themeSelect");
 const soundToggle = document.querySelector("#soundToggle");
@@ -148,7 +152,11 @@ const i18n = {
     nightLight: "ナイト",
     noCastle: "キャスリングなし",
     noEnPassant: "アンパッサンなし",
+    noPawnDouble: "ポーンの2マス移動なし",
+    noRepeatPiece: "同じ駒を連続で動かせない",
     novice: "Novice",
+    oneStepSliders: "ルークとビショップは1マスだけ",
+    mandatoryCapture: "取れる駒があれば必ず取る",
     findMatch: "マッチ検索",
     onlineDemo: "オンラインロビー: 名前を保存してマッチ検索を押してください。",
     onlineElo: "Online ELO",
@@ -249,7 +257,11 @@ const i18n = {
     nightLight: "Night",
     noCastle: "No castling",
     noEnPassant: "No en passant",
+    noPawnDouble: "No two-square pawn move",
+    noRepeatPiece: "No same piece twice",
     novice: "Novice",
+    oneStepSliders: "Rooks and bishops move one square",
+    mandatoryCapture: "Captures are mandatory",
     findMatch: "Find match",
     onlineDemo: "Online lobby: save your name, then press Find match.",
     onlineElo: "Online ELO",
@@ -854,27 +866,47 @@ function activeRules() {
     noCastle: mode === "custom" && ruleNoCastle.checked,
     noEnPassant: mode === "custom" && ruleNoEnPassant.checked,
     queensOnly: mode === "custom" && ruleQueensOnly.checked,
+    oneStepSliders: mode === "custom" && ruleOneStepSliders.checked,
+    noPawnDouble: mode === "custom" && ruleNoPawnDouble.checked,
+    mandatoryCapture: mode === "custom" && ruleMandatoryCapture.checked,
+    noRepeatPiece: mode === "custom" && ruleNoRepeatPiece.checked,
   };
 }
 
-function filteredMoves(square) {
-  const rules = activeRules();
-  return game.moves({ square, verbose: true }).filter((move) => {
-    if (moveTargetsKing(move)) return false;
-    if (rules.noCastle && (move.flags.includes("k") || move.flags.includes("q"))) return false;
-    if (rules.noEnPassant && move.flags.includes("e")) return false;
-    return true;
-  });
+function moveDistance(move) {
+  return {
+    file: Math.abs(files.indexOf(move.to[0]) - files.indexOf(move.from[0])),
+    rank: Math.abs(Number(move.to[1]) - Number(move.from[1])),
+  };
+}
+
+function moveAllowedByCustomRules(move, rules, mandatoryCaptureAvailable, lastOwnMove) {
+  if (moveTargetsKing(move)) return false;
+  if (rules.noCastle && (move.flags.includes("k") || move.flags.includes("q"))) return false;
+  if (rules.noEnPassant && move.flags.includes("e")) return false;
+  if (rules.noPawnDouble && move.flags.includes("b")) return false;
+  if (rules.mandatoryCapture && mandatoryCaptureAvailable && !move.captured && !move.flags.includes("e")) return false;
+  if (rules.noRepeatPiece && lastOwnMove?.to === move.from) return false;
+
+  if (rules.oneStepSliders && (move.piece === "r" || move.piece === "b")) {
+    const distance = moveDistance(move);
+    if (Math.max(distance.file, distance.rank) > 1) return false;
+  }
+  return true;
 }
 
 function filteredAllMoves() {
   const rules = activeRules();
-  return game.moves({ verbose: true }).filter((move) => {
-    if (moveTargetsKing(move)) return false;
-    if (rules.noCastle && (move.flags.includes("k") || move.flags.includes("q"))) return false;
-    if (rules.noEnPassant && move.flags.includes("e")) return false;
-    return true;
-  });
+  const moves = game.moves({ verbose: true });
+  const history = rules.noRepeatPiece ? game.history({ verbose: true }) : [];
+  const lastOwnMove = [...history].reverse().find((move) => move.color === game.turn());
+  const baseMoves = moves.filter((move) => moveAllowedByCustomRules(move, rules, false, lastOwnMove));
+  const mandatoryCaptureAvailable = baseMoves.some((move) => Boolean(move.captured) || move.flags.includes("e"));
+  return baseMoves.filter((move) => moveAllowedByCustomRules(move, rules, mandatoryCaptureAvailable, lastOwnMove));
+}
+
+function filteredMoves(square) {
+  return filteredAllMoves().filter((move) => move.from === square);
 }
 
 function isStalemateDraw() {
@@ -2861,7 +2893,15 @@ botSideSelect.addEventListener("change", () => {
   scheduleBotMove();
 });
 
-[ruleNoCastle, ruleNoEnPassant, ruleQueensOnly].forEach((input) => {
+[
+  ruleNoCastle,
+  ruleNoEnPassant,
+  ruleQueensOnly,
+  ruleOneStepSliders,
+  ruleNoPawnDouble,
+  ruleMandatoryCapture,
+  ruleNoRepeatPiece,
+].forEach((input) => {
   input.addEventListener("change", () => {
     selected = null;
     legalMoves = [];

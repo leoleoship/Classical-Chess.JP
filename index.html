@@ -157,6 +157,22 @@
               <input id="ruleQueensOnly" type="checkbox" />
               <span data-i18n="queensOnly">昇格はクイーンのみ</span>
             </label>
+            <label>
+              <input id="ruleOneStepSliders" type="checkbox" />
+              <span data-i18n="oneStepSliders">ルークとビショップは1マスだけ</span>
+            </label>
+            <label>
+              <input id="ruleNoPawnDouble" type="checkbox" />
+              <span data-i18n="noPawnDouble">ポーンの2マス移動なし</span>
+            </label>
+            <label>
+              <input id="ruleMandatoryCapture" type="checkbox" />
+              <span data-i18n="mandatoryCapture">取れる駒があれば必ず取る</span>
+            </label>
+            <label>
+              <input id="ruleNoRepeatPiece" type="checkbox" />
+              <span data-i18n="noRepeatPiece">同じ駒を連続で動かせない</span>
+            </label>
           </div>
 
           <div id="builderPanel" class="builder-panel" hidden>
@@ -290,6 +306,6 @@
 
     <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 
-    <script src="./app.js?v=20260610-forced-mate-rating"></script>
+    <script src="./app.js?v=20260610-expanded-custom-rules"></script>
   </body>
 </html>
