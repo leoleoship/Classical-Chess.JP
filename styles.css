@@ -1472,6 +1472,15 @@ h1 {
   line-height: 1.25;
 }
 
+.puzzle-prompt {
+  min-height: 18px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
 .puzzle-message {
   min-height: 18px;
 }
