@@ -378,6 +378,11 @@ const chessPuzzles = [
   { id: "intermediate-3", difficulty: "intermediate", name: { en: "Sixth-rank squeeze", ja: "6段目の締め付け" }, fen: "8/8/3Q1R2/8/8/4K2k/8/8 w - - 0 1", line: ["f6g6", "h3h4", "d6h2"] },
   { id: "intermediate-4", difficulty: "intermediate", name: { en: "Rook exchange net", ja: "ルーク交換の網" }, fen: "8/4K3/8/8/8/7R/1r5R/4k3 w - - 0 1", line: ["h2b2", "e1f1", "h3h1"] },
   { id: "intermediate-5", difficulty: "intermediate", name: { en: "Bishop screen", ja: "ビショップの遮蔽" }, fen: "K6k/8/3Q3q/8/B7/8/8/8 w - - 0 1", line: ["d6h6", "h8g8", "a4b3"] },
+  { id: "intermediate-6", difficulty: "intermediate", name: { en: "Pinned Mate", ja: "ピンのメイト" }, fen: "4k3/4b2N/7Q/8/6B1/8/8/K3R3 w - - 0 1", line: ["h6f8"] },
+  { id: "intermediate-7", difficulty: "intermediate", name: { en: "Pawn Push", ja: "ポーンの一押し" }, fen: "5k2/5Pp1/3PPPP1/8/8/8/8/K7 w - - 0 1", line: ["e6e7"] },
+  { id: "intermediate-8", difficulty: "intermediate", name: { en: "Queen's Lure", ja: "クイーンの誘い" }, fen: "6rk/5p1p/3P2Q1/6bN/8/8/1P6/K3R3 w - - 0 1", line: ["g6g8", "h8g8", "e1e8"] },
+  { id: "intermediate-9", difficulty: "intermediate", name: { en: "Forky Matey", ja: "フォークでメイト" }, fen: "7k/4N1pp/6Pq/4N3/8/8/8/K7 w - - 0 1", line: ["e5f7"] },
+  { id: "intermediate-10", difficulty: "intermediate", name: { en: "Open Mate", ja: "オープン・メイト" }, fen: "8/8/R7/7k/R7/8/8/KR6 w - - 0 1", line: ["b1b5"] },
 
   { id: "advanced-1", difficulty: "advanced", name: { en: "King-guided battery", ja: "キングが導くバッテリー" }, fen: "8/2R5/4k3/8/3K4/8/3R4/8 w - - 0 1", line: ["d4e4", "e6f6", "d2g2", "f6e6", "g2g6"] },
   { id: "advanced-2", difficulty: "advanced", name: { en: "Rook clearance", ja: "ルークのクリアランス" }, fen: "2RK4/8/8/8/1p6/k7/8/5Q2 w - - 0 1", line: ["c8c2", "a3a4", "f1a6", "a4b3", "a6a2"] },

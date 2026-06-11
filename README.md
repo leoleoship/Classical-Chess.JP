@@ -24,7 +24,7 @@ python3 -m http.server 4173
 - Advancedは相手の返しを、Grandmasterはさらに次の応手まで読む軽量ミニマックス探索
 - Bot戦では白・黒を選択可能
 - Bot戦ELO: 勝利 `+15`、敗北 `-10`
-- チェスパズルは合計35問。BeginnerとNoviceは各10問、Intermediate / Advanced / Grandmasterは各5問で、メイトイン1から複雑なサクリファイスまで収録
+- チェスパズルは合計40問。Beginner / Novice / Intermediateは各10問、Advanced / Grandmasterは各5問で、メイトイン1から複雑なサクリファイスまで収録
 - パズルでは相手の応手を自動再生し、難易度別の選択、動かす駒を示すヒント、クリア状況のブラウザ保存に対応
 - Supabase Realtimeを使ったオンライン人数表示、マッチング、指し手同期、投了
 - オンライン対局は再読み込み後も保存済みルームへ再接続し、相手から最新局面を同期
