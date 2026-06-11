@@ -187,7 +187,7 @@ const i18n = {
     onlineWin: "オンラインELOが15上がりました。",
     puzzleMode: "パズル",
     puzzleNumber: "パズル {number}",
-    puzzleObjective: "白番。{moves}手でメイト。",
+    puzzleObjective: "{side}番。{moves}手でメイト。",
     puzzleProgress: "{solved} / 25クリア",
     puzzleCorrect: "正解。そのまま続けてください。",
     puzzleHint: "ヒント",
@@ -304,7 +304,7 @@ const i18n = {
     onlineWin: "Online ELO increased by 15.",
     puzzleMode: "Puzzles",
     puzzleNumber: "Puzzle {number}",
-    puzzleObjective: "White to move. Mate in {moves}.",
+    puzzleObjective: "{side} to move. Mate in {moves}.",
     puzzleProgress: "{solved} / 25 solved",
     puzzleCorrect: "Correct. Keep going.",
     puzzleHint: "Hint",
@@ -351,11 +351,11 @@ const musicModes = {
 };
 
 const chessPuzzles = [
-  { id: "beginner-1", difficulty: "beginner", name: { en: "First-rank finish", ja: "最終ランクの一撃" }, fen: "5k2/3Q1p2/5R2/p5K1/8/8/8/8 w - - 0 1", line: ["d7f7"] },
-  { id: "beginner-2", difficulty: "beginner", name: { en: "Diagonal seal", ja: "斜線の封鎖" }, fen: "K6k/8/8/8/1Q6/8/2Br4/8 w - - 0 1", line: ["b4f8"] },
-  { id: "beginner-3", difficulty: "beginner", name: { en: "Rook lift", ja: "ルークの上昇" }, fen: "6k1/4Q3/8/2p5/R7/K1p5/8/8 w - - 0 1", line: ["a4a8"] },
-  { id: "beginner-4", difficulty: "beginner", name: { en: "Queen and knight", ja: "クイーンとナイト" }, fen: "8/3p4/8/3K2p1/8/4N3/7k/5Q2 w - - 0 1", line: ["f1g2"] },
-  { id: "beginner-5", difficulty: "beginner", name: { en: "Back-rank door", ja: "バックランクの扉" }, fen: "5k2/p1R5/8/6Q1/8/2Kp4/8/8 w - - 0 1", line: ["g5d8"] },
+  { id: "beginner-1", difficulty: "beginner", name: { en: "Back Rank Threat", ja: "バックランクの脅威" }, fen: "6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1", line: ["a1a8"] },
+  { id: "beginner-2", difficulty: "beginner", name: { en: "Promotion Selection", ja: "昇格の選択" }, fen: "6br/4PpkN/8/4K3/4B3/8/8/7R w - - 0 1", line: ["e7e8n"] },
+  { id: "beginner-3", difficulty: "beginner", name: { en: "Rook Blockade", ja: "ルークの封鎖" }, fen: "7k/7p/8/8/1B6/8/8/4K1R1 w - - 0 1", line: ["b4c3"] },
+  { id: "beginner-4", difficulty: "beginner", name: { en: "Smothered by Pieces", ja: "駒に囲まれて" }, fen: "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4", line: ["h5f7"] },
+  { id: "beginner-5", difficulty: "beginner", name: { en: "What a Fool", ja: "なんて愚かな手" }, fen: "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2", line: ["d8h4"] },
 
   { id: "novice-1", difficulty: "novice", name: { en: "Queen bridge", ja: "クイーンの橋" }, fen: "8/1k5r/R7/8/1K6/2Q5/8/8 w - - 0 1", line: ["c3c6", "b7b8", "a6a8"] },
   { id: "novice-2", difficulty: "novice", name: { en: "Long rook turn", ja: "長いルークの旋回" }, fen: "8/8/8/7R/8/K7/8/1k3B2 w - - 0 1", line: ["h5c5", "b1a1", "c5c1"] },
@@ -408,7 +408,7 @@ let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
 let puzzleHintSquare = null;
-let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV2") || "[]"));
+let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV3") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
 let enPassantBoardSquares = [];
@@ -1166,12 +1166,16 @@ function puzzleMoveCount(puzzle = currentPuzzle()) {
   return Math.ceil(puzzle.line.length / 2);
 }
 
+function puzzlePlayerColor(puzzle = currentPuzzle()) {
+  return puzzle.fen.split(" ")[1] === "b" ? "b" : "w";
+}
+
 function puzzleMoveKey(move) {
   return `${move.from}${move.to}${move.promotion || ""}`;
 }
 
 function saveSolvedPuzzles() {
-  localStorage.setItem("chessJpSolvedPuzzlesV2", JSON.stringify([...solvedPuzzles]));
+  localStorage.setItem("chessJpSolvedPuzzlesV3", JSON.stringify([...solvedPuzzles]));
 }
 
 function renderPuzzlePanel() {
@@ -1195,7 +1199,10 @@ function renderPuzzlePanel() {
   puzzleProgress.textContent = t("puzzleProgress", { solved: solvedPuzzles.size });
   puzzleNumber.textContent = t("puzzleNumber", { number });
   puzzleTitle.textContent = puzzle.name[language] || puzzle.name.en;
-  puzzleObjective.textContent = t("puzzleObjective", { moves: puzzleMoveCount(puzzle) });
+  puzzleObjective.textContent = t("puzzleObjective", {
+    moves: puzzleMoveCount(puzzle),
+    side: t(puzzlePlayerColor(puzzle) === "w" ? "white" : "black"),
+  });
   puzzleHint.disabled = puzzleThinking || puzzleSolved || puzzlePly % 2 === 1;
   puzzleNext.disabled = !puzzleSolved;
 }
@@ -2797,7 +2804,12 @@ function updateStatus() {
   if (mode === "puzzle") {
     if (puzzleSolved) statusEl.textContent = t("puzzleSolved");
     else if (puzzleThinking) statusEl.textContent = t("puzzleReply");
-    else statusEl.textContent = t("puzzleObjective", { moves: puzzleMoveCount() });
+    else {
+      statusEl.textContent = t("puzzleObjective", {
+        moves: puzzleMoveCount(),
+        side: t(puzzlePlayerColor() === "w" ? "white" : "black"),
+      });
+    }
     fenInput.value = game.fen();
     return;
   }
