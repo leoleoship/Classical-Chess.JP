@@ -401,12 +401,50 @@ const chessPuzzles = [
   { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Bishop clearance", ja: "ビショップのクリアランス" }, fen: "8/8/8/1k1K2R1/8/R1b5/8/8 w - - 0 1", line: ["a3c3", "b5b6", "c3b3", "b6c7", "g5g8", "c7d7", "b3b7"] },
   { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Knight geometry", ja: "ナイトの幾何学" }, fen: "1k6/7N/8/2K3R1/8/8/2n5/8 w - - 0 1", line: ["c5b6", "b8c8", "h7f6", "c8d8", "g5e5", "d8c8", "e5e8"] },
   { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "Knight geometry", ja: "ナイトの幾何学" }, fen: "2N5/1k6/5n2/8/B7/8/7Q/3K4 w - - 0 1", line: ["h2d6", "b7c8", "a4c6", "f6g8", "d6d7", "c8b8", "d7b7"] },
-  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Sacrifice a rook, a knight, and the queen. The surviving knight delivers the smothered mate.", ja: "ルーク、ナイト、クイーンを順番に犠牲にし、残ったナイトでスマザードメイトを決めよう。" }, fen: "rr1q1rk1/6pp/2N5/5N2/8/3Q4/8/1RK5 w - - 0 1", line: ["b1b8", "a8b8", "c6e7", "d8e7", "f5h6", "g8h8", "d3d5", "e7d6", "d5g8", "f8g8", "h6f7"] },
+  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Sacrifice a rook, a knight, and the queen. The surviving knight delivers the smothered mate.", ja: "ルーク、ナイト、クイーンを順番に犠牲にし、残ったナイトでスマザードメイトを決めよう。" }, fen: "rr1q1r1k/6pp/2N4N/8/2Q5/8/8/1RK5 w - - 0 1", line: ["b1b8", "a8b8", "c6e7", "d8e7", "c4d5", "e7d6", "d5g8", "f8g8", "h6f7"] },
   { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "A Quiet Threat", ja: "静かな脅威" }, prompt: { en: "Offer the checking bishop. Its capture opens the e-file, allowing the rook and queen to create mate in two.", ja: "チェックするビショップをあえて取らせよう。その捕獲でeファイルが開き、ルークとクイーンによるメイトイン2が生まれます。" }, fen: "4k3/4rppp/p7/8/8/5Q2/4B3/K3R3 w - - 0 1", line: ["e2b5", "a6b5", "e1e7", "e8f8", "f3f7"] },
-  { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook! (Featuring GothamChess)", ja: "ザ・ルーク！（GothamChess出演）" }, prompt: { en: "Sacrifice both rooks, build the queen sacrifice, and let the knight close the smothered mating net.", ja: "2本のルークを両方犠牲にし、さらにクイーンを捨てて、最後はナイトで窒息メイトを完成させよう。" }, fen: "r2q1rk1/5ppp/8/5N2/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "f5h6", "g8h8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"] },
+  { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook! (Featuring GothamChess)", ja: "ザ・ルーク！（GothamChess出演）" }, prompt: { en: "Sacrifice both rooks, build the queen sacrifice, and let the knight close the smothered mating net.", ja: "2本のルークを両方犠牲にし、さらにクイーンを捨てて、最後はナイトで窒息メイトを完成させよう。" }, fen: "r2q1r1k/5ppp/7N/8/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"] },
   { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Sniper Bishop", ja: "スナイパー・ビショップ" }, prompt: { en: "Set the bishop on the long diagonal, then snipe g7. The second bishop protects it while the king's own knight and pawn seal every exit.", ja: "ビショップを長い対角線に配置してg7を狙撃。もう1枚のビショップが守り、相手のナイトとポーンがキングの逃げ道を塞ぎます。" }, fen: "5Bnk/p5pp/8/8/8/8/8/B3K3 w - - 0 1", line: ["a1c3", "a7a6", "c3g7"] },
-  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, sacrifice the knight afterward, then finish with the queen.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、その後ナイトを犠牲にしてクイーンでメイトしよう。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g7e7", "h8g8", "e7g7", "g8h8", "g5f7", "e8f7", "d3h7"] },
+  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, sacrifice the knight afterward, then finish with the queen.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、その後ナイトを犠牲にしてクイーンでメイトしよう。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g5f7", "e8f7", "d3h7"] },
 ];
+
+const extendedPuzzleOpenings = {
+  "intermediate-1": ["1k6/3K4/8/8/8/8/B7/2Q1r3 w - - 0 1", "d7d8", "e1e4"],
+  "intermediate-2": ["8/4k3/1Q6/8/7q/1K6/8/2R5 w - - 0 1", "c1c7", "e7f8"],
+  "intermediate-3": ["8/8/3Q4/8/5R2/4K3/7k/8 w - - 0 1", "f4f6", "h2h3"],
+  "intermediate-4": ["8/4K3/8/8/8/7R/1r1k4/7R w - - 0 1", "h1h2", "d2e1"],
+  "intermediate-5": ["8/K6k/3Q3q/8/B7/8/8/8 w - - 0 1", "a7a8", "h7h8"],
+  "intermediate-6": ["8/p2kb2N/7Q/8/8/8/K7/R2B4 w - - 0 1", "d1g4", "d7e8"],
+  "intermediate-7": ["8/5PkP/1P6/5PP1/8/8/P1p2p2/4K3 w - - 0 1", "e1f1", "g7h8"],
+  "intermediate-8": ["3b2rk/5p1p/3P4/7N/8/8/1P6/KQ2R3 w - - 0 1", "b1g6", "d8g5"],
+  "intermediate-9": ["6k1/5N2/8/8/2Q2q2/8/K7/8 w - - 0 1", "f7e5", "g8h8"],
+  "intermediate-10": ["8/8/2R1R3/6k1/P3p3/8/3K4/5R2 w - - 0 1", "f1f8", "g5h5"],
+  "advanced-1": ["8/3k4/8/8/3K4/8/3R4/2R5 w - - 0 1", "c1c7", "d7e6"],
+  "advanced-2": ["2R5/2K5/8/8/1p6/8/k7/5Q2 w - - 0 1", "c7d8", "a2a3"],
+  "advanced-3": ["5k2/6R1/3K3B/8/8/4p3/8/8 w - - 0 1", "g7b7", "f8e8"],
+  "advanced-4": ["8/8/2r5/2B5/6K1/6Q1/8/k7 w - - 0 1", "g4h5", "a1b1"],
+  "advanced-5": ["k7/8/4K3/8/4R2R/4p3/8/8 w - - 0 1", "e6f7", "a8a7"],
+  "advanced-6": ["5r1k/4p1pp/8/r1BQNP2/2B5/6r1/n2r4/K5b1 w - - 0 1", "e5f7", "h8g8"],
+  "advanced-7": ["rq2kbnr/ppp2ppp/2np4/4p3/4P1b1/2N2N2/PPPP1PPP/R1BQKB1R w - - 4 6", "f1c4", "b8d8"],
+  "advanced-8": ["4qrk1/5ppp/5P2/8/p7/8/R7/K2QR3 w - - 0 1", "a2e2", "e8d8"],
+  "advanced-9": ["r4rk1/5ppp/8/8/8/8/B7/1KQ1R3 w - - 0 1", "c1c4", "f8e8"],
+  "advanced-10": ["4b1k1/6p1/8/8/1N6/R7/8/1K6 w - - 0 1", "b4c6", "e8f7"],
+  "grandmaster-1": ["3b4/5R2/4k3/8/8/8/4K3/1Q6 w - - 0 1", "b1f5", "e6d6"],
+  "grandmaster-2": ["k7/8/4P1B1/5R2/K7/8/8/8 w - - 0 1", "g6h7", "a8b8"],
+  "grandmaster-3": ["8/8/8/3K2R1/k7/1Rb5/8/8 w - - 0 1", "b3a3", "a4b5"],
+  "grandmaster-4": ["1k6/8/5N2/2K3R1/8/8/8/n7 w - - 0 1", "f6h7", "a1c2"],
+  "grandmaster-5": ["2N5/8/2k2n2/8/8/8/2B4Q/3K4 w - - 0 1", "c2a4", "c6b7"],
+  "grandmaster-7": ["r3k3/5ppp/p7/8/8/8/4B3/K2R1Q2 w - - 0 1", "d1e1", "a8a7", "f1f3", "a7e7"],
+  "grandmaster-9": ["7k/p5pp/7n/8/8/B7/8/B5K1 w - - 0 1", "g1f1", "h6g8", "f1e1", "g8h6", "a3f8", "h6g8"],
+  "grandmaster-10": ["4q1k1/4pr1R/8/6N1/8/2BQ4/8/K7 w - - 0 1", "h7g7", "g8h8"],
+};
+
+chessPuzzles.forEach((puzzle) => {
+  const opening = extendedPuzzleOpenings[puzzle.id];
+  if (!opening) return;
+  puzzle.fen = opening[0];
+  puzzle.line = [...opening.slice(1), ...puzzle.line];
+});
 
 const checkmateEffects = [
   "confetti",
@@ -434,7 +472,7 @@ let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
 let puzzleHintSquare = null;
-let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV8") || "[]"));
+let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV9") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
 let enPassantBoardSquares = [];
@@ -1201,7 +1239,7 @@ function puzzleMoveKey(move) {
 }
 
 function saveSolvedPuzzles() {
-  localStorage.setItem("chessJpSolvedPuzzlesV8", JSON.stringify([...solvedPuzzles]));
+  localStorage.setItem("chessJpSolvedPuzzlesV9", JSON.stringify([...solvedPuzzles]));
 }
 
 function renderPuzzlePanel() {
