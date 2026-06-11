@@ -378,17 +378,22 @@ const chessPuzzles = [
   { id: "intermediate-3", difficulty: "intermediate", name: { en: "Sixth-rank squeeze", ja: "6段目の締め付け" }, fen: "8/8/3Q1R2/8/8/4K2k/8/8 w - - 0 1", line: ["f6g6", "h3h4", "d6h2"] },
   { id: "intermediate-4", difficulty: "intermediate", name: { en: "Rook exchange net", ja: "ルーク交換の網" }, fen: "8/4K3/8/8/8/7R/1r5R/4k3 w - - 0 1", line: ["h2b2", "e1f1", "h3h1"] },
   { id: "intermediate-5", difficulty: "intermediate", name: { en: "Bishop screen", ja: "ビショップの遮蔽" }, fen: "K6k/8/3Q3q/8/B7/8/8/8 w - - 0 1", line: ["d6h6", "h8g8", "a4b3"] },
-  { id: "intermediate-6", difficulty: "intermediate", name: { en: "Pinned Mate", ja: "ピンのメイト" }, fen: "4k3/4b2N/7Q/8/6B1/8/8/K3R3 w - - 0 1", line: ["h6f8"] },
-  { id: "intermediate-7", difficulty: "intermediate", name: { en: "Pawn Push", ja: "ポーンの一押し" }, fen: "5k2/5Pp1/3PPPP1/8/8/8/8/K7 w - - 0 1", line: ["e6e7"] },
+  { id: "intermediate-6", difficulty: "intermediate", name: { en: "Pinned Mate", ja: "ピンのメイト" }, fen: "7k/1Q6/3p1R2/3b4/pB6/8/3K4/8 w - - 0 1", line: ["f6f8", "d5g8", "b4c3"] },
+  { id: "intermediate-7", difficulty: "intermediate", name: { en: "Pawn Push", ja: "ポーンの一押し" }, fen: "7k/5P1P/1P6/5PP1/8/8/P1p2p2/5K2 w - - 0 1", line: ["f7f8q", "h8h7", "g5g6"] },
   { id: "intermediate-8", difficulty: "intermediate", name: { en: "Queen's Lure", ja: "クイーンの誘い" }, fen: "6rk/5p1p/3P2Q1/6bN/8/8/1P6/K3R3 w - - 0 1", line: ["g6g8", "h8g8", "e1e8"] },
-  { id: "intermediate-9", difficulty: "intermediate", name: { en: "Forky Matey", ja: "フォークでメイト" }, fen: "7k/4N1pp/6Pq/4N3/8/8/8/K7 w - - 0 1", line: ["e5f7"] },
-  { id: "intermediate-10", difficulty: "intermediate", name: { en: "Open Mate", ja: "オープン・メイト" }, fen: "8/8/R7/7k/R7/8/8/KR6 w - - 0 1", line: ["b1b5"] },
+  { id: "intermediate-9", difficulty: "intermediate", name: { en: "Forky Matey", ja: "フォークでメイト" }, fen: "7k/4Npp1/6P1/4Nq2/8/8/K7/R7 w - - 0 1", line: ["a1h1", "f5h5", "e5f7"] },
+  { id: "intermediate-10", difficulty: "intermediate", name: { en: "Open Mate", ja: "オープン・メイト" }, fen: "5R2/8/2R1R3/7k/P3p3/8/3K4/8 w - - 0 1", line: ["e6h6", "h5g4", "c6g6"] },
 
   { id: "advanced-1", difficulty: "advanced", name: { en: "King-guided battery", ja: "キングが導くバッテリー" }, fen: "8/2R5/4k3/8/3K4/8/3R4/8 w - - 0 1", line: ["d4e4", "e6f6", "d2g2", "f6e6", "g2g6"] },
   { id: "advanced-2", difficulty: "advanced", name: { en: "Rook clearance", ja: "ルークのクリアランス" }, fen: "2RK4/8/8/8/1p6/k7/8/5Q2 w - - 0 1", line: ["c8c2", "a3a4", "f1a6", "a4b3", "a6a2"] },
   { id: "advanced-3", difficulty: "advanced", name: { en: "Bishop relay", ja: "ビショップのリレー" }, fen: "4k3/1R6/3K3B/8/8/4p3/8/8 w - - 0 1", line: ["d6e6", "e8d8", "h6f4", "d8e8", "b7b8"] },
   { id: "advanced-4", difficulty: "advanced", name: { en: "Bishop interference", ja: "ビショップの干渉" }, fen: "8/8/2r5/2B4K/8/6Q1/8/1k6 w - - 0 1", line: ["g3b3", "b1a1", "c5d4", "c6c3", "d4c3"] },
   { id: "advanced-5", difficulty: "advanced", name: { en: "Split-rook pursuit", ja: "二方向のルーク追撃" }, fen: "8/k4K2/8/8/4R2R/4p3/8/8 w - - 0 1", line: ["h4h6", "a7b8", "e4e7", "b8c8", "h6h8"] },
+  { id: "advanced-6", difficulty: "advanced", name: { en: "Smothering King", ja: "キングを窒息させろ" }, fen: "5rk1/4pNpp/8/r1BQ1P2/2B5/6r1/n2r4/K5b1 w - - 0 1", line: ["f7h6", "g8h8", "d5g8", "f8g8", "h6f7"] },
+  { id: "advanced-7", difficulty: "advanced", name: { en: "Two Knights and a Bishop", ja: "2頭のナイトとビショップ" }, fen: "r2qkbnr/ppp2ppp/2np4/4p3/2B1P1b1/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 6", line: ["f3e5", "g4d1", "c4f7", "e8e7", "c3d5"] },
+  { id: "advanced-8", difficulty: "advanced", name: { en: "Fair Trade...?", ja: "公平な交換…？" }, fen: "3q1rk1/5ppp/5P2/8/p7/8/4R3/K2QR3 w - - 0 1", line: ["d1d8", "f8d8", "e2e8", "d8e8", "e1e8"] },
+  { id: "advanced-9", difficulty: "advanced", name: { en: "Remove the Defender", ja: "守備駒を排除せよ" }, fen: "r3r1k1/5ppp/8/8/2Q5/8/8/1K2R3 w - - 0 1", line: ["e1e8", "a8e8", "c4f7", "g8h8", "f7e8"] },
+  { id: "advanced-10", difficulty: "advanced", name: { en: "Anastasia's Power", ja: "アナスタシアの力" }, fen: "6k1/6p1/2N5/8/6q1/R7/K7/8 w - - 0 1", line: ["c6e7", "g8h7", "a3h3", "g4h5", "h3h5"] },
 
   { id: "grandmaster-1", difficulty: "grandmaster", name: { en: "Rook clearance maze", ja: "ルークのクリアランス迷路" }, fen: "3b4/5R2/3k4/5Q2/8/8/4K3/8 w - - 0 1", line: ["f7d7", "d6c6", "f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
   { id: "grandmaster-2", difficulty: "grandmaster", name: { en: "Promotion corridor", ja: "昇格への回廊" }, fen: "1k6/7B/4P3/5R2/K7/8/8/8 w - - 0 1", line: ["f5f7", "b8c8", "f7d7", "c8b8", "e6e7", "b8c8", "e7e8q"] },
@@ -423,7 +428,7 @@ let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
 let puzzleHintSquare = null;
-let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV5") || "[]"));
+let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV6") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
 let enPassantBoardSquares = [];
@@ -1190,7 +1195,7 @@ function puzzleMoveKey(move) {
 }
 
 function saveSolvedPuzzles() {
-  localStorage.setItem("chessJpSolvedPuzzlesV5", JSON.stringify([...solvedPuzzles]));
+  localStorage.setItem("chessJpSolvedPuzzlesV6", JSON.stringify([...solvedPuzzles]));
 }
 
 function renderPuzzlePanel() {
