@@ -401,6 +401,11 @@ const chessPuzzles = [
   { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Bishop clearance", ja: "ビショップのクリアランス" }, fen: "8/8/8/1k1K2R1/8/R1b5/8/8 w - - 0 1", line: ["a3c3", "b5b6", "c3b3", "b6c7", "g5g8", "c7d7", "b3b7"] },
   { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Knight geometry", ja: "ナイトの幾何学" }, fen: "1k6/7N/8/2K3R1/8/8/2n5/8 w - - 0 1", line: ["c5b6", "b8c8", "h7f6", "c8d8", "g5e5", "d8c8", "e5e8"] },
   { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "Knight geometry", ja: "ナイトの幾何学" }, fen: "2N5/1k6/5n2/8/B7/8/7Q/3K4 w - - 0 1", line: ["h2d6", "b7c8", "a4c6", "f6g8", "d6d7", "c8b8", "d7b7"] },
+  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Sacrifice a rook, a knight, and the queen. The surviving knight delivers the smothered mate.", ja: "ルーク、ナイト、クイーンを順番に犠牲にし、残ったナイトでスマザードメイトを決めよう。" }, fen: "rr1q1rk1/6pp/2N5/5N2/8/3Q4/8/1RK5 w - - 0 1", line: ["b1b8", "a8b8", "c6e7", "d8e7", "f5h6", "g8h8", "d3d5", "e7d6", "d5g8", "f8g8", "h6f7"] },
+  { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "A Quiet Threat", ja: "静かな脅威" }, prompt: { en: "Offer the checking bishop. Its capture opens the e-file, allowing the rook and queen to create mate in two.", ja: "チェックするビショップをあえて取らせよう。その捕獲でeファイルが開き、ルークとクイーンによるメイトイン2が生まれます。" }, fen: "4k3/4rppp/p7/8/8/5Q2/4B3/K3R3 w - - 0 1", line: ["e2b5", "a6b5", "e1e7", "e8f8", "f3f7"] },
+  { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rocking Rook!", ja: "ロッキング・ルーク！" }, prompt: { en: "Sacrifice both rooks, build the queen sacrifice, and let the knight close the smothered mating net.", ja: "2本のルークを両方犠牲にし、さらにクイーンを捨てて、最後はナイトで窒息メイトを完成させよう。" }, fen: "r2q1rk1/5ppp/8/5N2/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "f5h6", "g8h8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"] },
+  { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Sniper Bishop", ja: "スナイパー・ビショップ" }, prompt: { en: "Set the bishop on the long diagonal, then snipe g7. The second bishop protects it while the king's own knight and pawn seal every exit.", ja: "ビショップを長い対角線に配置してg7を狙撃。もう1枚のビショップが守り、相手のナイトとポーンがキングの逃げ道を塞ぎます。" }, fen: "5Bnk/p5pp/8/8/8/8/8/B3K3 w - - 0 1", line: ["a1c3", "a7a6", "c3g7"] },
+  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, sacrifice the knight afterward, then finish with the queen.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、その後ナイトを犠牲にしてクイーンでメイトしよう。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g7e7", "h8g8", "e7g7", "g8h8", "g5f7", "e8f7", "d3h7"] },
 ];
 
 const checkmateEffects = [
@@ -429,7 +434,7 @@ let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
 let puzzleHintSquare = null;
-let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV7") || "[]"));
+let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV8") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
 let enPassantBoardSquares = [];
@@ -1196,7 +1201,7 @@ function puzzleMoveKey(move) {
 }
 
 function saveSolvedPuzzles() {
-  localStorage.setItem("chessJpSolvedPuzzlesV7", JSON.stringify([...solvedPuzzles]));
+  localStorage.setItem("chessJpSolvedPuzzlesV8", JSON.stringify([...solvedPuzzles]));
 }
 
 function renderPuzzlePanel() {
