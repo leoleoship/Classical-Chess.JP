@@ -357,11 +357,11 @@ const chessPuzzles = [
   { id: "beginner-4", difficulty: "beginner", name: { en: "Smothered by Pieces", ja: "駒に囲まれて" }, fen: "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4", line: ["h5f7"] },
   { id: "beginner-5", difficulty: "beginner", name: { en: "What a Fool", ja: "なんて愚かな手" }, fen: "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2", line: ["d8h4"] },
 
-  { id: "novice-1", difficulty: "novice", name: { en: "Queen bridge", ja: "クイーンの橋" }, fen: "8/1k5r/R7/8/1K6/2Q5/8/8 w - - 0 1", line: ["c3c6", "b7b8", "a6a8"] },
-  { id: "novice-2", difficulty: "novice", name: { en: "Long rook turn", ja: "長いルークの旋回" }, fen: "8/8/8/7R/8/K7/8/1k3B2 w - - 0 1", line: ["h5c5", "b1a1", "c5c1"] },
-  { id: "novice-3", difficulty: "novice", name: { en: "Queen descent", ja: "クイーンの降下" }, fen: "8/1p6/3Q4/8/8/3p1K2/8/4k3 w - - 0 1", line: ["d6d3", "b7b6", "d3e2"] },
-  { id: "novice-4", difficulty: "novice", name: { en: "Knight blockade", ja: "ナイトの封鎖" }, fen: "8/8/1n6/8/1N6/2R2K2/8/7k w - - 0 1", line: ["f3g3", "b6c8", "c3c1"] },
-  { id: "novice-5", difficulty: "novice", name: { en: "Rook shelter", ja: "ルークの隠れ家" }, fen: "4K3/7k/7b/8/7R/8/8/8 w - - 0 1", line: ["e8f7", "h7h8", "h4h6"] },
+  { id: "novice-1", difficulty: "novice", name: { en: "The Amazing Opera", ja: "驚異のオペラ" }, fen: "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16", line: ["b3b8", "d7b8", "d1d8"] },
+  { id: "novice-2", difficulty: "novice", name: { en: "Sacrifice, Lure, and Mate!", ja: "犠牲、誘い、そしてメイト！" }, fen: "5nkr/5N2/4pKBp/8/2n5/8/4r3/6R1 w - - 0 1", line: ["g6h7", "g8h7", "g1g7"] },
+  { id: "novice-3", difficulty: "novice", name: { en: "Deflector", ja: "守備駒をそらせ" }, fen: "3qr1k1/5ppp/8/8/8/8/4Q3/4R1K1 w - - 0 1", line: ["e2e8", "d8e8", "e1e8"] },
+  { id: "novice-4", difficulty: "novice", name: { en: "Counter Check!", ja: "カウンターチェック！" }, fen: "3qk1r1/1N3p1N/8/8/1B6/8/4B3/4R1K1 w - - 0 1", line: ["e2g4", "d8e7", "e1e7"] },
+  { id: "novice-5", difficulty: "novice", name: { en: "Railroad to Victory", ja: "勝利へのレール" }, fen: "1k6/8/8/7Q/8/8/8/4K2R w - - 0 1", line: ["h5f7", "b8c8", "h1h8"] },
 
   { id: "intermediate-1", difficulty: "intermediate", name: { en: "Queen bridgework", ja: "クイーンの橋渡し" }, fen: "1k1K4/8/8/8/4r3/8/B7/2Q5 w - - 0 1", line: ["c1c7", "b8a8", "a2d5"] },
   { id: "intermediate-2", difficulty: "intermediate", name: { en: "Queen deflection", ja: "クイーンのそらし" }, fen: "5k2/2R5/1Q6/8/7q/1K6/8/8 w - - 0 1", line: ["b6b8", "h4d8", "b8d8"] },
@@ -408,7 +408,7 @@ let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
 let puzzleHintSquare = null;
-let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV3") || "[]"));
+let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV4") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
 let enPassantBoardSquares = [];
@@ -1175,7 +1175,7 @@ function puzzleMoveKey(move) {
 }
 
 function saveSolvedPuzzles() {
-  localStorage.setItem("chessJpSolvedPuzzlesV3", JSON.stringify([...solvedPuzzles]));
+  localStorage.setItem("chessJpSolvedPuzzlesV4", JSON.stringify([...solvedPuzzles]));
 }
 
 function renderPuzzlePanel() {
