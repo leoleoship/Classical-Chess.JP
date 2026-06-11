@@ -37,6 +37,7 @@ const puzzleNumber = document.querySelector("#puzzleNumber");
 const puzzleTitle = document.querySelector("#puzzleTitle");
 const puzzleObjective = document.querySelector("#puzzleObjective");
 const puzzleMessage = document.querySelector("#puzzleMessage");
+const puzzleHint = document.querySelector("#puzzleHint");
 const puzzleRestart = document.querySelector("#puzzleRestart");
 const puzzleNext = document.querySelector("#puzzleNext");
 const customRules = document.querySelector("#customRules");
@@ -189,6 +190,8 @@ const i18n = {
     puzzleObjective: "白番。{moves}手でメイト。",
     puzzleProgress: "{solved} / 25クリア",
     puzzleCorrect: "正解。そのまま続けてください。",
+    puzzleHint: "ヒント",
+    puzzleHintShown: "動かす駒を盤上で光らせました。",
     puzzleReply: "相手が応手しています...",
     puzzleSolved: "クリア！ チェックメイトです。",
     puzzleWrong: "その手ではありません。局面を戻します。",
@@ -304,6 +307,8 @@ const i18n = {
     puzzleObjective: "White to move. Mate in {moves}.",
     puzzleProgress: "{solved} / 25 solved",
     puzzleCorrect: "Correct. Keep going.",
+    puzzleHint: "Hint",
+    puzzleHintShown: "The piece to move is highlighted on the board.",
     puzzleReply: "Opponent is replying...",
     puzzleSolved: "Solved! Checkmate.",
     puzzleWrong: "That is not the move. Resetting the position.",
@@ -402,6 +407,7 @@ let puzzlePly = 0;
 let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
+let puzzleHintSquare = null;
 let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV2") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
@@ -1190,6 +1196,7 @@ function renderPuzzlePanel() {
   puzzleNumber.textContent = t("puzzleNumber", { number });
   puzzleTitle.textContent = puzzle.name[language] || puzzle.name.en;
   puzzleObjective.textContent = t("puzzleObjective", { moves: puzzleMoveCount(puzzle) });
+  puzzleHint.disabled = puzzleThinking || puzzleSolved || puzzlePly % 2 === 1;
   puzzleNext.disabled = !puzzleSolved;
 }
 
@@ -1204,6 +1211,7 @@ function loadPuzzle(index = puzzleIndex) {
   puzzlePly = 0;
   puzzleThinking = false;
   puzzleSolved = false;
+  puzzleHintSquare = null;
   flipped = game.turn() === "b";
   puzzleMessage.textContent = "";
   puzzleMessage.className = "puzzle-message";
@@ -1224,6 +1232,7 @@ function finishPuzzle(result) {
 }
 
 function applyPuzzlePly(move, playerMove) {
+  puzzleHintSquare = null;
   const result = game.move(move);
   if (!result) return null;
   markTacticalMarkersDirty();
@@ -1267,6 +1276,7 @@ function schedulePuzzleReply() {
 function playPuzzleMove(move) {
   const expected = currentPuzzle().line[puzzlePly];
   if (puzzleMoveKey(move) !== expected) {
+    puzzleHintSquare = null;
     selected = null;
     legalMoves = [];
     puzzleMessage.textContent = t("puzzleWrong");
@@ -1279,6 +1289,16 @@ function playPuzzleMove(move) {
 
   const result = applyPuzzlePly(move, true);
   if (result && !puzzleSolved) schedulePuzzleReply();
+}
+
+function showPuzzleHint() {
+  if (mode !== "puzzle" || puzzleThinking || puzzleSolved || puzzlePly % 2 === 1) return;
+  const expected = currentPuzzle().line[puzzlePly];
+  if (!expected) return;
+  puzzleHintSquare = expected.slice(0, 2);
+  puzzleMessage.textContent = t("puzzleHintShown");
+  puzzleMessage.className = "puzzle-message hint";
+  render();
 }
 
 function selectNextPuzzle() {
@@ -2472,6 +2492,7 @@ function renderBoard() {
       }
 
       if (!builder && selected === square) button.classList.add("selected");
+      if (!builder && mode === "puzzle" && puzzleHintSquare === square) button.classList.add("puzzle-hint");
       if (!builder && (lastMove?.from === square || lastMove?.to === square)) button.classList.add("last");
       if (!builder && legalMoves.some((move) => move.to === square)) {
         button.classList.add(piece ? "capture" : "legal");
@@ -3052,6 +3073,7 @@ puzzlePicker.addEventListener("click", (event) => {
 });
 
 puzzleRestart.addEventListener("click", () => loadPuzzle(puzzleIndex));
+puzzleHint.addEventListener("click", showPuzzleHint);
 puzzleNext.addEventListener("click", selectNextPuzzle);
 
 piecePalette.addEventListener("click", (event) => {
