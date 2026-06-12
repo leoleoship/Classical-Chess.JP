@@ -370,78 +370,43 @@ const chessPuzzles = [
   { id: "novice-5", difficulty: "novice", name: { en: "Railroad to Victory", ja: "勝利へのレール" }, fen: "1k6/8/8/7Q/8/8/8/4K2R w - - 0 1", line: ["h5f7", "b8c8", "h1h8"] },
   { id: "novice-6", difficulty: "novice", name: { en: "Queen Bridge", ja: "クイーンの橋" }, fen: "8/1k5r/R7/8/1K6/2Q5/8/8 w - - 0 1", line: ["c3c6", "b7b8", "a6a8"] },
   { id: "novice-7", difficulty: "novice", name: { en: "Long Rook Turn", ja: "長いルークの旋回" }, fen: "8/8/8/7R/8/K7/8/1k3B2 w - - 0 1", line: ["h5c5", "b1a1", "c5c1"] },
-  { id: "novice-8", difficulty: "novice", name: { en: "Queen Descent", ja: "クイーンの降下" }, fen: "8/1p6/3Q4/8/8/3p1K2/8/4k3 w - - 0 1", line: ["d6d3", "b7b6", "d3e2"] },
-  { id: "novice-9", difficulty: "novice", name: { en: "Knight Blockade", ja: "ナイトの封鎖" }, fen: "8/8/1n6/8/1N6/2R2K2/8/7k w - - 0 1", line: ["f3g3", "b6c8", "c3c1"] },
+  { id: "novice-8", difficulty: "novice", name: { en: "Queen Descent", ja: "クイーンの降下" }, fen: "8/1p6/3Q4/8/8/3p1K2/8/4k3 w - - 0 1", line: ["d6d3", "b7b5", "d3e2"] },
+  { id: "novice-9", difficulty: "novice", name: { en: "Knight Blockade", ja: "ナイトの封鎖" }, fen: "8/8/1n6/8/1N6/2R2K2/8/7k w - - 0 1", line: ["f3g3", "b6c4", "c3c1"] },
   { id: "novice-10", difficulty: "novice", name: { en: "Rook Shelter", ja: "ルークの隠れ家" }, fen: "4K3/7k/7b/8/7R/8/8/8 w - - 0 1", line: ["e8f7", "h7h8", "h4h6"] },
 
-  { id: "intermediate-1", difficulty: "intermediate", name: { en: "Queen bridgework", ja: "クイーンの橋渡し" }, fen: "1k1K4/8/8/8/4r3/8/B7/2Q5 w - - 0 1", line: ["c1c7", "b8a8", "a2d5"] },
-  { id: "intermediate-2", difficulty: "intermediate", name: { en: "Queen deflection", ja: "クイーンのそらし" }, fen: "5k2/2R5/1Q6/8/7q/1K6/8/8 w - - 0 1", line: ["b6b8", "h4d8", "b8d8"] },
-  { id: "intermediate-3", difficulty: "intermediate", name: { en: "Sixth-rank squeeze", ja: "6段目の締め付け" }, fen: "8/8/3Q1R2/8/8/4K2k/8/8 w - - 0 1", line: ["f6g6", "h3h4", "d6h2"] },
-  { id: "intermediate-4", difficulty: "intermediate", name: { en: "Rook exchange net", ja: "ルーク交換の網" }, fen: "8/4K3/8/8/8/7R/1r5R/4k3 w - - 0 1", line: ["h2b2", "e1f1", "h3h1"] },
-  { id: "intermediate-5", difficulty: "intermediate", name: { en: "Bishop screen", ja: "ビショップの遮蔽" }, fen: "K6k/8/3Q3q/8/B7/8/8/8 w - - 0 1", line: ["d6h6", "h8g8", "a4b3"] },
-  { id: "intermediate-6", difficulty: "intermediate", name: { en: "Pinned Mate", ja: "ピンのメイト" }, prompt: { en: "Pin the bishop to its king, then mate on f8. Without the pin, the bishop could capture the mating queen.", ja: "ビショップをキングにピンしてからf8でメイト。ピンがなければ、ビショップはメイトするクイーンを取れます。" }, fen: "4k3/p3b2N/7Q/8/6B1/8/K7/R7 w - - 0 1", line: ["a1e1", "a7a6", "h6f8"] },
-  { id: "intermediate-7", difficulty: "intermediate", name: { en: "Pawn Push", ja: "ポーンの一押し" }, fen: "7k/5P1P/1P6/5PP1/8/8/P1p2p2/5K2 w - - 0 1", line: ["f7f8q", "h8h7", "g5g6"] },
-  { id: "intermediate-8", difficulty: "intermediate", name: { en: "Queen's Lure", ja: "クイーンの誘い" }, fen: "6rk/5p1p/3P2Q1/6bN/8/8/1P6/K3R3 w - - 0 1", line: ["g6g8", "h8g8", "e1e8"] },
-  { id: "intermediate-9", difficulty: "intermediate", name: { en: "Forky Matey", ja: "フォークでメイト" }, prompt: { en: "Build the mating net, then finish with a knight move that checks the king and forks the queen.", ja: "メイトの網を作り、最後はキングにチェックしながらクイーンもフォークするナイトの一手で決めよう。" }, fen: "7k/8/8/4N3/2Q2q2/8/K7/8 w - - 0 1", line: ["c4f7", "f4h4", "e5g6"] },
-  { id: "intermediate-10", difficulty: "intermediate", name: { en: "Open Mate", ja: "オープン・メイト" }, fen: "5R2/8/2R1R3/7k/P3p3/8/3K4/8 w - - 0 1", line: ["e6h6", "h5g4", "c6g6"] },
+  { id: "intermediate-1", difficulty: "intermediate", name: { en: "Diagonal Corridor", ja: "対角線の回廊" }, fen: "3b4/3R4/2k5/5Q2/8/8/4K3/8 w - - 4 3", line: ["f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
+  { id: "intermediate-2", difficulty: "intermediate", name: { en: "Queen Deflection", ja: "クイーンのそらし" }, fen: "8/4k3/1Q6/8/7q/1K6/8/2R5 w - - 0 1", line: ["c1c7", "e7f8", "b6b8", "h4d8", "b8d8"] },
+  { id: "intermediate-3", difficulty: "intermediate", name: { en: "Queen Staircase", ja: "クイーンの階段" }, fen: "1k2K3/6Q1/8/8/8/8/8/8 w - - 4 3", line: ["e8d8", "b8a8", "d8c7", "a8a7", "g7a1"] },
+  { id: "intermediate-4", difficulty: "intermediate", name: { en: "Inverted Staircase", ja: "反転した階段" }, fen: "8/8/8/8/8/8/6Q1/1k2K3 w - - 4 3", line: ["e1d1", "b1a1", "d1c2", "a1a2", "g2a8"] },
+  { id: "intermediate-5", difficulty: "intermediate", name: { en: "Rook Box", ja: "ルークの包囲網" }, fen: "6R1/8/8/8/7K/8/8/7k w - - 4 3", line: ["h4g3", "h1g1", "g8f8", "g1h1", "f8f1"] },
+  { id: "intermediate-6", difficulty: "intermediate", name: { en: "Rook Box Reversed", ja: "反転したルーク包囲" }, fen: "7k/8/8/7K/8/8/8/6R1 w - - 4 3", line: ["h5g6", "h8g8", "g1f1", "g8h8", "f1f8"] },
+  { id: "intermediate-7", difficulty: "intermediate", name: { en: "Left-Edge Rook", ja: "左端のルーク" }, fen: "1R6/8/8/8/K7/8/8/k7 w - - 4 3", line: ["a4b3", "a1b1", "b8c8", "b1a1", "c8c1"] },
+  { id: "intermediate-8", difficulty: "intermediate", name: { en: "Rising Rook", ja: "上昇するルーク" }, fen: "k7/8/8/K7/8/8/8/1R6 w - - 4 3", line: ["a5b6", "a8b8", "b1c1", "b8a8", "c1c8"] },
+  { id: "intermediate-9", difficulty: "intermediate", name: { en: "Queen's Return", ja: "クイーンの帰還" }, fen: "3K2k1/1Q6/8/8/8/8/8/8 w - - 4 3", line: ["d8e8", "g8h8", "e8f7", "h8h7", "b7h1"] },
+  { id: "intermediate-10", difficulty: "intermediate", name: { en: "Queen's Return Reversed", ja: "反転したクイーンの帰還" }, fen: "8/8/8/8/8/8/1Q6/3K2k1 w - - 4 3", line: ["d1e1", "g1h1", "e1f2", "h1h2", "b2h8"] },
 
-  { id: "advanced-1", difficulty: "advanced", name: { en: "King-guided battery", ja: "キングが導くバッテリー" }, fen: "8/2R5/4k3/8/3K4/8/3R4/8 w - - 0 1", line: ["d4e4", "e6f6", "d2g2", "f6e6", "g2g6"] },
-  { id: "advanced-2", difficulty: "advanced", name: { en: "Rook clearance", ja: "ルークのクリアランス" }, fen: "2RK4/8/8/8/1p6/k7/8/5Q2 w - - 0 1", line: ["c8c2", "a3a4", "f1a6", "a4b3", "a6a2"] },
-  { id: "advanced-3", difficulty: "advanced", name: { en: "Bishop relay", ja: "ビショップのリレー" }, fen: "4k3/1R6/3K3B/8/8/4p3/8/8 w - - 0 1", line: ["d6e6", "e8d8", "h6f4", "d8e8", "b7b8"] },
-  { id: "advanced-4", difficulty: "advanced", name: { en: "Bishop interference", ja: "ビショップの干渉" }, fen: "8/8/2r5/2B4K/8/6Q1/8/1k6 w - - 0 1", line: ["g3b3", "b1a1", "c5d4", "c6c3", "d4c3"] },
-  { id: "advanced-5", difficulty: "advanced", name: { en: "Split-rook pursuit", ja: "二方向のルーク追撃" }, fen: "8/k4K2/8/8/4R2R/4p3/8/8 w - - 0 1", line: ["h4h6", "a7b8", "e4e7", "b8c8", "h6h8"] },
-  { id: "advanced-6", difficulty: "advanced", name: { en: "Smothering King", ja: "キングを窒息させろ" }, fen: "5rk1/4pNpp/8/r1BQ1P2/2B5/6r1/n2r4/K5b1 w - - 0 1", line: ["f7h6", "g8h8", "d5g8", "f8g8", "h6f7"] },
-  { id: "advanced-7", difficulty: "advanced", name: { en: "Two Knights and a Bishop", ja: "2頭のナイトとビショップ" }, fen: "r2qkbnr/ppp2ppp/2np4/4p3/2B1P1b1/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 6", line: ["f3e5", "g4d1", "c4f7", "e8e7", "c3d5"] },
-  { id: "advanced-8", difficulty: "advanced", name: { en: "Fair Trade...?", ja: "公平な交換…？" }, fen: "3q1rk1/5ppp/5P2/8/p7/8/4R3/K2QR3 w - - 0 1", line: ["d1d8", "f8d8", "e2e8", "d8e8", "e1e8"] },
-  { id: "advanced-9", difficulty: "advanced", name: { en: "Remove the Defender", ja: "守備駒を排除せよ" }, prompt: { en: "Trade a rook to remove the back-rank defender, then use the protected queen to force mate.", ja: "ルークを交換してバックランクの守備駒を排除し、守られたクイーンでメイトを強制しよう。" }, fen: "r3r1k1/5ppp/8/8/2Q5/8/B7/1K2R3 w - - 0 1", line: ["e1e8", "a8e8", "c4f7", "g8h8", "f7e8"] },
-  { id: "advanced-10", difficulty: "advanced", name: { en: "Anastasia's Power", ja: "アナスタシアの力" }, prompt: { en: "Drive the king to h7, lift the rook, and capture the blocking bishop to complete Anastasia's mate.", ja: "キングをh7へ追い、ルークを持ち上げ、間に入ったビショップを取ってアナスタシアのメイトを完成させよう。" }, fen: "6k1/5bp1/2N5/8/8/R7/8/1K6 w - - 0 1", line: ["c6e7", "g8h7", "a3h3", "f7h5", "h3h5"] },
+  { id: "advanced-1", difficulty: "advanced", name: { en: "Long Diagonal Chase", ja: "長い対角線の追撃" }, fen: "3b4/5R2/3k4/5Q2/8/8/4K3/8 w - - 2 2", line: ["f7d7", "d6c6", "f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
+  { id: "advanced-2", difficulty: "advanced", name: { en: "Inverted Diagonal Chase", ja: "反転した対角線の追撃" }, fen: "8/4K3/8/8/5Q2/3k4/5R2/3b4 w - - 2 2", line: ["f2d2", "d3c3", "f4d4", "c3b3", "d2b2", "b3a3", "d4b4"] },
+  { id: "advanced-3", difficulty: "advanced", name: { en: "Queen Compass", ja: "クイーンの羅針盤" }, fen: "k4K2/6Q1/8/8/8/8/8/8 w - - 2 2", line: ["f8e8", "a8b8", "e8d8", "b8a8", "d8c7", "a8a7", "g7a1"] },
+  { id: "advanced-4", difficulty: "advanced", name: { en: "Southbound Compass", ja: "南向きの羅針盤" }, fen: "8/8/8/8/8/8/6Q1/k4K2 w - - 2 2", line: ["f1e1", "a1b1", "e1d1", "b1a1", "d1c2", "a1a2", "g2a8"] },
+  { id: "advanced-5", difficulty: "advanced", name: { en: "Rook Edge Pursuit", ja: "ルークの端追い" }, fen: "6R1/8/8/7K/8/8/7k/8 w - - 2 2", line: ["h5h4", "h2h1", "h4g3", "h1g1", "g8f8", "g1h1", "f8f1"] },
+  { id: "advanced-6", difficulty: "advanced", name: { en: "Rook Edge Ascent", ja: "ルークの端上り" }, fen: "8/7k/8/8/7K/8/8/6R1 w - - 2 2", line: ["h4h5", "h7h8", "h5g6", "h8g8", "g1f1", "g8h8", "f1f8"] },
+  { id: "advanced-7", difficulty: "advanced", name: { en: "Left-Edge Pursuit", ja: "左端の追撃" }, fen: "1R6/8/8/K7/8/8/k7/8 w - - 2 2", line: ["a5a4", "a2a1", "a4b3", "a1b1", "b8c8", "b1a1", "c8c1"] },
+  { id: "advanced-8", difficulty: "advanced", name: { en: "Left-Edge Ascent", ja: "左端の上り" }, fen: "8/k7/8/8/K7/8/8/1R6 w - - 2 2", line: ["a4a5", "a7a8", "a5b6", "a8b8", "b1c1", "b8a8", "c1c8"] },
+  { id: "advanced-9", difficulty: "advanced", name: { en: "Queen's Long Return", ja: "クイーンの長い帰還" }, fen: "2K4k/1Q6/8/8/8/8/8/8 w - - 2 2", line: ["c8d8", "h8g8", "d8e8", "g8h8", "e8f7", "h8h7", "b7h1"] },
+  { id: "advanced-10", difficulty: "advanced", name: { en: "Queen's Rising Return", ja: "上昇するクイーンの帰還" }, fen: "8/8/8/8/8/8/1Q6/2K4k w - - 2 2", line: ["c1d1", "h1g1", "d1e1", "g1h1", "e1f2", "h1h2", "b2h8"] },
 
-  { id: "grandmaster-1", difficulty: "grandmaster", name: { en: "Rook clearance maze", ja: "ルークのクリアランス迷路" }, fen: "3b4/5R2/3k4/5Q2/8/8/4K3/8 w - - 0 1", line: ["f7d7", "d6c6", "f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
-  { id: "grandmaster-2", difficulty: "grandmaster", name: { en: "Promotion corridor", ja: "昇格への回廊" }, fen: "1k6/7B/4P3/5R2/K7/8/8/8 w - - 0 1", line: ["f5f7", "b8c8", "f7d7", "c8b8", "e6e7", "b8c8", "e7e8q"] },
-  { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Bishop clearance", ja: "ビショップのクリアランス" }, fen: "8/8/8/1k1K2R1/8/R1b5/8/8 w - - 0 1", line: ["a3c3", "b5b6", "c3b3", "b6c7", "g5g8", "c7d7", "b3b7"] },
-  { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Knight geometry", ja: "ナイトの幾何学" }, fen: "1k6/7N/8/2K3R1/8/8/2n5/8 w - - 0 1", line: ["c5b6", "b8c8", "h7f6", "c8d8", "g5e5", "d8c8", "e5e8"] },
-  { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "Knight geometry", ja: "ナイトの幾何学" }, fen: "2N5/1k6/5n2/8/B7/8/7Q/3K4 w - - 0 1", line: ["h2d6", "b7c8", "a4c6", "f6g8", "d6d7", "c8b8", "d7b7"] },
+  { id: "grandmaster-1", difficulty: "grandmaster", name: { en: "Rook Clearance Maze", ja: "ルークのクリアランス迷路" }, fen: "3b4/5R2/4k3/8/8/8/4K3/1Q6 w - - 0 1", line: ["b1f5", "e6d6", "f7d7", "d6c6", "f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
+  { id: "grandmaster-2", difficulty: "grandmaster", name: { en: "Inverted Clearance", ja: "反転したクリアランス" }, fen: "1Q6/4K3/8/8/8/4k3/5R2/3b4 w - - 0 1", line: ["b8f4", "e3d3", "f2d2", "d3c3", "f4d4", "c3b3", "d2b2", "b3a3", "d4b4"] },
+  { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Queen Compass Rotated", ja: "回転したクイーンの羅針盤" }, fen: "7Q/8/8/8/8/8/8/2K3k1 w - - 0 1", line: ["h8b2", "g1h1", "c1d1", "h1g1", "d1e1", "g1h1", "e1f2", "h1h2", "b2h8"] },
+  { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Queen Compass Reversed", ja: "反転したクイーンの羅針盤" }, fen: "Q7/8/8/8/8/8/8/1k3K2 w - - 0 1", line: ["a8g2", "b1a1", "f1e1", "a1b1", "e1d1", "b1a1", "d1c2", "a1a2", "g2a8"] },
+  { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "Rook Edge Ascent", ja: "ルークの端上り" }, fen: "8/8/7k/8/7K/8/8/5R2 w - - 0 1", line: ["f1g1", "h6h7", "h4h5", "h7h8", "h5g6", "h8g8", "g1f1", "g8h8", "f1f8"] },
   { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Queen Compass", ja: "クイーンの羅針盤" }, prompt: { en: "Find the only queen move that keeps mate in five, then guide your king forward without giving the defender an extra tempo.", ja: "メイトイン5を保つ唯一のクイーンの一手を見つけ、相手に余分な手数を与えずキングを前進させよう。" }, fen: "1k3K2/8/8/8/8/8/8/Q7 w - - 0 1", line: ["a1g7", "b8a8", "f8e8", "a8b8", "e8d8", "b8a8", "d8c7", "a8a7", "g7a1"] },
   { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "Rook Edge Pursuit", ja: "ルークの端追い" }, prompt: { en: "Use the rook to control the edge while your king closes the box. Every tempo matters in this exact mate in five.", ja: "ルークで盤端を支配しながらキングで包囲を狭めよう。正確なメイトイン5では、すべてのテンポが重要です。" }, fen: "5R2/8/8/7K/8/7k/8/8 w - - 0 1", line: ["f8g8", "h3h2", "h5h4", "h2h1", "h4g3", "h1g1", "g8f8", "g1h1", "f8f1"] },
   { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "Classic Smothered Mate", ja: "伝統のスマザードメイト" }, prompt: { en: "Begin with the necessary rook sacrifice, drive the king into the corner with the knight, then sacrifice the queen for the classic smothered mate.", ja: "必要なルーク犠牲から始め、ナイトでキングを隅へ追い込み、最後はクイーンを犠牲にして伝統的なスマザードメイトを決めよう。" }, fen: "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1", line: ["f7f8", "a8f8", "e5f7", "h8g8", "f7h6", "g8h8", "c4g8", "f8g8", "h6f7"] },
   { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Mirror Rook Pursuit", ja: "鏡映しのルーク追撃" }, prompt: { en: "Solve the mirrored edge position. Coordinate king and rook precisely so the fifth move is the only mating finish.", ja: "左右反転した盤端の局面を解こう。キングとルークを正確に連携させ、5手目の唯一のメイトを決めよう。" }, fen: "2R5/8/8/K7/8/k7/8/8 w - - 0 1", line: ["c8b8", "a3a2", "a5a4", "a2a1", "a4b3", "a1b1", "b8c8", "b1a1", "c8c1"] },
   { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "Queen's Long Return", ja: "クイーンの長い帰還" }, prompt: { en: "Send the queen across the board, march the king into position, and finish with a long-range mate on the fifth move.", ja: "クイーンを盤の反対側へ送り、キングを所定の位置まで進め、5手目に長距離のメイトを決めよう。" }, fen: "2K3k1/8/8/8/8/8/8/7Q w - - 0 1", line: ["h1b7", "g8h8", "c8d8", "h8g8", "d8e8", "g8h8", "e8f7", "h8h7", "b7h1"] },
 ];
-
-const extendedPuzzleOpenings = {
-  "intermediate-1": ["1k6/3K4/8/8/8/8/B7/2Q1r3 w - - 0 1", "d7d8", "e1e4"],
-  "intermediate-2": ["8/4k3/1Q6/8/7q/1K6/8/2R5 w - - 0 1", "c1c7", "e7f8"],
-  "intermediate-3": ["8/8/3Q4/8/5R2/4K3/7k/8 w - - 0 1", "f4f6", "h2h3"],
-  "intermediate-4": ["8/4K3/8/8/8/7R/1r1k4/7R w - - 0 1", "h1h2", "d2e1"],
-  "intermediate-5": ["8/K6k/3Q3q/8/B7/8/8/8 w - - 0 1", "a7a8", "h7h8"],
-  "intermediate-6": ["8/p2kb2N/7Q/8/8/8/K7/R2B4 w - - 0 1", "d1g4", "d7e8"],
-  "intermediate-7": ["8/5PkP/1P6/5PP1/8/8/P1p2p2/4K3 w - - 0 1", "e1f1", "g7h8"],
-  "intermediate-8": ["3b2rk/5p1p/3P4/7N/8/8/1P6/KQ2R3 w - - 0 1", "b1g6", "d8g5"],
-  "intermediate-9": ["6k1/5N2/8/8/2Q2q2/8/K7/8 w - - 0 1", "f7e5", "g8h8"],
-  "intermediate-10": ["8/8/2R1R3/6k1/P3p3/8/3K4/5R2 w - - 0 1", "f1f8", "g5h5"],
-  "advanced-1": ["8/3k4/8/8/3K4/8/3R4/2R5 w - - 0 1", "c1c7", "d7e6"],
-  "advanced-2": ["2R5/2K5/8/8/1p6/8/k7/5Q2 w - - 0 1", "c7d8", "a2a3"],
-  "advanced-3": ["5k2/6R1/3K3B/8/8/4p3/8/8 w - - 0 1", "g7b7", "f8e8"],
-  "advanced-4": ["8/8/2r5/2B5/6K1/6Q1/8/k7 w - - 0 1", "g4h5", "a1b1"],
-  "advanced-5": ["k7/8/4K3/8/4R2R/4p3/8/8 w - - 0 1", "e6f7", "a8a7"],
-  "advanced-6": ["5r1k/4p1pp/8/r1BQNP2/2B5/6r1/n2r4/K5b1 w - - 0 1", "e5f7", "h8g8"],
-  "advanced-7": ["rq2kbnr/ppp2ppp/2np4/4p3/4P1b1/2N2N2/PPPP1PPP/R1BQKB1R w - - 4 6", "f1c4", "b8d8"],
-  "advanced-8": ["4qrk1/5ppp/5P2/8/p7/8/R7/K2QR3 w - - 0 1", "a2e2", "e8d8"],
-  "advanced-9": ["r4rk1/5ppp/8/8/8/8/B7/1KQ1R3 w - - 0 1", "c1c4", "f8e8"],
-  "advanced-10": ["4b1k1/6p1/8/8/1N6/R7/8/1K6 w - - 0 1", "b4c6", "e8f7"],
-  "grandmaster-1": ["3b4/5R2/4k3/8/8/8/4K3/1Q6 w - - 0 1", "b1f5", "e6d6"],
-  "grandmaster-2": ["k7/8/4P1B1/5R2/K7/8/8/8 w - - 0 1", "g6h7", "a8b8"],
-  "grandmaster-3": ["8/8/8/3K2R1/k7/1Rb5/8/8 w - - 0 1", "b3a3", "a4b5"],
-  "grandmaster-4": ["1k6/8/5N2/2K3R1/8/8/8/n7 w - - 0 1", "f6h7", "a1c2"],
-  "grandmaster-5": ["2N5/8/2k2n2/8/8/8/2B4Q/3K4 w - - 0 1", "c2a4", "c6b7"],
-};
-
-chessPuzzles.forEach((puzzle) => {
-  const opening = extendedPuzzleOpenings[puzzle.id];
-  if (!opening) return;
-  puzzle.fen = opening[0];
-  puzzle.line = [...opening.slice(1), ...puzzle.line];
-});
 
 const checkmateEffects = [
   "confetti",
@@ -469,7 +434,7 @@ let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
 let puzzleHintSquare = null;
-let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV9") || "[]"));
+let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV10") || "[]"));
 let bombExplosionSquare = null;
 let bombExplosionTimer = null;
 let enPassantBoardSquares = [];
@@ -1236,7 +1201,7 @@ function puzzleMoveKey(move) {
 }
 
 function saveSolvedPuzzles() {
-  localStorage.setItem("chessJpSolvedPuzzlesV9", JSON.stringify([...solvedPuzzles]));
+  localStorage.setItem("chessJpSolvedPuzzlesV10", JSON.stringify([...solvedPuzzles]));
 }
 
 function renderPuzzlePanel() {
