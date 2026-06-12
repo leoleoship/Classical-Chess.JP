@@ -371,11 +371,11 @@ const chessPuzzles = [
   { id: "novice-6", difficulty: "novice", name: { en: "Queen Bridge", ja: "クイーンの橋" }, fen: "8/1k5r/R7/8/1K6/2Q5/8/8 w - - 0 1", line: ["c3c6", "b7b8", "a6a8"] },
   { id: "novice-7", difficulty: "novice", name: { en: "Long Rook Turn", ja: "長いルークの旋回" }, fen: "8/8/8/7R/8/K7/8/1k3B2 w - - 0 1", line: ["h5c5", "b1a1", "c5c1"] },
   { id: "novice-8", difficulty: "novice", name: { en: "Queen Descent", ja: "クイーンの降下" }, fen: "8/1p6/3Q4/8/8/3p1K2/8/4k3 w - - 0 1", line: ["d6d3", "b7b5", "d3e2"] },
-  { id: "novice-9", difficulty: "novice", name: { en: "Knight Blockade", ja: "ナイトの封鎖" }, fen: "8/8/1n6/8/1N6/2R2K2/8/7k w - - 0 1", line: ["f3g3", "b6c4", "c3c1"] },
+  { id: "novice-9", difficulty: "novice", name: { en: "Knight Blockade", ja: "ナイトの封鎖" }, fen: "8/8/1n6/8/1N6/2R2K2/8/7k w - - 0 1", line: ["f3g3", "h1g1", "c3c1"] },
   { id: "novice-10", difficulty: "novice", name: { en: "Rook Shelter", ja: "ルークの隠れ家" }, fen: "4K3/7k/7b/8/7R/8/8/8 w - - 0 1", line: ["e8f7", "h7h8", "h4h6"] },
 
   { id: "intermediate-1", difficulty: "intermediate", name: { en: "Diagonal Corridor", ja: "対角線の回廊" }, fen: "3b4/3R4/2k5/5Q2/8/8/4K3/8 w - - 4 3", line: ["f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
-  { id: "intermediate-2", difficulty: "intermediate", name: { en: "Queen Deflection", ja: "クイーンのそらし" }, fen: "8/4k3/1Q6/8/7q/1K6/8/2R5 w - - 0 1", line: ["c1c7", "e7f8", "b6b8", "h4d8", "b8d8"] },
+  { id: "intermediate-2", difficulty: "intermediate", name: { en: "Queen Deflection", ja: "クイーンのそらし" }, fen: "8/4k3/1Q6/8/7q/1K6/8/2R5 w - - 0 1", line: ["c1c7", "e7e8", "b6e6", "e8f8", "e6f7"] },
   { id: "intermediate-3", difficulty: "intermediate", name: { en: "Queen Staircase", ja: "クイーンの階段" }, fen: "1k2K3/6Q1/8/8/8/8/8/8 w - - 4 3", line: ["e8d8", "b8a8", "d8c7", "a8a7", "g7a1"] },
   { id: "intermediate-4", difficulty: "intermediate", name: { en: "Inverted Staircase", ja: "反転した階段" }, fen: "8/8/8/8/8/8/6Q1/1k2K3 w - - 4 3", line: ["e1d1", "b1a1", "d1c2", "a1a2", "g2a8"] },
   { id: "intermediate-5", difficulty: "intermediate", name: { en: "Rook Box", ja: "ルークの包囲網" }, fen: "6R1/8/8/8/7K/8/8/7k w - - 4 3", line: ["h4g3", "h1g1", "g8f8", "g1h1", "f8f1"] },
@@ -398,15 +398,102 @@ const chessPuzzles = [
 
   { id: "grandmaster-1", difficulty: "grandmaster", name: { en: "Rook Clearance Maze", ja: "ルークのクリアランス迷路" }, fen: "3b4/5R2/4k3/8/8/8/4K3/1Q6 w - - 0 1", line: ["b1f5", "e6d6", "f7d7", "d6c6", "f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
   { id: "grandmaster-2", difficulty: "grandmaster", name: { en: "Inverted Clearance", ja: "反転したクリアランス" }, fen: "1Q6/4K3/8/8/8/4k3/5R2/3b4 w - - 0 1", line: ["b8f4", "e3d3", "f2d2", "d3c3", "f4d4", "c3b3", "d2b2", "b3a3", "d4b4"] },
-  { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Queen Compass Rotated", ja: "回転したクイーンの羅針盤" }, fen: "7Q/8/8/8/8/8/8/2K3k1 w - - 0 1", line: ["h8b2", "g1h1", "c1d1", "h1g1", "d1e1", "g1h1", "e1f2", "h1h2", "b2h8"] },
-  { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Queen Compass Reversed", ja: "反転したクイーンの羅針盤" }, fen: "Q7/8/8/8/8/8/8/1k3K2 w - - 0 1", line: ["a8g2", "b1a1", "f1e1", "a1b1", "e1d1", "b1a1", "d1c2", "a1a2", "g2a8"] },
+  { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Queen Compass Rotated", ja: "回転したクイーンの羅針盤" }, fen: "7Q/8/8/8/8/8/8/2K3k1 w - - 0 1", line: ["h8b2", "g1f1", "c1d1", "f1g1", "d1e1", "g1h1", "e1f2", "h1h2", "b2h8"] },
+  { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Queen Compass Reversed", ja: "反転したクイーンの羅針盤" }, fen: "Q7/8/8/8/8/8/8/1k3K2 w - - 0 1", line: ["a8g2", "b1c1", "f1e1", "c1b1", "e1d1", "b1a1", "d1c2", "a1a2", "g2a8"] },
   { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "Rook Edge Ascent", ja: "ルークの端上り" }, fen: "8/8/7k/8/7K/8/8/5R2 w - - 0 1", line: ["f1g1", "h6h7", "h4h5", "h7h8", "h5g6", "h8g8", "g1f1", "g8h8", "f1f8"] },
-  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Queen Compass", ja: "クイーンの羅針盤" }, prompt: { en: "Find the only queen move that keeps mate in five, then guide your king forward without giving the defender an extra tempo.", ja: "メイトイン5を保つ唯一のクイーンの一手を見つけ、相手に余分な手数を与えずキングを前進させよう。" }, fen: "1k3K2/8/8/8/8/8/8/Q7 w - - 0 1", line: ["a1g7", "b8a8", "f8e8", "a8b8", "e8d8", "b8a8", "d8c7", "a8a7", "g7a1"] },
+  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Queen Compass", ja: "クイーンの羅針盤" }, prompt: { en: "Find the strongest queen move, then coordinate king and queen along the engine's fastest mating route.", ja: "最強のクイーンの一手を見つけ、エンジンが選ぶ最短のメイトルートに沿ってキングとクイーンを連携させよう。" }, fen: "1k3K2/8/8/8/8/8/8/Q7 w - - 0 1", line: ["a1g7", "b8c8", "f8e8", "c8b8", "e8d8", "b8a8", "d8c7", "a8a7", "g7a1"] },
   { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "Rook Edge Pursuit", ja: "ルークの端追い" }, prompt: { en: "Use the rook to control the edge while your king closes the box. Every tempo matters in this exact mate in five.", ja: "ルークで盤端を支配しながらキングで包囲を狭めよう。正確なメイトイン5では、すべてのテンポが重要です。" }, fen: "5R2/8/8/7K/8/7k/8/8 w - - 0 1", line: ["f8g8", "h3h2", "h5h4", "h2h1", "h4g3", "h1g1", "g8f8", "g1h1", "f8f1"] },
   { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "Classic Smothered Mate", ja: "伝統のスマザードメイト" }, prompt: { en: "Begin with the necessary rook sacrifice, drive the king into the corner with the knight, then sacrifice the queen for the classic smothered mate.", ja: "必要なルーク犠牲から始め、ナイトでキングを隅へ追い込み、最後はクイーンを犠牲にして伝統的なスマザードメイトを決めよう。" }, fen: "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1", line: ["f7f8", "a8f8", "e5f7", "h8g8", "f7h6", "g8h8", "c4g8", "f8g8", "h6f7"] },
   { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Mirror Rook Pursuit", ja: "鏡映しのルーク追撃" }, prompt: { en: "Solve the mirrored edge position. Coordinate king and rook precisely so the fifth move is the only mating finish.", ja: "左右反転した盤端の局面を解こう。キングとルークを正確に連携させ、5手目の唯一のメイトを決めよう。" }, fen: "2R5/8/8/K7/8/k7/8/8 w - - 0 1", line: ["c8b8", "a3a2", "a5a4", "a2a1", "a4b3", "a1b1", "b8c8", "b1a1", "c8c1"] },
-  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "Queen's Long Return", ja: "クイーンの長い帰還" }, prompt: { en: "Send the queen across the board, march the king into position, and finish with a long-range mate on the fifth move.", ja: "クイーンを盤の反対側へ送り、キングを所定の位置まで進め、5手目に長距離のメイトを決めよう。" }, fen: "2K3k1/8/8/8/8/8/8/7Q w - - 0 1", line: ["h1b7", "g8h8", "c8d8", "h8g8", "d8e8", "g8h8", "e8f7", "h8h7", "b7h1"] },
+  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "Queen's Long Return", ja: "クイーンの長い帰還" }, prompt: { en: "Send the queen across the board and keep tightening the mating net with the most direct king-and-queen moves.", ja: "クイーンを盤の反対側へ送り、最も直接的なキングとクイーンの手でメイトの網を狭めよう。" }, fen: "2K3k1/8/8/8/8/8/8/7Q w - - 0 1", line: ["h1b7", "g8f8", "b7h7", "f8e8", "c8c7", "e8f8", "c7d6", "f8e8", "h7e7"] },
 ];
+
+const puzzlePolicies = {
+  "grandmaster-3": {
+    solutions: {
+      "7Q/8/8/8/8/8/8/2K3k1 w - -": ["h8b2"],
+      "8/8/8/8/8/8/1Q6/2K2k2 w - -": ["b2h2", "c1d1"],
+      "8/8/8/8/8/8/7Q/2K1k3 w - -": ["c1c2"],
+      "8/8/8/8/8/8/2K4Q/5k2 w - -": ["c2d3"],
+      "8/8/8/8/8/3K4/7Q/4k3 w - -": ["h2e2", "h2g1"],
+      "8/8/8/8/8/8/1Q6/3K2k1 w - -": ["d1e1"],
+      "8/8/8/8/8/8/1Q6/4K2k w - -": ["e1f2"],
+      "8/8/8/8/8/8/1Q3K1k/8 w - -": ["b2h8"],
+    },
+    replies: {
+      "8/8/8/8/8/8/1Q6/2K3k1 b - -": "g1f1",
+      "8/8/8/8/8/8/7Q/2K2k2 b - -": "f1e1",
+      "8/8/8/8/8/8/2K4Q/4k3 b - -": "e1f1",
+      "8/8/8/8/8/3K4/7Q/5k2 b - -": "f1e1",
+      "8/8/8/8/8/8/1Q6/3K1k2 b - -": "f1g1",
+      "8/8/8/8/8/8/1Q6/4K1k1 b - -": "g1h1",
+      "8/8/8/8/8/8/1Q3K2/7k b - -": "h1h2",
+    },
+  },
+  "grandmaster-4": {
+    solutions: {
+      "Q7/8/8/8/8/8/8/1k3K2 w - -": ["a8g2"],
+      "8/8/8/8/8/8/6Q1/2k2K2 w - -": ["g2a2", "f1e1"],
+      "8/8/8/8/8/8/Q7/3k1K2 w - -": ["f1f2"],
+      "8/8/8/8/8/8/Q4K2/2k5 w - -": ["f2e3"],
+      "8/8/8/8/8/4K3/Q7/3k4 w - -": ["a2d2", "a2b1"],
+      "8/8/8/8/8/8/6Q1/1k2K3 w - -": ["e1d1"],
+      "8/8/8/8/8/8/6Q1/k2K4 w - -": ["d1c2"],
+      "8/8/8/8/8/8/k1K3Q1/8 w - -": ["g2a8"],
+    },
+    replies: {
+      "8/8/8/8/8/8/6Q1/1k3K2 b - -": "b1c1",
+      "8/8/8/8/8/8/Q7/2k2K2 b - -": "c1d1",
+      "8/8/8/8/8/8/Q4K2/3k4 b - -": "d1c1",
+      "8/8/8/8/8/4K3/Q7/2k5 b - -": "c1d1",
+      "8/8/8/8/8/8/6Q1/2k1K3 b - -": "c1b1",
+      "8/8/8/8/8/8/6Q1/1k1K4 b - -": "b1a1",
+      "8/8/8/8/8/8/2K3Q1/k7 b - -": "a1a2",
+    },
+  },
+  "grandmaster-6": {
+    solutions: {
+      "1k3K2/8/8/8/8/8/8/Q7 w - -": ["a1g7"],
+      "2k2K2/6Q1/8/8/8/8/8/8 w - -": ["f8e8", "g7a7"],
+      "1k2K3/6Q1/8/8/8/8/8/8 w - -": ["e8d8"],
+      "k2K4/6Q1/8/8/8/8/8/8 w - -": ["d8c7"],
+      "8/k1K3Q1/8/8/8/8/8/8 w - -": ["g7a1"],
+      "3k1K2/Q7/8/8/8/8/8/8 w - -": ["f8f7"],
+      "2k5/Q4K2/8/8/8/8/8/8 w - -": ["f7e6"],
+      "3k4/Q7/4K3/8/8/8/8/8 w - -": ["a7b8", "a7d7"],
+    },
+    replies: {
+      "1k3K2/6Q1/8/8/8/8/8/8 b - -": "b8c8",
+      "2k1K3/6Q1/8/8/8/8/8/8 b - -": "c8b8",
+      "1k1K4/6Q1/8/8/8/8/8/8 b - -": "b8a8",
+      "k7/2K3Q1/8/8/8/8/8/8 b - -": "a8a7",
+      "2k2K2/Q7/8/8/8/8/8/8 b - -": "c8d8",
+      "3k4/Q4K2/8/8/8/8/8/8 b - -": "d8c8",
+      "2k5/Q7/4K3/8/8/8/8/8 b - -": "c8d8",
+    },
+  },
+  "grandmaster-10": {
+    solutions: {
+      "2K3k1/8/8/8/8/8/8/7Q w - -": ["h1b7"],
+      "2K2k2/1Q6/8/8/8/8/8/8 w - -": ["c8d8", "b7h7"],
+      "3K2k1/1Q6/8/8/8/8/8/8 w - -": ["d8e8"],
+      "4K2k/1Q6/8/8/8/8/8/8 w - -": ["e8f7"],
+      "8/1Q3K1k/8/8/8/8/8/8 w - -": ["b7h1"],
+      "2K1k3/7Q/8/8/8/8/8/8 w - -": ["c8c7"],
+      "5k2/2K4Q/8/8/8/8/8/8 w - -": ["c7d6"],
+      "4k3/7Q/3K4/8/8/8/8/8 w - -": ["h7g8", "h7e7"],
+    },
+    replies: {
+      "2K3k1/1Q6/8/8/8/8/8/8 b - -": "g8f8",
+      "3K1k2/1Q6/8/8/8/8/8/8 b - -": "f8g8",
+      "4K1k1/1Q6/8/8/8/8/8/8 b - -": "g8h8",
+      "7k/1Q3K2/8/8/8/8/8/8 b - -": "h8h7",
+      "2K2k2/7Q/8/8/8/8/8/8 b - -": "f8e8",
+      "4k3/2K4Q/8/8/8/8/8/8 b - -": "e8f8",
+      "5k2/7Q/3K4/8/8/8/8/8 b - -": "f8e8",
+    },
+  },
+};
 
 const checkmateEffects = [
   "confetti",
@@ -1200,6 +1287,17 @@ function puzzleMoveKey(move) {
   return `${move.from}${move.to}${move.promotion || ""}`;
 }
 
+function puzzlePositionKey() {
+  return game.fen().split(" ").slice(0, 4).join(" ");
+}
+
+function currentPuzzleSolutions() {
+  const policyMoves = puzzlePolicies[currentPuzzle().id]?.solutions[puzzlePositionKey()];
+  if (policyMoves?.length) return policyMoves;
+  const expected = currentPuzzle().line[puzzlePly];
+  return expected ? [expected] : [];
+}
+
 function saveSolvedPuzzles() {
   localStorage.setItem("chessJpSolvedPuzzlesV10", JSON.stringify([...solvedPuzzles]));
 }
@@ -1280,7 +1378,7 @@ function applyPuzzlePly(move, playerMove) {
   playMoveSound(null);
   render();
 
-  if (puzzlePly >= currentPuzzle().line.length && game.isCheckmate()) {
+  if (game.isCheckmate()) {
     finishPuzzle(result);
     return result;
   }
@@ -1298,7 +1396,15 @@ function schedulePuzzleReply() {
   puzzleThinking = true;
   render();
   puzzleTimer = window.setTimeout(() => {
-    const move = currentPuzzle().line[puzzlePly];
+    const move =
+      puzzlePolicies[currentPuzzle().id]?.replies[puzzlePositionKey()] ||
+      currentPuzzle().line[puzzlePly];
+    if (!move) {
+      puzzleThinking = false;
+      puzzleTimer = null;
+      render();
+      return;
+    }
     const payload = { from: move.slice(0, 2), to: move.slice(2, 4) };
     if (move.length > 4) payload.promotion = move[4];
     applyPuzzlePly(payload, false);
@@ -1309,8 +1415,7 @@ function schedulePuzzleReply() {
 }
 
 function playPuzzleMove(move) {
-  const expected = currentPuzzle().line[puzzlePly];
-  if (puzzleMoveKey(move) !== expected) {
+  if (!currentPuzzleSolutions().includes(puzzleMoveKey(move))) {
     puzzleHintSquare = null;
     selected = null;
     legalMoves = [];
@@ -1328,7 +1433,9 @@ function playPuzzleMove(move) {
 
 function showPuzzleHint() {
   if (mode !== "puzzle" || puzzleThinking || puzzleSolved || puzzlePly % 2 === 1) return;
-  const expected = currentPuzzle().line[puzzlePly];
+  const solutions = currentPuzzleSolutions();
+  const scripted = currentPuzzle().line[puzzlePly];
+  const expected = solutions.includes(scripted) ? scripted : solutions[0];
   if (!expected) return;
   puzzleHintSquare = expected.slice(0, 2);
   puzzleMessage.textContent = t("puzzleHintShown");
