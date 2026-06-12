@@ -446,6 +446,65 @@ chessPuzzles.forEach((puzzle) => {
   puzzle.line = [...opening.slice(1), ...puzzle.line];
 });
 
+// Later difficulties retain more of the surrounding game: pawn structures,
+// developed defenders, and layered protection around the core mating idea.
+const naturalPuzzlePositions = {
+  "beginner-1": "6k1/5ppp/7n/8/5P2/8/6P1/R4RK1 w - - 0 1",
+  "beginner-2": "6br/4PpkN/6p1/4K3/4B3/8/8/7R w - - 0 1",
+  "beginner-3": "2r4k/7p/1p6/2p5/1B6/P7/3P4/4K1R1 w - - 0 1",
+  "beginner-4": "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4",
+  "beginner-5": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2",
+  "beginner-6": "5kr1/3Q1pp1/5R2/p5K1/5P1P/8/8/8 w - - 0 1",
+  "beginner-7": "K6k/7p/6p1/3p4/1Q6/P1P5/2Br4/8 w - - 0 1",
+  "beginner-8": "6kr/4Q2p/8/2p5/R7/KPp5/1P6/8 w - - 0 1",
+  "beginner-9": "8/3p4/5p2/3K2p1/4P3/3PN3/5P1k/5Q2 w - - 0 1",
+  "beginner-10": "5k2/p1R5/1p6/2b3Q1/8/2Kp4/1P1P4/8 w - - 0 1",
+  "novice-1": "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16",
+  "novice-2": "5nkr/5N2/4pKBp/8/2n5/3P4/2P1r3/3Q2R1 w - - 0 1",
+  "novice-3": "3qr1k1/5ppp/7n/8/6P1/5P2/4QP2/4RRK1 w - - 0 1",
+  "novice-4": "3qkrr1/1N3p1N/1p6/p7/1B6/2P5/4B3/4R1K1 w - - 0 1",
+  "novice-5": "rk6/pp6/p1p5/7Q/6P1/5P2/4P1P1/4K1RR w - - 0 1",
+  "novice-6": "8/1kp1p1pr/Rp3q2/8/1K1P4/P1Q5/1P1P4/8 w - - 0 1",
+  "novice-7": "8/5p1p/4pqp1/7R/6P1/K6P/1P2Q1P1/1k3B2 w - - 0 1",
+  "novice-8": "1n6/1pq5/p1pQ4/8/1P2PBP1/3p1K2/6P1/4k3 w - - 0 1",
+  "novice-9": "8/3p4/1np1p3/3p4/1N6/PQR2K2/PP4P1/7k w - - 0 1",
+  "novice-10": "4K1r1/5p1k/6pb/5pp1/5PQR/5PP1/7P/8 w - - 0 1",
+  "intermediate-1": "1k6/p1pK4/1p1p1p2/3np3/1P3P2/P7/BP1B4/2QRr3 w - - 0 1",
+  "intermediate-2": "8/4k2p/1Q1p2pp/4pb2/1P1P2bq/PK6/PP6/1RR5 w - - 0 1",
+  "intermediate-3": "3q1rn1/4p1p1/3Q1p1p/3p4/4NR2/3PKP2/3PPP1k/8 w - - 0 1",
+  "intermediate-4": "3r4/1p2K3/pqp5/1p1p2B1/1P1P1P2/2P3PR/1r1k4/7R w - - 0 1",
+  "intermediate-5": "5b2/K3b1pk/2pQ3q/1p4pp/BP2NP2/2P5/2PP4/8 w - - 0 1",
+  "intermediate-6": "8/p1pkb2N/1qpp3Q/1p1n4/2P5/3P4/K1P4P/R2B4 w - - 0 1",
+  "intermediate-7": "8/2qn1PkP/1P3p1p/4pPP1/3N4/1Q3N2/P1p2p2/4K3 w - - 0 1",
+  "intermediate-8": "3br1rk/2p2p1p/1p1P2p1/7N/3P4/2P5/1P6/KQ1RR3 w - - 0 1",
+  "intermediate-9": "4rrk1/5N2/5pp1/4ppp1/2QPPq2/NP1P4/K1P5/8 w - - 0 1",
+  "intermediate-10": "1n1r4/2qp2p1/2R1R2p/1B1p2k1/P3p3/1P6/P1QK4/5R2 w - - 0 1",
+  "advanced-1": "1nrr4/p1pk4/np1p4/p7/1b1K1P2/P2PPN2/1P1R3P/2RQ4 w - - 0 1",
+  "advanced-2": "2R5/2K1npb1/4pqp1/3n1p1p/1p2P1P1/5P1P/k4PP1/4RQN1 w - - 0 1",
+  "advanced-3": "5krr/6Rp/3KpnpB/3p1p1p/4P1P1/3PpP1P/4P1P1/6N1 w - - 0 1",
+  "advanced-4": "1n6/ppp5/nqrp4/p1B1p3/1P2NBK1/P5QP/5PPP/k7 w - - 0 1",
+  "advanced-5": "k7/1p2n3/p1p1K1p1/1p1p1bB1/2PNRPQR/3PpPPP/8/8 w - - 0 1",
+  "advanced-6": "5r1k/4p1pp/8/r1BQNPq1/1PBPP3/3P1Pr1/n2r4/K5b1 w - - 0 1",
+  "advanced-7": "rq2kbnr/ppp2ppp/2np4/4p3/4P1b1/2N2N2/PPPP1PPP/R1BQKB1R w - - 4 6",
+  "advanced-8": "4qrkr/5ppp/2p2P1n/1p6/p1P3P1/1P5P/R5P1/K2QRB2 w - - 0 1",
+  "advanced-9": "r4rk1/p4ppp/1qn3p1/p7/1P3P2/PP6/BP1B4/1KQRR3 w - - 0 1",
+  "advanced-10": "4brk1/3pq1p1/2p2p2/1p1pn3/PN1P2P1/R7/PPP5/1KRQ4 w - - 0 1",
+  "grandmaster-1": "r1rb4/3p1Rp1/4kqpp/p2n1p1p/1P6/1PP5/PP1PKP2/1QBR1B2 w - - 0 1",
+  "grandmaster-2": "k4b2/pp1n4/ppp1P1B1/p1ppnR2/KbB1P1P1/1PNP1Q2/4P1P1/8 w - - 0 1",
+  "grandmaster-3": "rn6/pb2p3/2np1p2/p1pKp1R1/k2PPPP1/1Rb1PP2/1PQN4/2B5 w - - 0 1",
+  "grandmaster-4": "rk2r1n1/1p1p4/p1p2N1p/1pKpp1R1/1P1PNPQ1/2P1PP2/3P1P2/n7 w - - 0 1",
+  "grandmaster-5": "2N5/3pp2p/1pkppn2/q1bn1p2/1bP1P1P1/3P1P2/2BNP1PQ/3K1R2 w - - 0 1",
+  "grandmaster-6": "rr1q1rnk/3pp1pp/2N2p1N/4p1p1/2Q2P1P/3PP1P1/2PP4/1RKR4 w - - 0 1",
+  "grandmaster-7": "rnbrk3/5ppp/p6p/3p2qp/P5P1/2N4P/PP1PB1P1/K1RR1Q2 w - - 0 1",
+  "grandmaster-8": "r2q1r1k/1b3ppp/p5pN/1p3b1p/6P1/1Q3NP1/P1P2PPP/3RR1K1 w - - 0 1",
+  "grandmaster-9": "1r2r2k/p4ppp/1qn1p1pn/5p2/5P1P/B3PQPN/4NPPP/B5K1 w - - 0 1",
+  "grandmaster-10": "4qrk1/3nprpR/3p1p1p/2p1p1N1/1b3P1P/2BQPNP1/2PPP3/K7 w - - 0 1",
+};
+
+chessPuzzles.forEach((puzzle) => {
+  puzzle.fen = naturalPuzzlePositions[puzzle.id] || puzzle.fen;
+});
+
 const checkmateEffects = [
   "confetti",
   "bomb",
