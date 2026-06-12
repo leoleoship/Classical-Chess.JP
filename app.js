@@ -367,9 +367,9 @@ const chessPuzzles = [
   { id: "beginner-9", difficulty: "beginner", name: { en: "Queen and Knight", ja: "クイーンとナイト" }, fen: "8/3p4/8/3K2p1/8/4N3/7k/5Q2 w - - 0 1", line: ["f1g2"] },
   { id: "beginner-10", difficulty: "beginner", name: { en: "Back-rank Door", ja: "バックランクの扉" }, fen: "5k2/p1R5/8/6Q1/8/2Kp4/8/8 w - - 0 1", line: ["g5d8"] },
 
-  { id: "novice-1", difficulty: "novice", name: { en: "The Amazing Opera", ja: "驚異のオペラ" }, fen: "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16", line: ["b3b8", "d7b8", "d1d8"] },
-  { id: "novice-2", difficulty: "novice", name: { en: "Sacrifice, Lure, and Mate!", ja: "犠牲、誘い、そしてメイト！" }, fen: "5nkr/5N2/4pKBp/8/2n5/8/4r3/6R1 w - - 0 1", line: ["g6h7", "g8h7", "g1g7"] },
-  { id: "novice-3", difficulty: "novice", name: { en: "Deflector", ja: "守備駒をそらせ" }, fen: "3qr1k1/5ppp/8/8/8/8/4Q3/4R1K1 w - - 0 1", line: ["e2e8", "d8e8", "e1e8"] },
+  { id: "novice-1", difficulty: "novice", name: { en: "The Amazing Opera", ja: "驚異のオペラ" }, fen: "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16", line: ["b3b8", "d7b8", "d1d8"], forcedSacrificePlies: [0] },
+  { id: "novice-2", difficulty: "novice", name: { en: "Sacrifice, Lure, and Mate!", ja: "犠牲、誘い、そしてメイト！" }, fen: "5nkr/5N2/4pKBp/8/2n5/8/4r3/6R1 w - - 0 1", line: ["g6h7", "g8h7", "g1g7"], forcedSacrificePlies: [0] },
+  { id: "novice-3", difficulty: "novice", name: { en: "Deflector", ja: "守備駒をそらせ" }, fen: "3qr1k1/5ppp/8/8/8/8/4Q3/4R1K1 w - - 0 1", line: ["e2e8", "d8e8", "e1e8"], forcedSacrificePlies: [0] },
   { id: "novice-4", difficulty: "novice", name: { en: "Counter Check!", ja: "カウンターチェック！" }, fen: "3qk1r1/1N3p1N/8/8/1B6/8/4B3/4R1K1 w - - 0 1", line: ["e2g4", "d8e7", "e1e7"] },
   { id: "novice-5", difficulty: "novice", name: { en: "Railroad to Victory", ja: "勝利へのレール" }, fen: "1k6/8/8/7Q/8/8/8/4K2R w - - 0 1", line: ["h5f7", "b8c8", "h1h8"] },
   { id: "novice-6", difficulty: "novice", name: { en: "Queen Bridge", ja: "クイーンの橋" }, fen: "8/1k5r/R7/8/1K6/2Q5/8/8 w - - 0 1", line: ["c3c6", "b7b8", "a6a8"] },
@@ -385,7 +385,7 @@ const chessPuzzles = [
   { id: "intermediate-5", difficulty: "intermediate", name: { en: "Bishop Screen", ja: "ビショップの遮蔽" }, prompt: { en: "Use the enemy bishop as a screen while the rook and queen drive the king to the edge.", ja: "相手のビショップを遮蔽物として利用し、ルークとクイーンでキングを盤端へ追い込もう。" }, fen: "3b4/3R2pp/2k5/5Q2/8/8/4K1PP/8 w - - 0 1", line: ["f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
   { id: "intermediate-6", difficulty: "intermediate", name: { en: "Pinned Mate", ja: "ピンのメイト" }, prompt: { en: "Pin the bishop to its king, then mate on f8. Without the pin, the bishop could capture the mating queen.", ja: "ビショップをキングにピンしてからf8でメイト。ピンがなければ、ビショップはメイトするクイーンを取れます。" }, fen: "4k3/p3b2N/7Q/8/6B1/8/K7/R7 w - - 0 1", line: ["a1e1", "a7a6", "h6f8"] },
   { id: "intermediate-7", difficulty: "intermediate", name: { en: "Pawn Push", ja: "ポーンの一押し" }, prompt: { en: "Choose the only promotion that keeps mate in three, then coordinate both queens against the king's best defense.", ja: "メイトイン3を保てる唯一の昇格を選び、2枚のクイーンでキングの最善の守りを突破しよう。" }, fen: "8/P1K5/8/1P6/8/4Q3/p5k1/8 w - - 0 1", line: ["a7a8q", "g2h2", "a8h8", "h2g2", "h8h3"] },
-  { id: "intermediate-8", difficulty: "intermediate", name: { en: "Queen's Lure", ja: "クイーンの誘い" }, fen: "6rk/5p1p/3P2Q1/6bN/8/8/1P6/K3R3 w - - 0 1", line: ["g6g8", "h8g8", "e1e8"] },
+  { id: "intermediate-8", difficulty: "intermediate", name: { en: "Queen's Lure", ja: "クイーンの誘い" }, prompt: { en: "Offer the queen with check. The king is forced to capture it, allowing the rook to finish the mate.", ja: "クイーンをチェックで差し出そう。キングは取るしかなく、その直後にルークでメイトできます。" }, fen: "6rk/5p1p/3P2Q1/6bN/8/8/1P6/K3R3 w - - 0 1", line: ["g6g8", "h8g8", "e1e8"], forcedSacrificePlies: [2] },
   { id: "intermediate-9", difficulty: "intermediate", name: { en: "Forky Matey", ja: "フォークでメイト" }, prompt: { en: "Deflect the queen, tighten the net, and finish with a knight mate against the opponent's best king route.", ja: "クイーンをそらし、メイトの網を狭め、相手キングの最善ルートに対してナイトでメイトしよう。" }, fen: "1K6/8/8/7p/3Q1p2/8/5q1k/3rN3 w - - 0 1", line: ["d4f2", "h2h3", "f2g2", "h3h4", "e1f3"] },
   { id: "intermediate-10", difficulty: "intermediate", name: { en: "Open Mate", ja: "オープン・メイト" }, prompt: { en: "Walk the king into the rook's open-file mating box. Black's king moves are forced.", ja: "キングをルークのオープンファイルのメイト網へ導こう。黒キングの応手は強制です。" }, fen: "6R1/8/8/8/7K/8/PPP5/7k w - - 0 1", line: ["h4g3", "h1g1", "g8f8", "g1h1", "f8f1"] },
 
@@ -394,10 +394,10 @@ const chessPuzzles = [
   { id: "advanced-3", difficulty: "advanced", name: { en: "Bishop relay", ja: "ビショップのリレー" }, fen: "4k3/1R6/3K3B/8/8/4p3/8/8 w - - 0 1", line: ["d6e6", "e8d8", "h6f4", "d8e8", "b7b8"] },
   { id: "advanced-4", difficulty: "advanced", name: { en: "Bishop interference", ja: "ビショップの干渉" }, fen: "8/8/2r5/2B4K/8/6Q1/8/1k6 w - - 0 1", line: ["g3b3", "b1a1", "c5d4", "c6c3", "d4c3"] },
   { id: "advanced-5", difficulty: "advanced", name: { en: "Split-rook pursuit", ja: "二方向のルーク追撃" }, fen: "8/k4K2/8/8/4R2R/4p3/8/8 w - - 0 1", line: ["h4h6", "a7b8", "e4e7", "b8c8", "h6h8"] },
-  { id: "advanced-6", difficulty: "advanced", name: { en: "Smothering King", ja: "キングを窒息させろ" }, fen: "5rk1/4pNpp/8/r1BQ1P2/2B5/6r1/n2r4/K5b1 w - - 0 1", line: ["f7h6", "g8h8", "d5g8", "f8g8", "h6f7"] },
+  { id: "advanced-6", difficulty: "advanced", name: { en: "Smothering King", ja: "キングを窒息させろ" }, fen: "5rk1/4pNpp/8/r1BQ1P2/2B5/6r1/n2r4/K5b1 w - - 0 1", line: ["f7h6", "g8h8", "d5g8", "f8g8", "h6f7"], forcedSacrificePlies: [4] },
   { id: "advanced-7", difficulty: "advanced", name: { en: "Two Knights and a Bishop", ja: "2頭のナイトとビショップ" }, fen: "r2qkbnr/ppp2ppp/2np4/4p3/2B1P1b1/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 4 6", line: ["f3e5", "g4d1", "c4f7", "e8e7", "c3d5"] },
-  { id: "advanced-8", difficulty: "advanced", name: { en: "Fair Trade...?", ja: "公平な交換…？" }, fen: "3q1rk1/5ppp/5P2/8/p7/8/4R3/K2QR3 w - - 0 1", line: ["d1d8", "f8d8", "e2e8", "d8e8", "e1e8"] },
-  { id: "advanced-9", difficulty: "advanced", name: { en: "Remove the Defender", ja: "守備駒を排除せよ" }, prompt: { en: "Trade a rook to remove the back-rank defender, then use the protected queen to force mate.", ja: "ルークを交換してバックランクの守備駒を排除し、守られたクイーンでメイトを強制しよう。" }, fen: "r3r1k1/5ppp/8/8/2Q5/8/B7/1K2R3 w - - 0 1", line: ["e1e8", "a8e8", "c4f7", "g8h8", "f7e8"] },
+  { id: "advanced-8", difficulty: "advanced", name: { en: "Fair Trade...?", ja: "公平な交換…？" }, prompt: { en: "Begin with a queen exchange, then give a rook check that must be captured. The remaining rook completes the back-rank mate.", ja: "まずクイーンを交換し、次に必ず取られるルークチェックを放とう。残ったルークでバックランクメイトを完成させます。" }, fen: "3q1rk1/5ppp/5P2/8/p7/8/4R3/K2QR3 w - - 0 1", line: ["d1d8", "f8d8", "e2e8", "d8e8", "e1e8"], forcedSacrificePlies: [4] },
+  { id: "advanced-9", difficulty: "advanced", name: { en: "Remove the Defender", ja: "守備駒を排除せよ" }, prompt: { en: "Give a rook check that forces the back-rank defender to capture it, then use the protected queen to force mate.", ja: "ルークでチェックし、バックランクの守備駒に強制的に取らせよう。その後、守られたクイーンでメイトを決めます。" }, fen: "r3r1k1/5ppp/8/8/2Q5/8/B7/1K2R3 w - - 0 1", line: ["e1e8", "a8e8", "c4f7", "g8h8", "f7e8"], forcedSacrificePlies: [2] },
   { id: "advanced-10", difficulty: "advanced", name: { en: "Anastasia's Power", ja: "アナスタシアの力" }, prompt: { en: "Drive the king to h7, lift the rook, and capture the blocking bishop to complete Anastasia's mate.", ja: "キングをh7へ追い、ルークを持ち上げ、間に入ったビショップを取ってアナスタシアのメイトを完成させよう。" }, fen: "6k1/5bp1/2N5/8/8/R7/8/1K6 w - - 0 1", line: ["c6e7", "g8h7", "a3h3", "f7h5", "h3h5"] },
 
   { id: "grandmaster-1", difficulty: "grandmaster", name: { en: "Rook clearance maze", ja: "ルークのクリアランス迷路" }, fen: "3b4/5R2/3k4/5Q2/8/8/4K3/8 w - - 0 1", line: ["f7d7", "d6c6", "f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
@@ -405,11 +405,11 @@ const chessPuzzles = [
   { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Bishop clearance", ja: "ビショップのクリアランス" }, fen: "8/8/8/1k1K2R1/8/R1b5/8/8 w - - 0 1", line: ["a3c3", "b5b6", "c3b3", "b6c7", "g5g8", "c7d7", "b3b7"] },
   { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Knight Relay", ja: "ナイトのリレー" }, fen: "1k6/7N/8/2K3R1/8/8/2n5/8 w - - 0 1", line: ["c5b6", "b8c8", "h7f6", "c8d8", "g5e5", "d8c8", "e5e8"] },
   { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "Bishop-Knight Net", ja: "ビショップとナイトの網" }, fen: "2N5/1k6/5n2/8/B7/8/7Q/3K4 w - - 0 1", line: ["h2d6", "b7c8", "a4c6", "f6g8", "d6d7", "c8b8", "d7b7"] },
-  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Give a rook check and force its capture. After the knight drives the king into the corner, sacrifice the queen with check and finish the smothered mate.", ja: "ルークでチェックして強制的に取らせよう。ナイトでキングを隅へ追い込んだ後、クイーンもチェックで犠牲にし、スマザードメイトを決めよう。" }, fen: "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1", line: ["f7f8", "a8f8", "e5f7", "h8g8", "f7h6", "g8h8", "c4g8", "f8g8", "h6f7"] },
+  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Make two genuinely losing-looking offers: first a rook check that must be captured, then a queen check that must be captured. The knight delivers the forced smothered mate.", ja: "本当に損をするように見える犠牲を2回行います。まず必ず取られるルークチェック、次に必ず取られるクイーンチェックを放ち、ナイトで強制スマザードメイトを決めよう。" }, fen: "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1", line: ["f7f8", "a8f8", "e5f7", "h8g8", "f7h6", "g8h8", "c4g8", "f8g8", "h6f7"], forcedSacrificePlies: [0, 6] },
   { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "A Quiet Threat", ja: "静かな脅威" }, prompt: { en: "The bishop check opens the e-file. Punish the defender's best capture by coordinating the rook and queen for mate.", ja: "ビショップのチェックでeファイルを開こう。守備側の最善の捕獲に対し、ルークとクイーンを連携してメイトしよう。" }, fen: "4k3/4rppp/p7/8/8/5Q2/4B3/K3R3 w - - 0 1", line: ["e2b5", "a6b5", "e1e7", "e8f8", "f3f7"] },
-  { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook!", ja: "ザ・ルーク！" }, prompt: { en: "Clear both rooks through exchanges, build the attack, then sacrifice the queen with check so the knight can complete the smothered mate.", ja: "2本のルークを交換で盤上から取り除き、攻撃を組み立てよう。最後はクイーンをチェックで犠牲にし、ナイトで窒息メイトを完成させよう。" }, fen: "r2q1r1k/5ppp/7N/8/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"] },
+  { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook!", ja: "ザ・ルーク！" }, prompt: { en: "Clear both rooks through exchanges, build the attack, then sacrifice the queen with a forced check so the knight can complete the smothered mate.", ja: "2本のルークを交換で盤上から取り除き、攻撃を組み立てよう。最後は必ず取られるクイーンチェックで犠牲にし、ナイトで窒息メイトを完成させよう。" }, fen: "r2q1r1k/5ppp/7N/8/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"], forcedSacrificePlies: [6] },
   { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Sniper Bishop", ja: "スナイパー・ビショップ" }, prompt: { en: "Set the bishop on the long diagonal, then snipe g7. The second bishop protects it while the king's own knight and pawn seal every exit.", ja: "ビショップを長い対角線に配置してg7を狙撃。もう1枚のビショップが守り、相手のナイトとポーンがキングの逃げ道を塞ぎます。" }, fen: "5Bnk/p5pp/8/8/8/8/8/B3K3 w - - 0 1", line: ["a1c3", "a7a6", "c3g7"] },
-  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, deflect the queen with the knight check, then finish with the queen.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、ナイトのチェックでクイーンをそらしてから、クイーンでメイトしよう。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g5f7", "e8f7", "d3h7"] },
+  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, then offer the knight with check. The queen is forced to capture it, opening the final queen mate.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、最後にナイトをチェックで差し出そう。クイーンは取るしかなく、最後のクイーンメイトへの道が開きます。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g5f7", "e8f7", "d3h7"], forcedSacrificePlies: [6] },
 ];
 
 const extendedPuzzleOpenings = {
@@ -475,7 +475,7 @@ const naturalPuzzlePositions = {
   "intermediate-5": "3b4/3R2pp/2k5/5Q2/8/8/4K1PP/8 w - - 0 1",
   "intermediate-6": "8/p1pkb2N/1qpp3Q/1p1n4/2P5/3P4/K1P4P/R2B4 w - - 0 1",
   "intermediate-7": "8/P1K5/8/1P6/8/4Q3/p5k1/8 w - - 0 1",
-  "intermediate-8": "3br1rk/2p2p1p/1p1P2p1/7N/3P4/2P5/1P6/KQ1RR3 w - - 0 1",
+  "intermediate-8": "3b2rk/2p2p1p/1p1P2p1/7N/3P4/2P5/1P6/KQ1RR3 w - - 0 1",
   "intermediate-9": "1K6/8/8/7p/3Q1p2/8/5q1k/3rN3 w - - 0 1",
   "intermediate-10": "6R1/8/8/8/7K/8/PPP5/7k w - - 0 1",
   "advanced-1": "1nrr4/p1pk4/np1p4/p7/1b1K1P2/P2PPN2/1P1R3P/2RQ4 w - - 0 1",
@@ -497,12 +497,44 @@ const naturalPuzzlePositions = {
   "grandmaster-7": "rnbrk3/5ppp/p6p/3p2qp/P5P1/2N4P/PP1PB1P1/K1RR1Q2 w - - 0 1",
   "grandmaster-8": "r2q1r1k/1b3ppp/p5pN/1p3b1p/6P1/1Q3NP1/P1P2PPP/3RR1K1 w - - 0 1",
   "grandmaster-9": "1r2r2k/p4ppp/1qn1p1pn/5p2/5P1P/B3PQPN/4NPPP/B5K1 w - - 0 1",
-  "grandmaster-10": "4qrk1/3nprpR/3p1p1p/2p1p1N1/1b3P1P/2BQPNP1/2PPP3/K7 w - - 0 1",
+  "grandmaster-10": "4q1k1/3nprpR/3p3p/2p3N1/1b3P1P/2BQPNP1/2PPP3/K7 w - - 0 1",
 };
 
 chessPuzzles.forEach((puzzle) => {
   puzzle.fen = naturalPuzzlePositions[puzzle.id] || puzzle.fen;
 });
+
+function validateForcedPuzzleSacrifices() {
+  chessPuzzles.forEach((puzzle) => {
+    if (!puzzle.forcedSacrificePlies?.length) return;
+    const probe = new Chess(puzzle.fen);
+
+    puzzle.line.forEach((moveKey, ply) => {
+      const move = probe.move({
+        from: moveKey.slice(0, 2),
+        to: moveKey.slice(2, 4),
+        promotion: moveKey[4],
+      });
+      if (!move || !puzzle.forcedSacrificePlies.includes(ply)) return;
+
+      const replyKey = puzzle.line[ply + 1];
+      const replies = probe.moves({ verbose: true });
+      const forcedReply = replies.length === 1 ? replies[0] : null;
+      const isForcedCapture =
+        probe.inCheck() &&
+        forcedReply &&
+        `${forcedReply.from}${forcedReply.to}${forcedReply.promotion || ""}` === replyKey &&
+        forcedReply.to === move.to &&
+        Boolean(forcedReply.captured);
+
+      if (!isForcedCapture) {
+        console.error(`Puzzle ${puzzle.id} has a non-forced sacrifice at ply ${ply + 1}.`);
+      }
+    });
+  });
+}
+
+validateForcedPuzzleSacrifices();
 
 const checkmateEffects = [
   "confetti",
