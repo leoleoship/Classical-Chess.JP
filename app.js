@@ -195,6 +195,8 @@ const i18n = {
     puzzleHintShown: "動かす駒を盤上で光らせました。",
     puzzleReply: "相手が応手しています...",
     puzzleSolved: "クリア！ チェックメイトです。",
+    puzzleLevelComplete: "{difficulty}の全パズルをクリア！",
+    puzzleAllComplete: "全パズル制覇！",
     puzzleWrong: "その手ではありません。局面を戻します。",
     restartPuzzle: "やり直す",
     nextPuzzle: "次のパズル",
@@ -312,6 +314,8 @@ const i18n = {
     puzzleHintShown: "The piece to move is highlighted on the board.",
     puzzleReply: "Opponent is replying...",
     puzzleSolved: "Solved! Checkmate.",
+    puzzleLevelComplete: "All {difficulty} puzzles complete!",
+    puzzleAllComplete: "ALL PUZZLES COMPLETE!",
     puzzleWrong: "That is not the move. Resetting the position.",
     restartPuzzle: "Restart",
     nextPuzzle: "Next puzzle",
@@ -401,11 +405,11 @@ const chessPuzzles = [
   { id: "grandmaster-3", difficulty: "grandmaster", name: { en: "Bishop clearance", ja: "ビショップのクリアランス" }, fen: "8/8/8/1k1K2R1/8/R1b5/8/8 w - - 0 1", line: ["a3c3", "b5b6", "c3b3", "b6c7", "g5g8", "c7d7", "b3b7"] },
   { id: "grandmaster-4", difficulty: "grandmaster", name: { en: "Knight Relay", ja: "ナイトのリレー" }, fen: "1k6/7N/8/2K3R1/8/8/2n5/8 w - - 0 1", line: ["c5b6", "b8c8", "h7f6", "c8d8", "g5e5", "d8c8", "e5e8"] },
   { id: "grandmaster-5", difficulty: "grandmaster", name: { en: "Bishop-Knight Net", ja: "ビショップとナイトの網" }, fen: "2N5/1k6/5n2/8/B7/8/7Q/3K4 w - - 0 1", line: ["h2d6", "b7c8", "a4c6", "f6g8", "d6d7", "c8b8", "d7b7"] },
-  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Sacrifice a rook, a knight, and the queen. The surviving knight delivers the smothered mate.", ja: "ルーク、ナイト、クイーンを順番に犠牲にし、残ったナイトでスマザードメイトを決めよう。" }, fen: "rr1q1r1k/6pp/2N4N/8/2Q5/8/8/1RK5 w - - 0 1", line: ["b1b8", "a8b8", "c6e7", "d8e7", "c4d5", "e7d6", "d5g8", "f8g8", "h6f7"] },
-  { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "A Quiet Threat", ja: "静かな脅威" }, prompt: { en: "Offer the checking bishop. Its capture opens the e-file, allowing the rook and queen to create mate in two.", ja: "チェックするビショップをあえて取らせよう。その捕獲でeファイルが開き、ルークとクイーンによるメイトイン2が生まれます。" }, fen: "4k3/4rppp/p7/8/8/5Q2/4B3/K3R3 w - - 0 1", line: ["e2b5", "a6b5", "e1e7", "e8f8", "f3f7"] },
-  { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook!", ja: "ザ・ルーク！" }, prompt: { en: "Sacrifice both rooks, build the queen sacrifice, and let the knight close the smothered mating net.", ja: "2本のルークを両方犠牲にし、さらにクイーンを捨てて、最後はナイトで窒息メイトを完成させよう。" }, fen: "r2q1r1k/5ppp/7N/8/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"] },
+  { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Give a rook check and force its capture. After the knight drives the king into the corner, sacrifice the queen with check and finish the smothered mate.", ja: "ルークでチェックして強制的に取らせよう。ナイトでキングを隅へ追い込んだ後、クイーンもチェックで犠牲にし、スマザードメイトを決めよう。" }, fen: "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1", line: ["f7f8", "a8f8", "e5f7", "h8g8", "f7h6", "g8h8", "c4g8", "f8g8", "h6f7"] },
+  { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "A Quiet Threat", ja: "静かな脅威" }, prompt: { en: "The bishop check opens the e-file. Punish the defender's best capture by coordinating the rook and queen for mate.", ja: "ビショップのチェックでeファイルを開こう。守備側の最善の捕獲に対し、ルークとクイーンを連携してメイトしよう。" }, fen: "4k3/4rppp/p7/8/8/5Q2/4B3/K3R3 w - - 0 1", line: ["e2b5", "a6b5", "e1e7", "e8f8", "f3f7"] },
+  { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook!", ja: "ザ・ルーク！" }, prompt: { en: "Clear both rooks through exchanges, build the attack, then sacrifice the queen with check so the knight can complete the smothered mate.", ja: "2本のルークを交換で盤上から取り除き、攻撃を組み立てよう。最後はクイーンをチェックで犠牲にし、ナイトで窒息メイトを完成させよう。" }, fen: "r2q1r1k/5ppp/7N/8/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"] },
   { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Sniper Bishop", ja: "スナイパー・ビショップ" }, prompt: { en: "Set the bishop on the long diagonal, then snipe g7. The second bishop protects it while the king's own knight and pawn seal every exit.", ja: "ビショップを長い対角線に配置してg7を狙撃。もう1枚のビショップが守り、相手のナイトとポーンがキングの逃げ道を塞ぎます。" }, fen: "5Bnk/p5pp/8/8/8/8/8/B3K3 w - - 0 1", line: ["a1c3", "a7a6", "c3g7"] },
-  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, sacrifice the knight afterward, then finish with the queen.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、その後ナイトを犠牲にしてクイーンでメイトしよう。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g5f7", "e8f7", "d3h7"] },
+  { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, deflect the queen with the knight check, then finish with the queen.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、ナイトのチェックでクイーンをそらしてから、クイーンでメイトしよう。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g5f7", "e8f7", "d3h7"] },
 ];
 
 const extendedPuzzleOpenings = {
@@ -489,7 +493,7 @@ const naturalPuzzlePositions = {
   "grandmaster-3": "rn6/pb2p3/2np1p2/p1pKp1R1/k2PPPP1/1Rb1PP2/1PQN4/2B5 w - - 0 1",
   "grandmaster-4": "rk2r1n1/1p1p4/p1p2N1p/1pKpp1R1/1P1PNPQ1/2P1PP2/3P1P2/n7 w - - 0 1",
   "grandmaster-5": "2N5/3pp2p/1pkppn2/q1bn1p2/1bP1P1P1/3P1P2/2BNP1PQ/3K1R2 w - - 0 1",
-  "grandmaster-6": "rr1q1rnk/3pp1pp/2N2p1N/4p1p1/2Q2P1P/3PP1P1/2PP4/1RKR4 w - - 0 1",
+  "grandmaster-6": "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1",
   "grandmaster-7": "rnbrk3/5ppp/p6p/3p2qp/P5P1/2N4P/PP1PB1P1/K1RR1Q2 w - - 0 1",
   "grandmaster-8": "r2q1r1k/1b3ppp/p5pN/1p3b1p/6P1/1Q3NP1/P1P2PPP/3RR1K1 w - - 0 1",
   "grandmaster-9": "1r2r2k/p4ppp/1qn1p1pn/5p2/5P1P/B3PQPN/4NPPP/B5K1 w - - 0 1",
@@ -1347,6 +1351,7 @@ function loadPuzzle(index = puzzleIndex) {
 
 function finishPuzzle(result) {
   const puzzle = currentPuzzle();
+  const wasSolved = solvedPuzzles.has(puzzle.id);
   puzzleSolved = true;
   puzzleThinking = false;
   solvedPuzzles.add(puzzle.id);
@@ -1354,8 +1359,17 @@ function finishPuzzle(result) {
   puzzleMessage.textContent = t("puzzleSolved");
   puzzleMessage.className = "puzzle-message success";
   render();
-  triggerGameOverCelebration(result);
-  triggerMoveMoment(result);
+  const difficultyPuzzles = chessPuzzles.filter((item) => item.difficulty === puzzle.difficulty);
+  const completedDifficulty = difficultyPuzzles.every((item) => solvedPuzzles.has(item.id));
+  const completedAllPuzzles = chessPuzzles.every((item) => solvedPuzzles.has(item.id));
+  if (!wasSolved && completedAllPuzzles) {
+    triggerPuzzleMilestoneCelebration("all", puzzle.difficulty);
+  } else if (!wasSolved && completedDifficulty) {
+    triggerPuzzleMilestoneCelebration("difficulty", puzzle.difficulty);
+  } else {
+    triggerGameOverCelebration(result);
+    triggerMoveMoment(result);
+  }
 }
 
 function applyPuzzlePly(move, playerMove) {
@@ -2423,6 +2437,39 @@ function triggerOnlineEloGain(delta) {
     celebrationLayer.append(token);
   }
   scheduleCelebrationClear(2300);
+}
+
+function triggerPuzzleMilestoneCelebration(type, difficulty) {
+  clearCelebration();
+  const allComplete = type === "all";
+  const difficultyLabel = difficulty[0].toUpperCase() + difficulty.slice(1);
+  celebrationLayer.classList.add("active", "puzzle-milestone", allComplete ? "all-puzzles-complete" : "difficulty-complete");
+  celebrationLayer.append(
+    makeCelebrationPiece(
+      allComplete ? "puzzle-all-title" : "puzzle-level-title",
+      allComplete ? t("puzzleAllComplete") : t("puzzleLevelComplete", { difficulty: difficultyLabel }),
+      50,
+      0,
+    ),
+  );
+  celebrationLayer.append(makeCelebrationPiece("puzzle-milestone-crown", allComplete ? "♛" : "♕", 50, 120));
+  const count = allComplete ? 54 : 22;
+  for (let i = 0; i < count; i += 1) {
+    const token = makeCelebrationPiece(
+      allComplete ? "puzzle-grand-confetti" : "puzzle-level-confetti",
+      i % 5 === 0 ? "✦" : "",
+      4 + Math.random() * 92,
+      i * (allComplete ? 28 : 48),
+    );
+    token.style.setProperty("--confetti-color", ["#f2c94c", "#eb5757", "#2d9cdb", "#27ae60", "#f2994a"][i % 5]);
+    celebrationLayer.append(token);
+  }
+  if (allComplete) {
+    ["♔", "♕", "♖", "♗", "♘", "♙"].forEach((glyph, index) => {
+      celebrationLayer.append(makeCelebrationPiece("puzzle-victory-piece", glyph, 20 + index * 12, 260 + index * 80));
+    });
+  }
+  scheduleCelebrationClear(allComplete ? 5200 : 3000);
 }
 
 function triggerMoveMoment(result) {
