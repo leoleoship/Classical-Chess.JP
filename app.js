@@ -498,8 +498,75 @@ const naturalPuzzlePositions = {
   "grandmaster-10": "4q1k1/3nprpR/3p3p/2p3N1/1b3P1P/2BQPNP1/2PPP3/K7 w - - 0 1",
 };
 
+function squaresBetween(from, to) {
+  const fromFile = files.indexOf(from[0]);
+  const toFile = files.indexOf(to[0]);
+  const fromRank = Number(from[1]);
+  const toRank = Number(to[1]);
+  const fileStep = Math.sign(toFile - fromFile);
+  const rankStep = Math.sign(toRank - fromRank);
+  const squares = [];
+  let file = fromFile + fileStep;
+  let rank = fromRank + rankStep;
+
+  while (file !== toFile || rank !== toRank) {
+    squares.push(`${files[file]}${rank}`);
+    file += fileStep;
+    rank += rankStep;
+  }
+  return squares;
+}
+
+function puzzleMovePayload(moveKey) {
+  const payload = { from: moveKey.slice(0, 2), to: moveKey.slice(2, 4) };
+  if (moveKey[4]) payload.promotion = moveKey[4];
+  return payload;
+}
+
+function sliderRoutesForPuzzle(puzzle) {
+  const probe = new Chess(puzzle.fen);
+  const routes = new Set();
+
+  for (const moveKey of puzzle.line) {
+    const payload = puzzleMovePayload(moveKey);
+    const piece = probe.get(payload.from);
+    if (piece && ["b", "r", "q"].includes(piece.type)) {
+      squaresBetween(payload.from, payload.to).forEach((square) => routes.add(square));
+    }
+    try {
+      probe.move(payload);
+    } catch {
+      break;
+    }
+  }
+  return routes;
+}
+
+function naturalizePuzzle(puzzle, naturalFen) {
+  if (!naturalFen) return puzzle.fen;
+  const tactical = new Chess(puzzle.fen);
+  const natural = new Chess(naturalFen);
+
+  sliderRoutesForPuzzle(puzzle).forEach((square) => {
+    if (!tactical.get(square) && natural.get(square)) natural.remove(square);
+  });
+
+  const replay = new Chess(natural.fen());
+  try {
+    puzzle.line.forEach((moveKey) => replay.move(puzzleMovePayload(moveKey)));
+  } catch {
+    console.warn(`Naturalization skipped for ${puzzle.id}: it obstructed the tactical line.`);
+    return puzzle.fen;
+  }
+  if (!replay.isCheckmate()) {
+    console.warn(`Naturalization skipped for ${puzzle.id}: the scripted line no longer checkmates.`);
+    return puzzle.fen;
+  }
+  return natural.fen();
+}
+
 chessPuzzles.forEach((puzzle) => {
-  puzzle.fen = naturalPuzzlePositions[puzzle.id] || puzzle.fen;
+  puzzle.fen = naturalizePuzzle(puzzle, naturalPuzzlePositions[puzzle.id]);
 });
 
 function validateForcedPuzzleSacrifices() {
