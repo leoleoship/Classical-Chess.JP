@@ -657,6 +657,7 @@ let masterGain = null;
 let musicTimer = null;
 let musicNotesPlayed = 0;
 let celebrationTimer = null;
+let lastPuzzleMovieHero = -1;
 let loadingTimer = null;
 let loadingHideTimer = null;
 let loadingProgress = 0;
@@ -1480,8 +1481,7 @@ function finishPuzzle(result) {
   } else if (!wasSolved && completedDifficulty) {
     triggerPuzzleMilestoneCelebration("difficulty", puzzle.difficulty);
   } else {
-    triggerGameOverCelebration(result);
-    triggerMoveMoment(result);
+    triggerPuzzleVictoryMovie("puzzle", puzzle.difficulty);
   }
 }
 
@@ -2553,36 +2553,113 @@ function triggerOnlineEloGain(delta) {
 }
 
 function triggerPuzzleMilestoneCelebration(type, difficulty) {
+  triggerPuzzleVictoryMovie(type, difficulty);
+}
+
+function puzzleVictoryCopy(type, difficulty) {
+  const phrases = {
+    en: [
+      "Well Done!",
+      "Crushed the Quest!",
+      "Brilliant Trailblazer!",
+      "Ride On, Puzzle Master!",
+      "That Mate Was Golden!",
+      "Another Mystery Solved!",
+    ],
+    ja: [
+      "よくできました！",
+      "クエスト完全攻略！",
+      "見事なひらめき！",
+      "進め、パズルマスター！",
+      "黄金のチェックメイト！",
+      "また一つ謎を解いた！",
+    ],
+  };
+  if (type === "all") {
+    return language === "ja" ? "全パズル制覇！" : "Every Quest Crushed!";
+  }
+  if (type === "difficulty") {
+    const difficultyLabel = difficulty[0].toUpperCase() + difficulty.slice(1);
+    return language === "ja" ? `${difficultyLabel} 完全攻略！` : `${difficultyLabel} Trail Conquered!`;
+  }
+  return randomItem(phrases[language] || phrases.en);
+}
+
+function makePuzzleMovieElement(className, text = "") {
+  const element = document.createElement("div");
+  element.className = className;
+  element.textContent = text;
+  return element;
+}
+
+function triggerPuzzleVictoryMovie(type = "puzzle", difficulty = currentPuzzle().difficulty) {
   clearCelebration();
   const allComplete = type === "all";
-  const difficultyLabel = difficulty[0].toUpperCase() + difficulty.slice(1);
-  celebrationLayer.classList.add("active", "puzzle-milestone", allComplete ? "all-puzzles-complete" : "difficulty-complete");
-  celebrationLayer.append(
-    makeCelebrationPiece(
-      allComplete ? "puzzle-all-title" : "puzzle-level-title",
-      allComplete ? t("puzzleAllComplete") : t("puzzleLevelComplete", { difficulty: difficultyLabel }),
-      50,
-      0,
-    ),
+  const difficultyComplete = type === "difficulty";
+  const pieceCast = ["♔", "♕", "♖", "♗", "♘", "♙", "♚", "♛", "♜", "♝", "♞", "♟"];
+  const heroChoices = pieceCast.map((_, index) => index).filter((index) => index !== lastPuzzleMovieHero);
+  const heroIndex = randomItem(heroChoices);
+  lastPuzzleMovieHero = heroIndex;
+  const hero = pieceCast[heroIndex];
+  const supporters = pieceCast.filter((_, index) => index !== heroIndex);
+  const sceneVariants = ["high-noon", "sunset", "starlight"];
+  const sceneVariant = randomItem(sceneVariants);
+
+  celebrationLayer.classList.add(
+    "active",
+    "puzzle-victory-movie",
+    `western-${sceneVariant}`,
+    allComplete ? "all-puzzles-complete" : difficultyComplete ? "difficulty-complete" : "puzzle-complete",
   );
-  celebrationLayer.append(makeCelebrationPiece("puzzle-milestone-crown", allComplete ? "♛" : "♕", 50, 120));
-  const count = allComplete ? 54 : 22;
-  for (let i = 0; i < count; i += 1) {
-    const token = makeCelebrationPiece(
-      allComplete ? "puzzle-grand-confetti" : "puzzle-level-confetti",
-      i % 5 === 0 ? "✦" : "",
-      4 + Math.random() * 92,
-      i * (allComplete ? 28 : 48),
-    );
-    token.style.setProperty("--confetti-color", ["#f2c94c", "#eb5757", "#2d9cdb", "#27ae60", "#f2994a"][i % 5]);
-    celebrationLayer.append(token);
-  }
-  if (allComplete) {
-    ["♔", "♕", "♖", "♗", "♘", "♙"].forEach((glyph, index) => {
-      celebrationLayer.append(makeCelebrationPiece("puzzle-victory-piece", glyph, 20 + index * 12, 260 + index * 80));
+
+  const scene = makePuzzleMovieElement("western-scene");
+  scene.append(
+    makePuzzleMovieElement("western-sun"),
+    makePuzzleMovieElement("western-mesa mesa-left"),
+    makePuzzleMovieElement("western-mesa mesa-right"),
+    makePuzzleMovieElement("western-saloon"),
+    makePuzzleMovieElement("western-ground"),
+    makePuzzleMovieElement("western-dust dust-one"),
+    makePuzzleMovieElement("western-dust dust-two"),
+  );
+
+  const title = makePuzzleMovieElement("western-victory-title", puzzleVictoryCopy(type, difficulty));
+  const subtitle = makePuzzleMovieElement(
+    "western-victory-subtitle",
+    allComplete
+      ? language === "ja"
+        ? "Chess.JP の伝説が生まれた"
+        : "A Chess.JP legend is born"
+      : language === "ja"
+        ? "次の挑戦が君を待っている"
+        : "The next challenge awaits",
+  );
+
+  const stage = makePuzzleMovieElement("western-piece-stage");
+  const heroWrap = makePuzzleMovieElement("western-hero");
+  heroWrap.append(
+    makePuzzleMovieElement("western-trophy", "🏆"),
+    makePuzzleMovieElement("western-hero-piece", hero),
+    makePuzzleMovieElement("western-hero-shadow"),
+  );
+  stage.append(heroWrap);
+
+  const supporterCount = allComplete ? 10 : difficultyComplete ? 8 : 6;
+  supporters
+    .sort(() => Math.random() - 0.5)
+    .slice(0, supporterCount)
+    .forEach((glyph, index) => {
+      const side = index % 2 === 0 ? "left" : "right";
+      const row = Math.floor(index / 2);
+      const supporter = makePuzzleMovieElement(`western-supporter supporter-${side}`, glyph);
+      supporter.style.setProperty("--supporter-row", row);
+      supporter.style.setProperty("--supporter-delay", `${120 + index * 70}ms`);
+      stage.append(supporter);
     });
-  }
-  scheduleCelebrationClear(allComplete ? 5200 : 3000);
+
+  scene.append(title, subtitle, stage);
+  celebrationLayer.append(scene);
+  scheduleCelebrationClear(allComplete ? 6200 : difficultyComplete ? 5200 : 4400);
 }
 
 function triggerMoveMoment(result) {

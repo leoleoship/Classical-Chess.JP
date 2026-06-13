@@ -2047,6 +2047,384 @@ body[data-theme="night"] .segmented {
   animation: puzzleVictoryPiece 1000ms ease-out both;
 }
 
+.celebration-layer.puzzle-victory-movie {
+  background: #e8a553;
+  animation: westernMovieIn 260ms ease-out both;
+}
+
+.celebration-layer.puzzle-victory-movie::before {
+  display: none;
+}
+
+.western-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #efbd72;
+  isolation: isolate;
+}
+
+.western-sunset .western-scene {
+  background: #d97852;
+}
+
+.western-starlight .western-scene {
+  background: #27334b;
+}
+
+.western-sun {
+  position: absolute;
+  top: 10%;
+  right: 13%;
+  width: clamp(74px, 12vw, 150px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #ffd65a;
+  box-shadow: 0 0 0 12px rgb(255 214 90 / 18%);
+  animation: westernSunRise 900ms ease-out both;
+}
+
+.western-starlight .western-sun {
+  background: #f6f1d0;
+  box-shadow: 0 0 28px rgb(246 241 208 / 42%);
+}
+
+.western-mesa {
+  position: absolute;
+  bottom: 21%;
+  z-index: 1;
+  width: 36%;
+  height: 31%;
+  background: #9e4937;
+  clip-path: polygon(0 100%, 0 54%, 12% 54%, 18% 28%, 55% 28%, 61% 50%, 76% 50%, 82% 67%, 100% 72%, 100% 100%);
+  opacity: 0.92;
+}
+
+.mesa-left {
+  left: -4%;
+  animation: westernMesaLeft 780ms ease-out both;
+}
+
+.mesa-right {
+  right: -5%;
+  transform: scaleX(-1);
+  animation: westernMesaRight 780ms ease-out both;
+}
+
+.western-sunset .western-mesa {
+  background: #71372f;
+}
+
+.western-starlight .western-mesa {
+  background: #171c29;
+}
+
+.western-saloon {
+  position: absolute;
+  right: 5%;
+  bottom: 17%;
+  z-index: 2;
+  width: clamp(120px, 18vw, 240px);
+  height: clamp(90px, 18vh, 170px);
+  background: #4b2b22;
+  border-top: 14px solid #322018;
+  box-shadow:
+    inset 0 0 0 5px #6f3f2d,
+    18px 16px 0 #322018;
+  opacity: 0.9;
+}
+
+.western-saloon::before {
+  position: absolute;
+  top: -44px;
+  left: 8%;
+  width: 84%;
+  height: 34px;
+  border: 5px solid #6f3f2d;
+  background: #f0c477;
+  color: #3c271d;
+  content: "SALOON";
+  font: 900 clamp(0.75rem, 1.8vw, 1.25rem) Georgia, serif;
+  line-height: 24px;
+  text-align: center;
+}
+
+.western-saloon::after {
+  position: absolute;
+  bottom: 0;
+  left: 39%;
+  width: 22%;
+  height: 58%;
+  background: #211611;
+  content: "";
+}
+
+.western-ground {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  height: 31%;
+  background: #a95c35;
+  border-top: 8px solid #d98b4b;
+}
+
+.western-starlight .western-ground {
+  background: #51382e;
+  border-top-color: #75503b;
+}
+
+.western-ground::before,
+.western-ground::after {
+  position: absolute;
+  bottom: 15%;
+  width: 22px;
+  height: 70px;
+  background: #31502e;
+  clip-path: polygon(35% 100%, 35% 56%, 0 56%, 0 31%, 35% 31%, 35% 0, 65% 0, 65% 45%, 100% 45%, 100% 70%, 65% 70%, 65% 100%);
+  content: "";
+}
+
+.western-ground::before {
+  left: 8%;
+}
+
+.western-ground::after {
+  right: 26%;
+  transform: scale(0.76);
+}
+
+.western-victory-title,
+.western-victory-subtitle {
+  position: absolute;
+  left: 50%;
+  z-index: 8;
+  width: min(92vw, 980px);
+  color: #fff8dc;
+  font-family: Georgia, "Times New Roman", serif;
+  text-align: center;
+  text-shadow:
+    0 4px 0 #4b251b,
+    0 8px 24px rgb(46 20 13 / 65%);
+  transform: translateX(-50%);
+}
+
+.western-victory-title {
+  top: clamp(24px, 7vh, 72px);
+  font-size: clamp(2.1rem, 6.8vw, 5.8rem);
+  line-height: 0.95;
+  animation: westernTitleDrop 700ms cubic-bezier(0.2, 0.9, 0.25, 1.18) both;
+}
+
+.western-victory-subtitle {
+  top: clamp(102px, 21vh, 190px);
+  color: #ffe3a1;
+  font-family: system-ui, sans-serif;
+  font-size: clamp(0.9rem, 2.2vw, 1.4rem);
+  font-weight: 800;
+  text-shadow: 0 3px 12px rgb(46 20 13 / 60%);
+  animation: westernSubtitleIn 700ms 320ms ease-out both;
+}
+
+.western-piece-stage {
+  position: absolute;
+  left: 50%;
+  bottom: 7%;
+  z-index: 7;
+  width: min(94vw, 900px);
+  height: min(54vh, 430px);
+  transform: translateX(-50%);
+}
+
+.western-hero {
+  position: absolute;
+  left: 50%;
+  bottom: 3%;
+  width: clamp(118px, 21vw, 220px);
+  height: 78%;
+  transform: translateX(-50%);
+  animation: westernHeroArrive 720ms 260ms cubic-bezier(0.2, 0.88, 0.2, 1.15) both;
+}
+
+.western-hero-piece {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 3;
+  color: #fff4d4;
+  font-size: clamp(6.5rem, 18vw, 12rem);
+  line-height: 1;
+  text-shadow:
+    0 6px 0 #4b251b,
+    0 12px 22px rgb(31 15 10 / 50%);
+  transform: translateX(-50%);
+}
+
+.western-trophy {
+  position: absolute;
+  top: -4%;
+  left: 50%;
+  z-index: 4;
+  font-size: clamp(3.6rem, 9vw, 6.6rem);
+  filter: drop-shadow(0 7px 0 #81511d) drop-shadow(0 12px 16px rgb(40 19 8 / 45%));
+  transform: translateX(-50%);
+  animation: westernTrophyLift 1000ms 720ms cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+}
+
+.western-hero-shadow {
+  position: absolute;
+  bottom: -2%;
+  left: 50%;
+  z-index: 1;
+  width: 82%;
+  height: 13%;
+  border-radius: 50%;
+  background: rgb(55 25 15 / 42%);
+  transform: translateX(-50%);
+}
+
+.western-supporter {
+  position: absolute;
+  bottom: calc(3% + var(--supporter-row) * 7%);
+  z-index: 2;
+  color: #fff0cf;
+  font-size: clamp(3rem, 8vw, 5.7rem);
+  line-height: 1;
+  text-shadow:
+    0 4px 0 #4b251b,
+    0 8px 15px rgb(42 20 12 / 48%);
+  animation: westernSupporterCheer 780ms var(--supporter-delay) ease-out both;
+}
+
+.supporter-left {
+  left: calc(2% + var(--supporter-row) * 8%);
+}
+
+.supporter-right {
+  right: calc(2% + var(--supporter-row) * 8%);
+}
+
+.western-dust {
+  position: absolute;
+  bottom: 9%;
+  z-index: 6;
+  width: 84px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgb(245 197 117 / 52%);
+  filter: blur(7px);
+}
+
+.dust-one {
+  left: 14%;
+  animation: westernDustRun 2200ms 500ms ease-out infinite;
+}
+
+.dust-two {
+  right: 17%;
+  animation: westernDustRun 1900ms 850ms ease-out infinite reverse;
+}
+
+@keyframes westernMovieIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes westernSunRise {
+  from { opacity: 0; transform: translateY(55%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes westernMesaLeft {
+  from { transform: translateX(-24%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes westernMesaRight {
+  from { transform: translateX(24%) scaleX(-1); }
+  to { transform: translateX(0) scaleX(-1); }
+}
+
+@keyframes westernTitleDrop {
+  from { opacity: 0.35; transform: translate(-50%, -12%) scale(0.82); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes westernSubtitleIn {
+  from { opacity: 0.35; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes westernHeroArrive {
+  from { opacity: 0.42; transform: translate(-50%, 14%) scale(0.82); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes westernTrophyLift {
+  from { opacity: 0.3; transform: translate(-50%, 26%) scale(0.62) rotate(-12deg); }
+  68% { opacity: 1; transform: translate(-50%, -12%) scale(1.12) rotate(4deg); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0); }
+}
+
+@keyframes westernSupporterCheer {
+  0% { opacity: 0.35; transform: translateY(18%) scale(0.76) rotate(-8deg); }
+  58% { opacity: 1; transform: translateY(-14%) scale(1.08) rotate(7deg); }
+  76% { transform: translateY(0) scale(1) rotate(-4deg); }
+  90% { transform: translateY(-9%) scale(1.04) rotate(3deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes westernDustRun {
+  from { opacity: 0; transform: translateX(-60px) scale(0.5); }
+  35% { opacity: 0.8; }
+  to { opacity: 0; transform: translateX(150px) scale(1.65); }
+}
+
+@media (max-width: 620px) {
+  .western-victory-title {
+    top: 5vh;
+    font-size: clamp(2rem, 12vw, 3.8rem);
+  }
+
+  .western-victory-subtitle {
+    top: 18vh;
+    padding: 0 18px;
+  }
+
+  .western-piece-stage {
+    bottom: 5%;
+    height: 55vh;
+  }
+
+  .western-hero {
+    height: 72%;
+  }
+
+  .western-supporter {
+    font-size: clamp(2.7rem, 14vw, 4.8rem);
+  }
+
+  .supporter-left {
+    left: calc(-1% + var(--supporter-row) * 4%);
+  }
+
+  .supporter-right {
+    right: calc(-1% + var(--supporter-row) * 4%);
+  }
+
+  .western-saloon {
+    right: -7%;
+    opacity: 0.72;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .puzzle-victory-movie *,
+  .puzzle-victory-movie {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}
+
 @keyframes puzzleMilestoneTitle {
   from { opacity: 0; transform: translate(-50%, -50%) scale(0.55); }
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
