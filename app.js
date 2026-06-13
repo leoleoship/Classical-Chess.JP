@@ -408,7 +408,7 @@ const chessPuzzles = [
   { id: "grandmaster-6", difficulty: "grandmaster", name: { en: "Brilliant Sacrifice for Mate", ja: "メイトへの華麗な犠牲" }, prompt: { en: "Make two genuinely losing-looking offers: first a rook check that must be captured, then a queen check that must be captured. The knight delivers the forced smothered mate.", ja: "本当に損をするように見える犠牲を2回行います。まず必ず取られるルークチェック、次に必ず取られるクイーンチェックを放ち、ナイトで強制スマザードメイトを決めよう。" }, fen: "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1", line: ["f7f8", "a8f8", "e5f7", "h8g8", "f7h6", "g8h8", "c4g8", "f8g8", "h6f7"], forcedSacrificePlies: [0, 6] },
   { id: "grandmaster-7", difficulty: "grandmaster", name: { en: "A Quiet Threat", ja: "静かな脅威" }, prompt: { en: "Sacrifice the bishop with check and force the king to capture it. Then coordinate the queen, knight, and remaining bishop through Black's best defense to reveal the hidden mate.", ja: "ビショップをチェックで犠牲にし、キングに強制的に取らせよう。その後、相手の最善防御に対してクイーン、ナイト、残ったビショップを連携させ、隠れたメイトを完成させよう。" }, fen: "8/kpB5/pN5P/B1nP4/2n5/p1bp4/1RppQ1P1/K7 w - - 0 1", line: ["c7b8", "a7b8", "e2e8", "b8c7", "b6c4", "b7b6", "a5b6", "c7b7", "c4d6"], forcedSacrificePlies: [0] },
   { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook!", ja: "ザ・ルーク！" }, prompt: { en: "Clear both rooks through exchanges, build the attack, then sacrifice the queen with a forced check so the knight can complete the smothered mate.", ja: "2本のルークを交換で盤上から取り除き、攻撃を組み立てよう。最後は必ず取られるクイーンチェックで犠牲にし、ナイトで窒息メイトを完成させよう。" }, fen: "r2q1r1k/5ppp/7N/8/8/1Q6/8/3RR1K1 w - - 0 1", line: ["d1d8", "a8d8", "e1e8", "f8e8", "b3d5", "f7f6", "d5g8", "e8g8", "h6f7"], forcedSacrificePlies: [6] },
-  { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Sniper Bishop", ja: "スナイパー・ビショップ" }, prompt: { en: "Set the bishop on the long diagonal, then snipe g7. The second bishop protects it while the king's own knight and pawn seal every exit.", ja: "ビショップを長い対角線に配置してg7を狙撃。もう1枚のビショップが守り、相手のナイトとポーンがキングの逃げ道を塞ぎます。" }, fen: "5Bnk/p5pp/8/8/8/8/8/B3K3 w - - 0 1", line: ["a1c3", "a7a6", "c3g7"] },
+  { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Sniper Bishop", ja: "スナイパー・ビショップ" }, prompt: { en: "Deflect the king with a knight check, promote with check, and keep driving it toward g8. The bishop on h2 locks c7, while the bishop on g2 fires the final long-range shot to d5.", ja: "ナイトチェックでキングをそらし、チェック付きで昇格してg8へ追い込もう。h2のビショップがc7を封鎖し、g2のビショップがd5へ長距離の最終射撃を放ちます。" }, fen: "n1k5/2P4p/4p3/1P3N2/3N4/3p3p/3r2BB/6bK w - - 0 1", line: ["f5e7", "c8d7", "c7c8q", "d7e7", "c8e6", "e7f8", "e6f6", "f8g8", "g2d5"] },
   { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use repeated discovered checks to run the windmill, then offer the knight with check. The queen is forced to capture it, opening the final queen mate.", ja: "ディスカバードチェックを繰り返してウインドミルを回し、最後にナイトをチェックで差し出そう。クイーンは取るしかなく、最後のクイーンメイトへの道が開きます。" }, fen: "4q2k/4prR1/8/6N1/8/2BQ4/8/K7 w - - 0 1", line: ["g7f7", "h8g8", "f7g7", "g8h8", "g5f7", "e8f7", "d3h7"], forcedSacrificePlies: [6] },
 ];
 
@@ -433,7 +433,6 @@ const extendedPuzzleOpenings = {
   "grandmaster-3": ["8/8/8/3K2R1/k7/1Rb5/8/8 w - - 0 1", "b3a3", "a4b5"],
   "grandmaster-4": ["1k6/8/5N2/2K3R1/8/8/8/n7 w - - 0 1", "f6h7", "a1c2"],
   "grandmaster-5": ["2N5/8/2k2n2/8/8/8/2B4Q/3K4 w - - 0 1", "c2a4", "c6b7"],
-  "grandmaster-9": ["7k/p5pp/7n/8/8/B7/8/B5K1 w - - 0 1", "g1f1", "h6g8", "f1e1", "g8h6", "a3f8", "h6g8"],
   "grandmaster-10": ["4q1k1/4pr1R/8/6N1/8/2BQ4/8/K7 w - - 0 1", "h7g7", "g8h8"],
 };
 
@@ -495,7 +494,7 @@ const naturalPuzzlePositions = {
   "grandmaster-6": "r6k/4pRpp/8/4N3/2Qp4/8/8/1K6 w - - 0 1",
   "grandmaster-7": "8/kpB5/pN5P/B1nP4/2n5/p1bp4/1RppQ1P1/K7 w - - 0 1",
   "grandmaster-8": "r2q1r1k/1b3ppp/p5pN/1p3b1p/6P1/1Q3NP1/P1P2PPP/3RR1K1 w - - 0 1",
-  "grandmaster-9": "1r2r2k/p4ppp/1qn1p1pn/5p2/5P1P/B3PQPN/4NPPP/B5K1 w - - 0 1",
+  "grandmaster-9": "n1k5/2P4p/4p3/1P3N2/3N4/3p3p/3r2BB/6bK w - - 0 1",
   "grandmaster-10": "4q1k1/3nprpR/3p3p/2p3N1/1b3P1P/2BQPNP1/2PPP3/K7 w - - 0 1",
 };
 
