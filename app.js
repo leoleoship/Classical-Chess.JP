@@ -1489,7 +1489,7 @@ function finishPuzzle(result) {
     puzzleVictoryTimer = null;
     if (mode !== "puzzle" || !puzzleSolved || currentPuzzle().id !== solvedPuzzleId) return;
     triggerPuzzleVictoryMovie(movieType, puzzle.difficulty);
-  }, 4550);
+  }, 3750);
 }
 
 function applyPuzzlePly(move, playerMove) {
