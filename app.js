@@ -379,7 +379,7 @@ const chessPuzzles = [
   { id: "novice-10", difficulty: "novice", name: { en: "Rook Shelter", ja: "ルークの隠れ家" }, fen: "4K3/7k/7b/8/7R/8/8/8 w - - 0 1", line: ["e8f7", "h7h8", "h4h6"] },
 
   { id: "intermediate-1", difficulty: "intermediate", name: { en: "Queen Bridgework", ja: "クイーンの橋渡し" }, prompt: { en: "Coordinate the rook and queen against the king's strongest defensive route.", ja: "相手キングの最も粘り強い守りに対して、ルークとクイーンを連携させよう。" }, fen: "8/4k3/1Q6/8/7q/1K6/8/2R5 w - - 0 1", line: ["c1c7", "e7f8", "b6b8", "h4d8", "b8d8"] },
-  { id: "intermediate-2", difficulty: "intermediate", name: { en: "Queen deflection", ja: "クイーンのそらし" }, fen: "5k2/2R5/1Q6/8/7q/1K6/8/8 w - - 0 1", line: ["b6b8", "h4d8", "b8d8"] },
+  { id: "intermediate-2", difficulty: "intermediate", name: { en: "Queen Deflection", ja: "クイーンのそらし" }, prompt: { en: "Drive the king onto h7, then check with the rook from h3. Black's queen is forced to leave e1 and block on h4, where the rook captures it with mate.", ja: "キングをh7へ追い、h3からルークでチェックしよう。黒のクイーンはe1を離れてh4へブロックするしかなく、ルークで取ればメイトです。" }, fen: "2r3k1/r6R/1p2P3/P1Q5/8/4nR2/K6p/4q3 w - - 0 1", line: ["c5g5", "g8h7", "f3h3", "e1h4", "h3h4"] },
   { id: "intermediate-3", difficulty: "intermediate", name: { en: "Sixth-rank squeeze", ja: "6段目の締め付け" }, prompt: { en: "Capture on c7 with check, keep the king boxed in, and shift the queen across the back rank for mate.", ja: "c7をチェックで取り、キングを閉じ込めたまま、クイーンをバックランクへ移してメイトしよう。" }, fen: "2k5/R1p1p1p1/1P2r1q1/4p2Q/3B2P1/p4P2/2N5/1K1B4 w - - 0 1", line: ["h5h8", "c8d7", "a7c7", "d7d6", "h8d8"] },
   { id: "intermediate-4", difficulty: "intermediate", name: { en: "Rook exchange net", ja: "ルーク交換の網" }, prompt: { en: "Use the rook check to drive the king, then let the queen and bishop close the mating net.", ja: "ルークチェックでキングを追い、クイーンとビショップでメイトの網を閉じよう。" }, fen: "2k5/1p1pR3/6B1/4PP2/p7/5p2/pQpN1r2/K7 w - - 0 1", line: ["b2c3", "c8b8", "e7e8", "b8a7", "c3a5"] },
   { id: "intermediate-5", difficulty: "intermediate", name: { en: "Bishop Screen", ja: "ビショップの遮蔽" }, prompt: { en: "Use the enemy bishop as a screen while the rook and queen drive the king to the edge.", ja: "相手のビショップを遮蔽物として利用し、ルークとクイーンでキングを盤端へ追い込もう。" }, fen: "3b4/3R2pp/2k5/5Q2/8/8/4K1PP/8 w - - 0 1", line: ["f5d5", "c6b6", "d7b7", "b6a6", "d5b5"] },
@@ -413,7 +413,6 @@ const chessPuzzles = [
 ];
 
 const extendedPuzzleOpenings = {
-  "intermediate-2": ["8/4k3/1Q6/8/7q/1K6/8/2R5 w - - 0 1", "c1c7", "e7f8"],
   "advanced-3": ["5k2/6R1/3K3B/8/8/4p3/8/8 w - - 0 1", "g7b7", "f8e8"],
   "grandmaster-1": ["3b4/5R2/4k3/8/8/8/4K3/1Q6 w - - 0 1", "b1f5", "e6d6"],
 };
