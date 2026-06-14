@@ -2048,20 +2048,30 @@ body[data-theme="night"] .segmented {
 }
 
 .celebration-layer.puzzle-victory-movie {
-  background: #e8a553;
-  animation: westernMovieIn 260ms ease-out both;
+  background: transparent;
+  animation: none;
 }
 
 .celebration-layer.puzzle-victory-movie::before {
   display: none;
 }
 
+.celebration-outgoing {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  animation: celebrationCrossfadeOut 1100ms ease-in forwards;
+}
+
 .western-scene {
   position: absolute;
   inset: 0;
+  z-index: 1;
   overflow: hidden;
   background: #efbd72;
   isolation: isolate;
+  animation: westernMovieIn 900ms ease-out both;
 }
 
 .western-sunset .western-scene {
@@ -2336,6 +2346,12 @@ body[data-theme="night"] .segmented {
 @keyframes westernMovieIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes celebrationCrossfadeOut {
+  0% { opacity: 1; }
+  42% { opacity: 0.9; }
+  100% { opacity: 0; }
 }
 
 @keyframes westernSunRise {

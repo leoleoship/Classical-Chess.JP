@@ -2601,7 +2601,17 @@ function makePuzzleMovieElement(className, text = "") {
 }
 
 function triggerPuzzleVictoryMovie(type = "puzzle", difficulty = currentPuzzle().difficulty) {
-  clearCelebration();
+  clearTimeout(celebrationTimer);
+  celebrationTimer = null;
+  const hasOutgoingCelebration =
+    celebrationLayer.classList.contains("active") && celebrationLayer.childElementCount > 0;
+  if (hasOutgoingCelebration) {
+    const outgoing = makePuzzleMovieElement("celebration-outgoing");
+    outgoing.replaceChildren(...celebrationLayer.children);
+    celebrationLayer.append(outgoing);
+  } else {
+    clearCelebration();
+  }
   const allComplete = type === "all";
   const difficultyComplete = type === "difficulty";
   const pieceCast = ["♔", "♕", "♖", "♗", "♘", "♙", "♚", "♛", "♜", "♝", "♞", "♟"];
