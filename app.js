@@ -2634,6 +2634,8 @@ function triggerPuzzleVictoryMovie(type = "puzzle", difficulty = currentPuzzle()
         ? "次の挑戦が君を待っている"
         : "The next challenge awaits",
   );
+  const copy = makePuzzleMovieElement("western-victory-copy");
+  copy.append(title, subtitle);
 
   const stage = makePuzzleMovieElement("western-piece-stage");
   const heroWrap = makePuzzleMovieElement("western-hero");
@@ -2657,7 +2659,7 @@ function triggerPuzzleVictoryMovie(type = "puzzle", difficulty = currentPuzzle()
       stage.append(supporter);
     });
 
-  scene.append(title, subtitle, stage);
+  scene.append(copy, stage);
   celebrationLayer.append(scene);
   scheduleCelebrationClear(allComplete ? 6200 : difficultyComplete ? 5200 : 4400);
 }
