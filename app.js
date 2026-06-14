@@ -642,6 +642,7 @@ let puzzlePly = 0;
 let puzzleThinking = false;
 let puzzleSolved = false;
 let puzzleTimer = null;
+let puzzleVictoryTimer = null;
 let puzzleHintSquare = null;
 let solvedPuzzles = new Set(JSON.parse(localStorage.getItem("chessJpSolvedPuzzlesV9") || "[]"));
 let bombExplosionSquare = null;
@@ -1448,6 +1449,9 @@ function renderPuzzlePanel() {
 function loadPuzzle(index = puzzleIndex) {
   clearTimeout(puzzleTimer);
   puzzleTimer = null;
+  clearTimeout(puzzleVictoryTimer);
+  puzzleVictoryTimer = null;
+  clearCelebration();
   puzzleIndex = Math.max(0, Math.min(chessPuzzles.length - 1, index));
   const puzzle = currentPuzzle();
   puzzleDifficulty.value = puzzle.difficulty;
@@ -1465,6 +1469,7 @@ function loadPuzzle(index = puzzleIndex) {
 
 function finishPuzzle(result) {
   const puzzle = currentPuzzle();
+  const solvedPuzzleId = puzzle.id;
   const wasSolved = solvedPuzzles.has(puzzle.id);
   puzzleSolved = true;
   puzzleThinking = false;
@@ -1476,13 +1481,15 @@ function finishPuzzle(result) {
   const difficultyPuzzles = chessPuzzles.filter((item) => item.difficulty === puzzle.difficulty);
   const completedDifficulty = difficultyPuzzles.every((item) => solvedPuzzles.has(item.id));
   const completedAllPuzzles = chessPuzzles.every((item) => solvedPuzzles.has(item.id));
-  if (!wasSolved && completedAllPuzzles) {
-    triggerPuzzleMilestoneCelebration("all", puzzle.difficulty);
-  } else if (!wasSolved && completedDifficulty) {
-    triggerPuzzleMilestoneCelebration("difficulty", puzzle.difficulty);
-  } else {
-    triggerPuzzleVictoryMovie("puzzle", puzzle.difficulty);
-  }
+  const movieType = !wasSolved && completedAllPuzzles ? "all" : !wasSolved && completedDifficulty ? "difficulty" : "puzzle";
+
+  clearTimeout(puzzleVictoryTimer);
+  triggerGameOverCelebration(result);
+  puzzleVictoryTimer = window.setTimeout(() => {
+    puzzleVictoryTimer = null;
+    if (mode !== "puzzle" || !puzzleSolved || currentPuzzle().id !== solvedPuzzleId) return;
+    triggerPuzzleVictoryMovie(movieType, puzzle.difficulty);
+  }, 4550);
 }
 
 function applyPuzzlePly(move, playerMove) {
@@ -1899,6 +1906,8 @@ function validateBuilderPlayable() {
 function resetPlayableState() {
   clearTimeout(puzzleTimer);
   puzzleTimer = null;
+  clearTimeout(puzzleVictoryTimer);
+  puzzleVictoryTimer = null;
   captured.w = [];
   captured.b = [];
   selected = null;
@@ -3249,6 +3258,9 @@ function setMode(nextMode) {
   clearTimeout(botTimer);
   clearTimeout(puzzleTimer);
   puzzleTimer = null;
+  clearTimeout(puzzleVictoryTimer);
+  puzzleVictoryTimer = null;
+  clearCelebration();
   botThinking = false;
   puzzleThinking = false;
   syncBotSide();
