@@ -658,6 +658,7 @@ let musicTimer = null;
 let musicNotesPlayed = 0;
 let celebrationTimer = null;
 let lastPuzzleMovieHero = -1;
+let lastPuzzleVictoryPhrase = { en: "", ja: "" };
 let loadingTimer = null;
 let loadingHideTimer = null;
 let loadingProgress = 0;
@@ -2590,7 +2591,11 @@ function puzzleVictoryCopy(type, difficulty) {
     const difficultyLabel = difficulty[0].toUpperCase() + difficulty.slice(1);
     return language === "ja" ? `${difficultyLabel} 完全攻略！` : `${difficultyLabel} Trail Conquered!`;
   }
-  return randomItem(phrases[language] || phrases.en);
+  const phraseLanguage = phrases[language] ? language : "en";
+  const choices = phrases[phraseLanguage].filter((phrase) => phrase !== lastPuzzleVictoryPhrase[phraseLanguage]);
+  const phrase = randomItem(choices);
+  lastPuzzleVictoryPhrase[phraseLanguage] = phrase;
+  return phrase;
 }
 
 function makePuzzleMovieElement(className, text = "") {
