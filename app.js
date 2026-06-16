@@ -586,6 +586,19 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "e7e5", "g1f3", "g8f6", "f3e5", "b8c6", "e5c6", "d7c6", "d2d3", "f8c5", "c1g5", "f6e4", "g5d8", "c5f2", "e1e2", "c8g4"],
   },
+  {
+    id: "opening-englund-hartlaub-charlick-black",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "b",
+    name: { en: "Englund Gambit: Hartlaub-Charlick Trap - Black", ja: "エングルンド・ギャンビット: ハルトラウブ・チャーリック・トラップ - 黒" },
+    prompt: {
+      en: "Hey. What a complete mess you have created. This gambit is a trap many players do not know how to deflect, even though it is still pretty famous. The Englund Gambit is not just about unexpected checkmates: it has many variations worth checking out. People say England Gambit because Englund looks close to England, but the opening is named Englund.",
+      ja: "やあ。なんて大混乱を作ったのでしょう。このギャンビットはかなり有名なのに、多くのプレイヤーが攻撃のかわし方を知らない罠です。エングルンド・ギャンビットは意外なメイトだけでなく、調べる価値のある変化がたくさんあります。England Gambit と言われがちなのは、Englund が England に似ているからですが、正しくは Englund という名前です。",
+    },
+    fen: "start",
+    line: ["d2d4", "e7e5", "d4e5", "b8c6", "g1f3", "d8e7", "c1f4", "e7b4", "f4d2", "b4b2", "d2c3", "f8b4", "d1d2", "b4c3"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
