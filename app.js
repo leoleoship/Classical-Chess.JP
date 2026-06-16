@@ -493,6 +493,32 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "e7e5", "f1c4", "b8c6", "d1h5", "g8f6", "h5f7"],
   },
+  {
+    id: "opening-queens-gambit-accepted-white",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "w",
+    name: { en: "Queen's Gambit Accepted - White", ja: "クイーンズ・ギャンビット・アクセプテッド - 白" },
+    prompt: {
+      en: "Cool. Let's see what you will do with it. The Queen's Gambit is a solid opening with two different variations depending on Black's move: accepted and declined. In the accepted Queen's Gambit, White sacrifices a pawn to gain central control and pressure Black's c4 pawn, making it aggressive. In the declined Queen's Gambit, the story changes: play safely and fight for central control.",
+      ja: "いいですね。これで何ができるか見てみましょう。クイーンズ・ギャンビットは堅実なオープニングで、黒の手によってアクセプテッドとディクラインドの2つに分かれます。アクセプテッドでは、白はポーンを犠牲にして中央支配を得て、黒のc4ポーンへ圧力をかける攻撃的な形になります。ディクラインドでは話が変わり、安全に指して中央支配を争います。",
+    },
+    fen: "start",
+    line: ["d2d4", "d7d5", "c2c4", "d5c4", "e2e4"],
+  },
+  {
+    id: "opening-queens-gambit-declined-white",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "w",
+    name: { en: "Queen's Gambit Declined - White", ja: "クイーンズ・ギャンビット・ディクラインド - 白" },
+    prompt: {
+      en: "Cool. Let's see what you will do with it. The Queen's Gambit is a solid opening with two different variations depending on Black's move: accepted and declined. In the accepted Queen's Gambit, White sacrifices a pawn to gain central control and pressure Black's c4 pawn, making it aggressive. In the declined Queen's Gambit, the story changes: play safely and fight for central control.",
+      ja: "いいですね。これで何ができるか見てみましょう。クイーンズ・ギャンビットは堅実なオープニングで、黒の手によってアクセプテッドとディクラインドの2つに分かれます。アクセプテッドでは、白はポーンを犠牲にして中央支配を得て、黒のc4ポーンへ圧力をかける攻撃的な形になります。ディクラインドでは話が変わり、安全に指して中央支配を争います。",
+    },
+    fen: "start",
+    line: ["d2d4", "d7d5", "c2c4", "e7e6"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
