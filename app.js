@@ -534,6 +534,19 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "g8f6", "d2d3", "g7g6", "b1c3", "f8g7", "g1f3", "e8g8", "f1e2", "d7d6"],
   },
+  {
+    id: "opening-evans-gambit-white",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "w",
+    name: { en: "Evans Gambit - White", ja: "エヴァンズ・ギャンビット - 白" },
+    prompt: {
+      en: "Woah. The opposing player would be surprised to see an amazing gambit like this. This is a very nice gambit because you can develop fast, gain pressure on the bishop, and completely dominate the game if possible. Play this now or Evan comes to hunt you down with his favorite gambit.",
+      ja: "わあ。相手はこんな見事なギャンビットを見たら驚くでしょう。素早く展開でき、ビショップに圧力をかけ、うまくいけばゲームを完全に支配できる、とても良いギャンビットです。今すぐ指さないと、エヴァンが大好きなギャンビットを持って追いかけてくるかもしれません。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "b8c6", "f1c4", "f8c5", "b2b4"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
@@ -1562,6 +1575,7 @@ function saveSolvedPuzzles() {
 
 function syncPuzzleDifficultyOptions() {
   const difficulties = currentPuzzleDifficulties();
+  const selectedDifficulty = difficulties.includes(puzzleDifficulty.value) ? puzzleDifficulty.value : difficulties[0];
   puzzleDifficulty.replaceChildren(
     ...difficulties.map((difficulty) => {
       const option = document.createElement("option");
@@ -1570,7 +1584,7 @@ function syncPuzzleDifficultyOptions() {
       return option;
     }),
   );
-  if (!difficulties.includes(puzzleDifficulty.value)) puzzleDifficulty.value = difficulties[0];
+  puzzleDifficulty.value = selectedDifficulty;
 }
 
 function renderPuzzlePanel() {
