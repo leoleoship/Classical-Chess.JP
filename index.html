@@ -178,6 +178,11 @@
 
           <div id="puzzlePanel" class="puzzle-panel" hidden>
             <div class="puzzle-heading">
+              <label for="puzzleCategory" data-i18n="puzzleKind">種類</label>
+              <select id="puzzleCategory">
+                <option value="checkmate" data-i18n="checkmatePuzzles">Checkmates</option>
+                <option value="opening" data-i18n="openingDrills">Openings</option>
+              </select>
               <label for="puzzleDifficulty" data-i18n="difficulty">難易度</label>
               <select id="puzzleDifficulty">
                 <option value="beginner" data-i18n="beginner">Beginner</option>
@@ -336,6 +341,6 @@
 
     <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 
-    <script src="./app.js?v=20260615-rotating-puzzle-phrases"></script>
+    <script src="./app.js?v=20260616-opening-drills"></script>
   </body>
 </html>

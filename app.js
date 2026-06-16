@@ -30,6 +30,7 @@ const modePuzzle = document.querySelector("#modePuzzle");
 const modeBuilder = document.querySelector("#modeBuilder");
 const modeCustom = document.querySelector("#modeCustom");
 const puzzlePanel = document.querySelector("#puzzlePanel");
+const puzzleCategory = document.querySelector("#puzzleCategory");
 const puzzleDifficulty = document.querySelector("#puzzleDifficulty");
 const puzzlePicker = document.querySelector("#puzzlePicker");
 const puzzleProgress = document.querySelector("#puzzleProgress");
@@ -127,6 +128,7 @@ const i18n = {
     brightLight: "明るめ",
     captured: "取られた駒",
     check: "{mode}: {side}番です。チェックされています。",
+    checkmatePuzzles: "メイト問題",
     checkmate: "チェックメイト。{side}の負けです。",
     classicLight: "クラシック",
     clearBoard: "全消去",
@@ -138,6 +140,7 @@ const i18n = {
     demoLoss: "デモ敗北 -10",
     demoWin: "デモ勝利 +15",
     draw: "ドローです。",
+    easy: "Easy",
     elo: "ELO",
     erase: "消す",
     fenError: "FENを読み込めませんでした。",
@@ -186,7 +189,12 @@ const i18n = {
     onlineSyncError: "オンライン接続に失敗しました。Supabase設定を確認してください。",
     onlineTurnWait: "相手の手番です。",
     onlineWin: "オンラインELOが15上がりました。",
+    openingDrills: "オープニング",
+    openingNumber: "オープニング {number}",
+    openingObjective: "{side}のオープニング練習。正しい手を{moves}回指そう。",
+    openingSolved: "オープニング完了！",
     puzzleMode: "パズル",
+    puzzleKind: "種類",
     puzzleNumber: "パズル {number}",
     puzzleObjective: "{side}番。{moves}手でメイト。",
     puzzleProgress: "{solved} / {total}クリア",
@@ -246,6 +254,7 @@ const i18n = {
     brightLight: "Bright",
     captured: "Captured pieces",
     check: "{mode}: {side} to move. In check.",
+    checkmatePuzzles: "Checkmates",
     checkmate: "Checkmate. {side} loses.",
     classicLight: "Classic",
     clearBoard: "Clear board",
@@ -257,6 +266,7 @@ const i18n = {
     demoLoss: "Demo loss -10",
     demoWin: "Demo win +15",
     draw: "Draw.",
+    easy: "Easy",
     elo: "ELO",
     erase: "Erase",
     fenError: "Could not load that FEN.",
@@ -305,7 +315,12 @@ const i18n = {
     onlineSyncError: "Online connection failed. Check the Supabase settings.",
     onlineTurnWait: "Waiting for your opponent.",
     onlineWin: "Online ELO increased by 15.",
+    openingDrills: "Openings",
+    openingNumber: "Opening {number}",
+    openingObjective: "{side} opening drill. Play {moves} correct moves.",
+    openingSolved: "Opening complete!",
     puzzleMode: "Puzzles",
+    puzzleKind: "Kind",
     puzzleNumber: "Puzzle {number}",
     puzzleObjective: "{side} to move. Mate in {moves}.",
     puzzleProgress: "{solved} / {total} solved",
@@ -410,6 +425,61 @@ const chessPuzzles = [
   { id: "grandmaster-8", difficulty: "grandmaster", name: { en: "The Rook!", ja: "ザ・ルーク！" }, prompt: { en: "Begin with a queen capture, weave the knight into the checking net, and return the queen to g7 for mate.", ja: "クイーンで取りながら始め、ナイトをチェックの網へ組み込み、最後にクイーンをg7へ戻してメイトしよう。" }, fen: "1q6/4Nn1k/1pp1rpp1/8/1B2Qpp1/2P5/b7/R1K5 w - - 0 1", line: ["e4g6", "h7h8", "g6h5", "h8g7", "e7f5", "g7g8", "h5g6", "g8h8", "g6g7"] },
   { id: "grandmaster-9", difficulty: "grandmaster", name: { en: "Sniper Bishop", ja: "スナイパー・ビショップ" }, prompt: { en: "Deflect the king with a knight check, promote with check, and keep driving it toward g8. The bishop on h2 locks c7, while the bishop on g2 fires the final long-range shot to d5.", ja: "ナイトチェックでキングをそらし、チェック付きで昇格してg8へ追い込もう。h2のビショップがc7を封鎖し、g2のビショップがd5へ長距離の最終射撃を放ちます。" }, fen: "n1k5/2P4p/4p3/1P3N2/3N4/3p3p/3r2BB/6bK w - - 0 1", line: ["f5e7", "c8d7", "c7c8q", "d7e7", "c8e6", "e7f8", "e6f6", "f8g8", "g2d5"] },
   { id: "grandmaster-10", difficulty: "grandmaster", name: { en: "The Windmill", ja: "ウインドミル" }, prompt: { en: "Use alternating rook and queen checks, sacrifice the rook on b6, and keep the king exposed until the queen mates.", ja: "ルークとクイーンのチェックを交互に使い、b6でルークを犠牲にして、キングをさらしたままクイーンでメイトしよう。" }, fen: "2k1N3/8/1pp1P3/pp4Q1/1p1p1q1r/B7/p5B1/2R3K1 w - - 0 1", line: ["c1c6", "c8b7", "g5e7", "b7a6", "c6b6", "a6b6", "e7b7", "b6c5", "b7c6"], forcedSacrificePlies: [4] },
+];
+
+const openingDrills = [
+  {
+    id: "opening-four-knights-white",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "w",
+    name: { en: "The Four Knights Game - White", ja: "フォーナイツ・ゲーム - 白" },
+    prompt: {
+      en: "The Four Knights Game is one of the most commonly played openings in the world. It is extremely easy and one of the first openings you should know because it is very solid. Practice White's setup: 1. e4 e5 2. Nf3 Nc6 3. Nc3 Nf6.",
+      ja: "フォーナイツ・ゲームは世界でとてもよく指されるオープニングの一つです。とても簡単で、堅実なので最初に覚えたいオープニングです。白の手順 1. e4 e5 2. Nf3 Nc6 3. Nc3 Nf6 を練習しよう。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "b8c6", "b1c3", "g8f6"],
+  },
+  {
+    id: "opening-four-knights-black",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "b",
+    name: { en: "The Four Knights Game - Black", ja: "フォーナイツ・ゲーム - 黒" },
+    prompt: {
+      en: "The Four Knights Game is one of the most commonly played openings in the world. It is extremely easy and one of the first openings you should know because it is very solid. Practice Black's replies: 1. e4 e5 2. Nf3 Nc6 3. Nc3 Nf6.",
+      ja: "フォーナイツ・ゲームは世界でとてもよく指されるオープニングの一つです。とても簡単で、堅実なので最初に覚えたいオープニングです。黒の応手 1. e4 e5 2. Nf3 Nc6 3. Nc3 Nf6 を練習しよう。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "b8c6", "b1c3", "g8f6"],
+  },
+  {
+    id: "opening-italian-game-white",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "w",
+    name: { en: "The Italian Game - White", ja: "イタリアン・ゲーム - 白" },
+    prompt: {
+      en: "The Italian Game is somewhat complex, but still easy to start learning. It develops quickly, can aim for Légal's Mate ideas, and attacks the weak f-pawn like a tempting little target.",
+      ja: "イタリアン・ゲームは少し複雑ですが、覚え始めるにはまだやさしいオープニングです。素早く展開し、レガールのメイトの狙いも作れ、弱いfポーンをかわいい獲物のように攻撃します。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "b8c6", "f1c4"],
+  },
+  {
+    id: "opening-french-defense-black",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "b",
+    name: { en: "The French Defense - Black", ja: "フレンチ・ディフェンス - 黒" },
+    prompt: {
+      en: "Why would this be hard? The French Defense is a simple but solid opening that attacks White's pawn on d4. Sometimes this opening can make your opponent confused.",
+      ja: "なぜ難しいと思う必要があるでしょう？フレンチ・ディフェンスはシンプルで堅実なオープニングで、白のd4ポーンを狙います。ときには相手を混乱させることもできます。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e6", "d2d4", "d7d5"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
@@ -636,6 +706,7 @@ let lastMoveVector = null;
 let mode = "human";
 let botTimer = null;
 let botThinking = false;
+let puzzleCategoryValue = "checkmate";
 let puzzleIndex = 0;
 let puzzlePly = 0;
 let puzzleThinking = false;
@@ -1395,16 +1466,36 @@ function knightForkTargetCount(square, color) {
   }).length;
 }
 
+function currentPuzzleList() {
+  return puzzleCategoryValue === "opening" ? openingDrills : chessPuzzles;
+}
+
+function currentPuzzleDifficulties() {
+  return [...new Set(currentPuzzleList().map((item) => item.difficulty))];
+}
+
 function currentPuzzle() {
-  return chessPuzzles[puzzleIndex] || chessPuzzles[0];
+  const list = currentPuzzleList();
+  return list[puzzleIndex] || list[0];
 }
 
 function puzzleMoveCount(puzzle = currentPuzzle()) {
+  if (puzzle.type === "opening") {
+    return puzzle.line.filter((_, index) => {
+      const turn = index % 2 === 0 ? "w" : "b";
+      return turn === puzzle.practiceColor;
+    }).length;
+  }
   return Math.ceil(puzzle.line.length / 2);
 }
 
 function puzzlePlayerColor(puzzle = currentPuzzle()) {
+  if (puzzle.type === "opening") return puzzle.practiceColor;
   return puzzle.fen.split(" ")[1] === "b" ? "b" : "w";
+}
+
+function isPuzzlePlayerTurn(puzzle = currentPuzzle()) {
+  return game.turn() === puzzlePlayerColor(puzzle);
 }
 
 function puzzleMoveKey(move) {
@@ -1415,10 +1506,26 @@ function saveSolvedPuzzles() {
   localStorage.setItem("chessJpSolvedPuzzlesV9", JSON.stringify([...solvedPuzzles]));
 }
 
+function syncPuzzleDifficultyOptions() {
+  const difficulties = currentPuzzleDifficulties();
+  puzzleDifficulty.replaceChildren(
+    ...difficulties.map((difficulty) => {
+      const option = document.createElement("option");
+      option.value = difficulty;
+      option.textContent = t(difficulty);
+      return option;
+    }),
+  );
+  if (!difficulties.includes(puzzleDifficulty.value)) puzzleDifficulty.value = difficulties[0];
+}
+
 function renderPuzzlePanel() {
   if (mode !== "puzzle") return;
+  syncPuzzleDifficultyOptions();
   const puzzle = currentPuzzle();
-  const difficultyPuzzles = chessPuzzles.filter((item) => item.difficulty === puzzleDifficulty.value);
+  puzzleCategory.value = puzzleCategoryValue;
+  const list = currentPuzzleList();
+  const difficultyPuzzles = list.filter((item) => item.difficulty === puzzleDifficulty.value);
   puzzlePicker.replaceChildren();
 
   difficultyPuzzles.forEach((item, index) => {
@@ -1428,21 +1535,22 @@ function renderPuzzlePanel() {
     button.dataset.puzzleId = item.id;
     button.classList.toggle("active", item.id === puzzle.id);
     button.classList.toggle("solved", solvedPuzzles.has(item.id));
-    button.setAttribute("aria-label", `${t("puzzleNumber", { number: index + 1 })}: ${item.name[language] || item.name.en}`);
+    button.setAttribute("aria-label", `${t(item.type === "opening" ? "openingNumber" : "puzzleNumber", { number: index + 1 })}: ${item.name[language] || item.name.en}`);
     puzzlePicker.append(button);
   });
 
   const number = difficultyPuzzles.findIndex((item) => item.id === puzzle.id) + 1;
-  puzzleProgress.textContent = t("puzzleProgress", { solved: solvedPuzzles.size, total: chessPuzzles.length });
-  puzzleNumber.textContent = t("puzzleNumber", { number });
+  const solvedInList = list.filter((item) => solvedPuzzles.has(item.id)).length;
+  puzzleProgress.textContent = t("puzzleProgress", { solved: solvedInList, total: list.length });
+  puzzleNumber.textContent = t(puzzle.type === "opening" ? "openingNumber" : "puzzleNumber", { number });
   puzzleTitle.textContent = puzzle.name[language] || puzzle.name.en;
-  puzzleObjective.textContent = t("puzzleObjective", {
+  puzzleObjective.textContent = t(puzzle.type === "opening" ? "openingObjective" : "puzzleObjective", {
     moves: puzzleMoveCount(puzzle),
     side: t(puzzlePlayerColor(puzzle) === "w" ? "white" : "black"),
   });
   puzzlePrompt.textContent = puzzle.prompt?.[language] || puzzle.prompt?.en || "";
   puzzlePrompt.hidden = !puzzlePrompt.textContent;
-  puzzleHint.disabled = puzzleThinking || puzzleSolved || puzzlePly % 2 === 1;
+  puzzleHint.disabled = puzzleThinking || puzzleSolved || !isPuzzlePlayerTurn(puzzle);
   puzzleNext.disabled = !puzzleSolved;
 }
 
@@ -1452,10 +1560,13 @@ function loadPuzzle(index = puzzleIndex) {
   clearTimeout(puzzleVictoryTimer);
   puzzleVictoryTimer = null;
   clearCelebration();
-  puzzleIndex = Math.max(0, Math.min(chessPuzzles.length - 1, index));
+  const list = currentPuzzleList();
+  puzzleIndex = Math.max(0, Math.min(list.length - 1, index));
   const puzzle = currentPuzzle();
+  syncPuzzleDifficultyOptions();
   puzzleDifficulty.value = puzzle.difficulty;
-  game.load(puzzle.fen);
+  if (puzzle.fen === "start") game.reset();
+  else game.load(puzzle.fen);
   resetPlayableState();
   puzzlePly = 0;
   puzzleThinking = false;
@@ -1465,26 +1576,28 @@ function loadPuzzle(index = puzzleIndex) {
   puzzleMessage.textContent = "";
   puzzleMessage.className = "puzzle-message";
   render();
+  if (mode === "puzzle" && !isPuzzlePlayerTurn(puzzle)) schedulePuzzleReply();
 }
 
 function finishPuzzle(result) {
   const puzzle = currentPuzzle();
+  const list = currentPuzzleList();
   const solvedPuzzleId = puzzle.id;
   const wasSolved = solvedPuzzles.has(puzzle.id);
   puzzleSolved = true;
   puzzleThinking = false;
   solvedPuzzles.add(puzzle.id);
   saveSolvedPuzzles();
-  puzzleMessage.textContent = t("puzzleSolved");
+  puzzleMessage.textContent = t(puzzle.type === "opening" ? "openingSolved" : "puzzleSolved");
   puzzleMessage.className = "puzzle-message success";
   render();
-  const difficultyPuzzles = chessPuzzles.filter((item) => item.difficulty === puzzle.difficulty);
+  const difficultyPuzzles = list.filter((item) => item.difficulty === puzzle.difficulty);
   const completedDifficulty = difficultyPuzzles.every((item) => solvedPuzzles.has(item.id));
-  const completedAllPuzzles = chessPuzzles.every((item) => solvedPuzzles.has(item.id));
+  const completedAllPuzzles = list.every((item) => solvedPuzzles.has(item.id));
   const movieType = !wasSolved && completedAllPuzzles ? "all" : !wasSolved && completedDifficulty ? "difficulty" : "puzzle";
 
   clearTimeout(puzzleVictoryTimer);
-  triggerGameOverCelebration(result);
+  if (puzzle.type !== "opening") triggerGameOverCelebration(result);
   puzzleVictoryTimer = window.setTimeout(() => {
     puzzleVictoryTimer = null;
     if (mode !== "puzzle" || !puzzleSolved || currentPuzzle().id !== solvedPuzzleId) return;
@@ -1493,6 +1606,7 @@ function finishPuzzle(result) {
 }
 
 function applyPuzzlePly(move, playerMove) {
+  const puzzle = currentPuzzle();
   puzzleHintSquare = null;
   const result = game.move(move);
   if (!result) return null;
@@ -1506,7 +1620,7 @@ function applyPuzzlePly(move, playerMove) {
   playMoveSound(null);
   render();
 
-  if (puzzlePly >= currentPuzzle().line.length && game.isCheckmate()) {
+  if (puzzlePly >= puzzle.line.length && (puzzle.type === "opening" || game.isCheckmate())) {
     finishPuzzle(result);
     return result;
   }
@@ -1520,7 +1634,7 @@ function applyPuzzlePly(move, playerMove) {
 }
 
 function schedulePuzzleReply() {
-  if (mode !== "puzzle" || puzzleSolved || puzzlePly >= currentPuzzle().line.length) return;
+  if (mode !== "puzzle" || puzzleSolved || puzzlePly >= currentPuzzle().line.length || isPuzzlePlayerTurn()) return;
   puzzleThinking = true;
   render();
   puzzleTimer = window.setTimeout(() => {
@@ -1549,11 +1663,11 @@ function playPuzzleMove(move) {
   }
 
   const result = applyPuzzlePly(move, true);
-  if (result && !puzzleSolved) schedulePuzzleReply();
+  if (result && !puzzleSolved && !isPuzzlePlayerTurn()) schedulePuzzleReply();
 }
 
 function showPuzzleHint() {
-  if (mode !== "puzzle" || puzzleThinking || puzzleSolved || puzzlePly % 2 === 1) return;
+  if (mode !== "puzzle" || puzzleThinking || puzzleSolved || !isPuzzlePlayerTurn()) return;
   const expected = currentPuzzle().line[puzzlePly];
   if (!expected) return;
   puzzleHintSquare = expected.slice(0, 2);
@@ -1564,10 +1678,11 @@ function showPuzzleHint() {
 
 function selectNextPuzzle() {
   const puzzle = currentPuzzle();
-  const group = chessPuzzles.filter((item) => item.difficulty === puzzle.difficulty);
+  const list = currentPuzzleList();
+  const group = list.filter((item) => item.difficulty === puzzle.difficulty);
   const groupIndex = group.findIndex((item) => item.id === puzzle.id);
   const next = group[(groupIndex + 1) % group.length];
-  loadPuzzle(chessPuzzles.findIndex((item) => item.id === next.id));
+  loadPuzzle(list.findIndex((item) => item.id === next.id));
 }
 
 function playerName(color) {
@@ -2898,7 +3013,7 @@ async function handleSquareClick(square) {
     return;
   }
 
-  if (mode === "puzzle" && (puzzleThinking || puzzleSolved || puzzlePly % 2 === 1)) return;
+  if (mode === "puzzle" && (puzzleThinking || puzzleSolved || !isPuzzlePlayerTurn())) return;
   if (resignation || isBotTurn() || botThinking) return;
   if (mode === "online" && !isOnlinePlayerTurn()) {
     onlineStatus.textContent = onlineMatch ? t("onlineTurnWait") : t("onlineNotReady");
@@ -3174,12 +3289,13 @@ function updateStatus() {
   }
 
   if (mode === "puzzle") {
-    if (puzzleSolved) statusEl.textContent = t("puzzleSolved");
+    const puzzle = currentPuzzle();
+    if (puzzleSolved) statusEl.textContent = t(puzzle.type === "opening" ? "openingSolved" : "puzzleSolved");
     else if (puzzleThinking) statusEl.textContent = t("puzzleReply");
     else {
-      statusEl.textContent = t("puzzleObjective", {
-        moves: puzzleMoveCount(),
-        side: t(puzzlePlayerColor() === "w" ? "white" : "black"),
+      statusEl.textContent = t(puzzle.type === "opening" ? "openingObjective" : "puzzleObjective", {
+        moves: puzzleMoveCount(puzzle),
+        side: t(puzzlePlayerColor(puzzle) === "w" ? "white" : "black"),
       });
     }
     fenInput.value = game.fen();
@@ -3447,15 +3563,23 @@ modePuzzle.addEventListener("click", () => setMode("puzzle"));
 modeBuilder.addEventListener("click", () => setMode("builder"));
 modeCustom.addEventListener("click", () => setMode("custom"));
 
+puzzleCategory.addEventListener("change", () => {
+  puzzleCategoryValue = puzzleCategory.value;
+  puzzleIndex = 0;
+  syncPuzzleDifficultyOptions();
+  loadPuzzle(0);
+});
+
 puzzleDifficulty.addEventListener("change", () => {
-  const index = chessPuzzles.findIndex((puzzle) => puzzle.difficulty === puzzleDifficulty.value);
+  const list = currentPuzzleList();
+  const index = list.findIndex((puzzle) => puzzle.difficulty === puzzleDifficulty.value);
   loadPuzzle(index);
 });
 
 puzzlePicker.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-puzzle-id]");
   if (!button) return;
-  const index = chessPuzzles.findIndex((puzzle) => puzzle.id === button.dataset.puzzleId);
+  const index = currentPuzzleList().findIndex((puzzle) => puzzle.id === button.dataset.puzzleId);
   loadPuzzle(index);
 });
 
