@@ -480,6 +480,19 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "e7e6", "d2d4", "d7d5"],
   },
+  {
+    id: "opening-scholars-mate-white",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "w",
+    name: { en: "King's Pawn Opening: Scholar's Mate Variation - White", ja: "キングズポーン・オープニング: 学者メイト変化 - 白" },
+    prompt: {
+      en: "There we go. This will definitely not work against strong players, but it can make your opponent ragequit and avoid chess for a few weeks just because you did this against them.",
+      ja: "さあ来ました。これは強い相手にはまず通用しませんが、決まると相手が怒って数週間チェスをやめたくなるかもしれない変化です。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "f1c4", "b8c6", "d1h5", "g8f6", "h5f7"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
