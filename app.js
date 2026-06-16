@@ -160,6 +160,7 @@ const i18n = {
     loadBoard: "読込",
     loadCurrent: "現在の局面",
     mode: "モード",
+    medium: "Medium",
     mistake: "Mistake",
     moveCount: "{count}手",
     moveRating: "手の評価",
@@ -286,6 +287,7 @@ const i18n = {
     loadBoard: "Load board",
     loadCurrent: "Load current",
     mode: "Mode",
+    medium: "Medium",
     mistake: "Mistake",
     moveCount: "{count} moves",
     moveRating: "Move rating",
@@ -518,6 +520,19 @@ const openingDrills = [
     },
     fen: "start",
     line: ["d2d4", "d7d5", "c2c4", "e7e6"],
+  },
+  {
+    id: "opening-kings-indian-defense-black",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "b",
+    name: { en: "King's Indian Defense - Black", ja: "キングズ・インディアン・ディフェンス - 黒" },
+    prompt: {
+      en: "Now this is what I call professional chess. This opening is good in theory, builds a defensive castle to keep the king safe, and completely fianchettoes the board with insane tactics ready to deploy once the moment is right. If I would rate it like a test, I would rate it an A+.",
+      ja: "これはまさにプロっぽいチェスです。理論的にも良く、キングを安全に守る防御の城を作り、フィアンケットで盤面を整え、準備ができた瞬間にすごい戦術を展開できます。テストみたいに評価するならA+です。",
+    },
+    fen: "start",
+    line: ["e2e4", "g8f6", "d2d3", "g7g6", "b1c3", "f8g7", "g1f3", "e8g8", "f1e2", "d7d6"],
   },
 ];
 
