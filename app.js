@@ -573,6 +573,19 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "e7e5", "g1f3", "b8c6", "d2d4", "e5d4", "f1c4"],
   },
+  {
+    id: "opening-stafford-gambit-black",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "b",
+    name: { en: "The Stafford Gambit - Black", ja: "スタッフォード・ギャンビット - 黒" },
+    prompt: {
+      en: "Hey, Stafford. What a genius you are. The Stafford Gambit may sound like an ordinary gambit, but the massive trap hidden inside lures pieces straight into checkmate. This is a very aggressive gambit that dives toward mate with the bishop and knight.",
+      ja: "やあ、スタッフォード。なんて天才なんでしょう。スタッフォード・ギャンビットは普通のギャンビットに聞こえるかもしれませんが、中に隠れた巨大な罠が駒をチェックメイトへ誘い込みます。ビショップとナイトで一直線にメイトへ向かう、とても攻撃的なギャンビットです。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "g8f6", "f3e5", "b8c6", "e5c6", "d7c6", "d2d3", "f8c5", "c1g5", "f6e4", "g5d8", "c5f2", "e1e2", "c8g4"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
