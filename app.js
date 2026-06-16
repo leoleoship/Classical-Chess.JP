@@ -560,6 +560,19 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "d7d5", "g1f3", "d5e4", "f3g5", "g8f6", "d2d3", "e4d3", "f1d3", "h7h6", "g5f7", "e8f7", "d3g6", "f7g6", "d1d8"],
   },
+  {
+    id: "opening-scotch-gambit-white",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "w",
+    name: { en: "The Scotch Gambit - White", ja: "スコッチ・ギャンビット - 白" },
+    prompt: {
+      en: "This is a very classical gambit choice. It is well known, and it deserves to be well known because it is theoretical and very nice to play. Also, the name comes from Scotland: the Scotch Game became famous after an Edinburgh-London correspondence match in the 1820s.",
+      ja: "これはとても古典的なギャンビットの選択です。有名ですし、理論的で指していて気持ちのいいギャンビットなので、有名になる価値があります。ちなみに名前はスコットランド由来で、1820年代のエディンバラ対ロンドンの通信対局でスコッチ・ゲームが有名になりました。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "b8c6", "d2d4", "e5d4", "f1c4"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
