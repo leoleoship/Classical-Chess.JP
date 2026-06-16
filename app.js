@@ -547,6 +547,19 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "e7e5", "g1f3", "b8c6", "f1c4", "f8c5", "b2b4"],
   },
+  {
+    id: "opening-icbm-gambit-white",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "w",
+    name: { en: "The Intercontinental Ballistic Missile Gambit - White", ja: "大陸間弾道ミサイル・ギャンビット - 白" },
+    prompt: {
+      en: "Boom! This gambit falls on the queen like an intercontinental ballistic missile launched against her. It is very aggressive because it risks the whole game by sacrificing a knight and a bishop for a queen, but if it fails, you will be down a pawn with undeveloped pieces. Personally, this is one of my favorite gambits of all time.",
+      ja: "ドカン！このギャンビットはクイーンに向けて発射された大陸間弾道ミサイルのように落ちてきます。ナイトとビショップを犠牲にしてクイーンを狙うのでとても攻撃的ですが、失敗すると駒が未発達のままポーン損になります。個人的には、これは史上最高に好きなギャンビットの一つです。",
+    },
+    fen: "start",
+    line: ["e2e4", "d7d5", "g1f3", "d5e4", "f3g5", "g8f6", "d2d3", "e4d3", "f1d3", "h7h6", "g5f7", "e8f7", "d3g6", "f7g6", "d1d8"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
