@@ -1717,7 +1717,7 @@ function finishPuzzle(result) {
   const movieType = !wasSolved && completedAllPuzzles ? "all" : !wasSolved && completedDifficulty ? "difficulty" : "puzzle";
 
   clearTimeout(puzzleVictoryTimer);
-  if (puzzle.type !== "opening") triggerGameOverCelebration(result);
+  if (puzzle.type !== "opening" || game.isCheckmate()) triggerGameOverCelebration(result);
   puzzleVictoryTimer = window.setTimeout(() => {
     puzzleVictoryTimer = null;
     if (mode !== "puzzle" || !puzzleSolved || currentPuzzle().id !== solvedPuzzleId) return;
