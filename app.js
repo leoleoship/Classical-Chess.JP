@@ -680,6 +680,19 @@ const openingDrills = [
     line: ["e2e4", "e7e5", "d2d4", "e5d4", "c2c3", "d4c3", "f1c4", "c3b2", "c1b2", "d7d6", "g1f3", "g8f6", "e1g1", "c8g4", "e4e5", "d6e5", "c4f7", "e8e7", "b2a3", "e7f7", "d1d8"],
   },
   {
+    id: "opening-benko-gambit-black",
+    type: "opening",
+    difficulty: "hard",
+    practiceColor: "b",
+    name: { en: "The Benko Gambit - Black", ja: "ベンコー・ギャンビット - 黒" },
+    prompt: {
+      en: "This gambit is pretty long and has many tactical attacks, unlike flashier gambits like the Halloween Gambit or the ICBM Gambit. It is a way for Black to crush White, just like the Sicilian Defense. So if you are Black, you might as well play this if White plays d4.",
+      ja: "このギャンビットはかなり長く、ハロウィン・ギャンビットやICBMギャンビットのような派手なものとは違って、たくさんの戦術的な攻撃を含みます。シシリアン・ディフェンスのように、黒が白を押しつぶすための方法です。黒番で白がd4を指してきたなら、これを指すのもかなりアリです。",
+    },
+    fen: "start",
+    line: ["d2d4", "g8f6", "c2c4", "c7c5", "d4d5", "b7b5", "c4b5", "a7a6", "b5a6", "c8a6", "g2g3", "g7g6", "f1g2", "d7d6", "b2b3", "f8g7", "c1b2", "e8g8"],
+  },
+  {
     id: "opening-halloween-gambit-four-knights-white",
     type: "opening",
     difficulty: "hard",
