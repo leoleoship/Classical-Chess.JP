@@ -485,6 +485,19 @@ const openingDrills = [
     line: ["e2e4", "e7e6", "d2d4", "d7d5"],
   },
   {
+    id: "opening-caro-kann-defense-black",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "b",
+    name: { en: "The Caro-Kann Defense - Black", ja: "カロ・カン・ディフェンス - 黒" },
+    prompt: {
+      en: "Good. Beginners should start with this opening because it is simple, and it develops your knight and pawn. It is also a classical way to start the game and has a lot of theory. But higher Elo? Nah. Their brain is probably filled with the Stafford or the Scotch. Basically, this does not work as easily at higher Elo because there are stronger opening choices.",
+      ja: "いいですね。初心者はこのオープニングから始めるとよいでしょう。シンプルで、ナイトとポーンを展開できます。古典的な序盤でもあり、理論もたくさんあります。でも高いEloでは？うーん。相手の頭の中はたぶんスタッフォードやスコッチでいっぱいです。つまり、高いEloではもっと強いオープニング選択があるので、そんなに簡単には通用しません。",
+    },
+    fen: "start",
+    line: ["e2e4", "c7c6", "d2d4", "d7d5", "b1c3", "d5e4", "c3e4", "b8d7"],
+  },
+  {
     id: "opening-scholars-mate-white",
     type: "opening",
     difficulty: "easy",
