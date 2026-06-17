@@ -150,6 +150,7 @@ const i18n = {
     gameMode: "対局モード",
     grandmaster: "Grandmaster",
     good: "Good",
+    hard: "Hard",
     humanMode: "対人戦",
     intermediate: "Intermediate",
     language: "言語",
@@ -277,6 +278,7 @@ const i18n = {
     gameMode: "Game mode",
     grandmaster: "Grandmaster",
     good: "Good",
+    hard: "Hard",
     humanMode: "Human",
     intermediate: "Intermediate",
     language: "Language",
@@ -598,6 +600,19 @@ const openingDrills = [
     },
     fen: "start",
     line: ["d2d4", "e7e5", "d4e5", "b8c6", "g1f3", "d8e7", "c1f4", "e7b4", "f4d2", "b4b2", "d2c3", "f8b4", "d1d2", "b4c3", "d2c3", "b2c1"],
+  },
+  {
+    id: "opening-danish-gambit-white",
+    type: "opening",
+    difficulty: "hard",
+    practiceColor: "w",
+    name: { en: "The Danish Gambit - White", ja: "デニッシュ・ギャンビット - 白" },
+    prompt: {
+      en: "The reason I rated this gambit hard is because it is pretty long, around 10 to 11 lines. The Danish Gambit has a lot of theory, so everything changes if Black makes even one move that does not go your way. If you are very good at chess and have 1500 Elo, sure, play it. But if you are still 800 Elo or bELOw, you probably should not play it because your match can go absolutely wrong.",
+      ja: "このギャンビットをHardにした理由は、かなり長く、10から11手くらい続くからです。デニッシュ・ギャンビットは理論が多く、黒が1手でも思い通りに指してくれないと全部変わります。チェスがかなり得意で1500 Eloくらいあるなら、もちろん指してみてもいいでしょう。でもまだ800 Elo、または bELOw なら、試合がとんでもない方向へ行くかもしれないのでおすすめしません。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "d2d4", "e5d4", "c2c3", "d4c3", "f1c4", "c3b2", "c1b2", "d7d6", "g1f3", "g8f6", "e1g1", "c8g4", "e4e5", "d6e5", "c4f7", "e8e7", "b2a3", "e7f7", "d1d8"],
   },
 ];
 
