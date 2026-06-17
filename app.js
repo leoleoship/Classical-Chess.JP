@@ -589,6 +589,19 @@ const openingDrills = [
     line: ["e2e4", "g8f6", "d2d3", "g7g6", "b1c3", "f8g7", "g1f3", "e8g8", "f1e2", "d7d6"],
   },
   {
+    id: "opening-latvian-gambit-black",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "b",
+    name: { en: "Latvian Gambit - Black", ja: "ラトビアン・ギャンビット - 黒" },
+    prompt: {
+      en: "This one is probably from Latvia, but anyway, the Latvian Gambit is a unique gambit that sacrifices a pawn for a nice tactical and aggressive attack. Play this and you will get 100 calls from the Latvian government to compliment you.",
+      ja: "これはたぶんラトビア由来ですが、とにかくラトビアン・ギャンビットは、ポーンを犠牲にして鋭く攻撃的な戦術を狙うユニークなギャンビットです。これを指せば、ラトビア政府から称賛の電話が100件来るかもしれません。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "f7f5", "f3e5", "d8f6", "d2d4", "d7d6", "e5c4", "f5e4"],
+  },
+  {
     id: "opening-evans-gambit-white",
     type: "opening",
     difficulty: "medium",
