@@ -511,6 +511,19 @@ const openingDrills = [
     line: ["e2e4", "c7c6", "d2d4", "d7d5", "b1c3", "d5e4", "c3e4", "b8d7"],
   },
   {
+    id: "opening-sicilian-defense-black",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "b",
+    name: { en: "Sicilian Defense - Black", ja: "シシリアン・ディフェンス - 黒" },
+    prompt: {
+      en: "This opening is for absolute aggression lovers, and also for Black-side players who do not know what to do against e4. Just play c5 and you will go with the flow. Good luck!",
+      ja: "このオープニングは、とにかく攻撃が好きな人向けです。そして、e4に何をすればいいかわからない黒番プレイヤーにもぴったりです。とりあえずc5を指せば流れに乗れます。Good luck!",
+    },
+    fen: "start",
+    line: ["e2e4", "c7c5", "g1f3", "d7d6", "d2d4", "c5d4", "f3d4", "g8f6", "b1c3", "a7a6"],
+  },
+  {
     id: "opening-scholars-mate-white",
     type: "opening",
     difficulty: "easy",
