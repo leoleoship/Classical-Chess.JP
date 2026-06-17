@@ -614,6 +614,19 @@ const openingDrills = [
     fen: "start",
     line: ["e2e4", "e7e5", "d2d4", "e5d4", "c2c3", "d4c3", "f1c4", "c3b2", "c1b2", "d7d6", "g1f3", "g8f6", "e1g1", "c8g4", "e4e5", "d6e5", "c4f7", "e8e7", "b2a3", "e7f7", "d1d8"],
   },
+  {
+    id: "opening-halloween-gambit-four-knights-white",
+    type: "opening",
+    difficulty: "hard",
+    practiceColor: "w",
+    name: { en: "Halloween Gambit: Four Knights Extended - White", ja: "ハロウィン・ギャンビット: フォーナイツ拡張 - 白" },
+    prompt: {
+      en: "This gambit looks like a normal gambit, but it is a complete berserker. This variation of the Halloween Gambit is my favorite because it includes a windmill. Play it and the opponent will get spooked by its moves. It is also very solid, so you can TRICK your opponent into accepting the gambit and TREAT them like a crying kid. Trick and chess!",
+      ja: "このギャンビットは普通のギャンビットに見えますが、実は完全なバーサーカーです。このハロウィン・ギャンビットの変化はウインドミルを含んでいるので、私のお気に入りです。これを指せば、相手はその手にびっくりするでしょう。しかもかなり堅実なので、相手をTRICKしてギャンビットを受けさせ、泣きそうな子どもみたいにTREATできます。Trick and chess!",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "g1f3", "b8c6", "b1c3", "g8f6", "f3e5", "c6e5", "d2d4", "e5c6", "d4d5", "c6e5", "f2f4", "e5g6", "e4e5", "f6g8", "d5d6", "c7d6", "e5d6", "d8f6", "c3b5", "e8d8", "c1e3", "a7a6", "e3b6", "d8e8", "b5c7", "e8d8", "c7a8", "d8e8", "a8c7", "e8d8", "c7d5", "d8e8", "d5f6"],
+  },
 ];
 
 const extendedPuzzleOpenings = {
