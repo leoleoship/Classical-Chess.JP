@@ -537,6 +537,19 @@ const openingDrills = [
     line: ["d2d4", "d7d5", "c2c4", "e7e6"],
   },
   {
+    id: "opening-alien-gambit-main-line-white",
+    type: "opening",
+    difficulty: "medium",
+    practiceColor: "w",
+    name: { en: "Alien Gambit Main Line - White", ja: "エイリアン・ギャンビット メインライン - 白" },
+    prompt: {
+      en: "Better. This gambit is an extended version of the Caro-Kann, yet it still highly exposes the enemy king, strips its castling rights, and forks the king and bishop with the knight. This can lead to a massive material and tactical loss for Black, and after that, the light-squared bishop will torture the king into space.",
+      ja: "いいですね。このギャンビットはカロ・カンの拡張版ですが、相手のキングを大きくさらし、キャスリング権を奪い、ナイトでキングとビショップをフォークします。黒は大きな駒損と戦術的な損失を受けやすく、その後は白マスビショップがキングを宇宙まで苦しめます。",
+    },
+    fen: "start",
+    line: ["e2e4", "c7c6", "d2d4", "d7d5", "b1c3", "d5e4", "c3e4", "g8f6", "e4g5", "h7h6", "g5f7", "e8f7", "g1f3", "c8g4", "f3e5", "f7e8", "e5g4"],
+  },
+  {
     id: "opening-kings-indian-defense-black",
     type: "opening",
     difficulty: "medium",
