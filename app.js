@@ -472,6 +472,19 @@ const openingDrills = [
     line: ["e2e4", "e7e5", "g1f3", "b8c6", "f1c4"],
   },
   {
+    id: "opening-vienna-game-white",
+    type: "opening",
+    difficulty: "easy",
+    practiceColor: "w",
+    name: { en: "Vienna Game - White", ja: "ヴィエナ・ゲーム - 白" },
+    prompt: {
+      en: "This is another classical choice. This gambit is aggressive and sacrifices a pawn to develop and gain central control. The Vienna Game is also something people sometimes choose when they are serious, so it is for serious and real chess lovers, while the King's Bongcloud and other openings are for memes and content.",
+      ja: "これも古典的な選択です。このギャンビットは攻撃的で、ポーンを犠牲にして展開と中央支配を得ます。ヴィエナ・ゲームは本気のときに選ばれることもあるので、真剣な本物のチェス好き向けです。一方、キングズ・ボングクラウドなどはミームやネタ向けです。",
+    },
+    fen: "start",
+    line: ["e2e4", "e7e5", "b1c3", "g8f6", "f2f4", "e5f4", "e4e5"],
+  },
+  {
     id: "opening-french-defense-black",
     type: "opening",
     difficulty: "easy",
