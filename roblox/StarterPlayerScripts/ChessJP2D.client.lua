@@ -19,11 +19,18 @@ local turn = "w"
 local moveNumber = 1
 local capturedWhite = {}
 local capturedBlack = {}
+local moveHistory = {}
+local currentTheme = "classic"
 
 local rootGui
+local backgroundFrame
 local boardFrame
+local sidePanel
 local statusLabel
 local capturedLabel
+local ratingLabel
+local moveHistoryLabel
+local themeLabel
 
 local pieceText = {
 	wp = "P", wn = "N", wb = "B", wr = "R", wq = "Q", wk = "K",
@@ -35,6 +42,30 @@ local startPosition = {
 	a2 = "wp", b2 = "wp", c2 = "wp", d2 = "wp", e2 = "wp", f2 = "wp", g2 = "wp", h2 = "wp",
 	a7 = "bp", b7 = "bp", c7 = "bp", d7 = "bp", e7 = "bp", f7 = "bp", g7 = "bp", h7 = "bp",
 	a8 = "br", b8 = "bn", c8 = "bb", d8 = "bq", e8 = "bk", f8 = "bb", g8 = "bn", h8 = "br",
+}
+
+local themes = {
+	classic = {
+		name = "Classic",
+		light = Color3.fromRGB(238, 219, 186),
+		dark = Color3.fromRGB(118, 150, 97),
+		background = Color3.fromRGB(26, 32, 36),
+		panel = Color3.fromRGB(39, 47, 52),
+	},
+	candyland = {
+		name = "Candyland",
+		light = Color3.fromRGB(255, 220, 236),
+		dark = Color3.fromRGB(124, 201, 211),
+		background = Color3.fromRGB(53, 42, 66),
+		panel = Color3.fromRGB(78, 58, 94),
+	},
+	sunburst = {
+		name = "Sunburst",
+		light = Color3.fromRGB(255, 231, 151),
+		dark = Color3.fromRGB(214, 109, 74),
+		background = Color3.fromRGB(46, 42, 32),
+		panel = Color3.fromRGB(69, 57, 39),
+	},
 }
 
 local function pieceColor(piece)
@@ -177,20 +208,72 @@ end
 
 local function baseSquareColor(square)
 	local file, rank = parseSquare(square)
-	return (file + rank) % 2 == 0 and LIGHT or DARK
+	local theme = themes[currentTheme]
+	return (file + rank) % 2 == 0 and theme.light or theme.dark
 end
 
 local function updateCapturedLabel()
+	if not capturedLabel then return end
 	local whiteText = #capturedWhite > 0 and table.concat(capturedWhite, " ") or "-"
 	local blackText = #capturedBlack > 0 and table.concat(capturedBlack, " ") or "-"
 	capturedLabel.Text = "White captured: " .. whiteText .. "\nBlack captured: " .. blackText
 end
 
 local function setStatus(message)
+	if not statusLabel then return end
 	statusLabel.Text = message
 end
 
+local function setRating(text, color)
+	if not ratingLabel then return end
+	ratingLabel.Text = text
+	ratingLabel.TextColor3 = color or Color3.fromRGB(242, 239, 230)
+end
+
+local function updateMoveHistory()
+	if not moveHistoryLabel then return end
+	if #moveHistory == 0 then
+		moveHistoryLabel.Text = "No moves yet."
+		return
+	end
+
+	local rows = {}
+	for index, item in ipairs(moveHistory) do
+		local moveSide = index % 2 == 1 and tostring(math.floor((index + 1) / 2)) .. ". " or ""
+		table.insert(rows, moveSide .. item)
+	end
+	moveHistoryLabel.Text = table.concat(rows, "\n")
+end
+
+local function scoreMove(piece, captured, from, to)
+	if captured and pieceKind(captured) == "q" then
+		return "Brilliant", Color3.fromRGB(80, 220, 255)
+	end
+	if captured then
+		return "Good", Color3.fromRGB(107, 226, 141)
+	end
+	if pieceKind(piece) == "n" or pieceKind(piece) == "b" then
+		return "Good", Color3.fromRGB(107, 226, 141)
+	end
+	if from == to then
+		return "Bad", Color3.fromRGB(240, 100, 95)
+	end
+	return "So-So", Color3.fromRGB(238, 211, 103)
+end
+
+local function formatMove(piece, from, to, captured)
+	local captureMark = captured and "x" or "-"
+	return pieceText[piece] .. from .. captureMark .. to
+end
+
 local function drawBoard()
+	if backgroundFrame then
+		backgroundFrame.BackgroundColor3 = themes[currentTheme].background
+	end
+	if sidePanel then
+		sidePanel.BackgroundColor3 = themes[currentTheme].panel
+	end
+
 	for square, button in pairs(squareButtons) do
 		local piece = board[square]
 		button.BackgroundColor3 = baseSquareColor(square)
@@ -211,13 +294,18 @@ local function drawBoard()
 	end
 
 	local side = turn == "w" and "White" or "Black"
-	setStatus("Chess.JP 2D - " .. side .. " to move. Move " .. tostring(moveNumber))
+	setStatus(side .. " to move. Move " .. tostring(moveNumber))
 	updateCapturedLabel()
+	updateMoveHistory()
+	if themeLabel then
+		themeLabel.Text = "Theme: " .. themes[currentTheme].name
+	end
 end
 
 local function makeMove(from, to)
 	local piece = board[from]
 	local captured = board[to]
+	local ratingText, ratingColor = scoreMove(piece, captured, from, to)
 	if captured then
 		local capturedName = string.upper(pieceColor(captured)) .. pieceText[captured]
 		if pieceColor(piece) == "w" then
@@ -234,6 +322,9 @@ local function makeMove(from, to)
 	if pieceKind(piece) == "p" and (toRank == 1 or toRank == 8) then
 		board[to] = pieceColor(piece) .. "q"
 	end
+
+	table.insert(moveHistory, formatMove(piece, from, to, captured))
+	setRating(ratingText, ratingColor)
 
 	selectedSquare = nil
 	legalTargets = {}
@@ -272,13 +363,15 @@ local function resetGame()
 	moveNumber = 1
 	capturedWhite = {}
 	capturedBlack = {}
+	moveHistory = {}
 	for square, piece in pairs(startPosition) do
 		board[square] = piece
 	end
+	setRating("-", Color3.fromRGB(242, 239, 230))
 	drawBoard()
 end
 
-local function makeText(parent, text, size, position, fontSize)
+local function makeText(parent, text, size, position, fontSize, color)
 	local label = Instance.new("TextLabel")
 	label.BackgroundTransparency = 1
 	label.Size = size
@@ -286,10 +379,58 @@ local function makeText(parent, text, size, position, fontSize)
 	label.Font = Enum.Font.GothamBold
 	label.Text = text
 	label.TextSize = fontSize
-	label.TextColor3 = Color3.fromRGB(242, 239, 230)
+	label.TextColor3 = color or Color3.fromRGB(242, 239, 230)
 	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.TextYAlignment = Enum.TextYAlignment.Top
 	label.Parent = parent
 	return label
+end
+
+local function makePanel(parent, name, size, position)
+	local panel = Instance.new("Frame")
+	panel.Name = name
+	panel.Size = size
+	panel.Position = position
+	panel.BackgroundColor3 = Color3.fromRGB(31, 38, 43)
+	panel.BorderSizePixel = 0
+	panel.Parent = parent
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 8)
+	corner.Parent = panel
+
+	return panel
+end
+
+local function makeButton(parent, text, size, position, callback)
+	local button = Instance.new("TextButton")
+	button.Size = size
+	button.Position = position
+	button.BackgroundColor3 = Color3.fromRGB(65, 78, 86)
+	button.BorderSizePixel = 0
+	button.Font = Enum.Font.GothamBold
+	button.Text = text
+	button.TextSize = 15
+	button.TextColor3 = Color3.fromRGB(245, 242, 235)
+	button.Parent = parent
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 6)
+	corner.Parent = button
+
+	button.MouseButton1Click:Connect(callback)
+	return button
+end
+
+local function cycleTheme()
+	if currentTheme == "classic" then
+		currentTheme = "candyland"
+	elseif currentTheme == "candyland" then
+		currentTheme = "sunburst"
+	else
+		currentTheme = "classic"
+	end
+	drawBoard()
 end
 
 local function buildGui()
@@ -303,11 +444,11 @@ local function buildGui()
 	rootGui.IgnoreGuiInset = true
 	rootGui.Parent = player:WaitForChild("PlayerGui")
 
-	local background = Instance.new("Frame")
-	background.Name = "Background"
-	background.Size = UDim2.fromScale(1, 1)
-	background.BackgroundColor3 = Color3.fromRGB(26, 32, 36)
-	background.Parent = rootGui
+	backgroundFrame = Instance.new("Frame")
+	backgroundFrame.Name = "Background"
+	backgroundFrame.Size = UDim2.fromScale(1, 1)
+	backgroundFrame.BackgroundColor3 = themes[currentTheme].background
+	backgroundFrame.Parent = rootGui
 
 	boardFrame = Instance.new("Frame")
 	boardFrame.Name = "Board"
@@ -316,7 +457,7 @@ local function buildGui()
 	boardFrame.Size = UDim2.fromOffset(560, 560)
 	boardFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 	boardFrame.BorderSizePixel = 0
-	boardFrame.Parent = background
+	boardFrame.Parent = backgroundFrame
 
 	local boardAspect = Instance.new("UIAspectRatioConstraint")
 	boardAspect.AspectRatio = 1
@@ -350,36 +491,57 @@ local function buildGui()
 	local panel = Instance.new("Frame")
 	panel.Name = "SidePanel"
 	panel.AnchorPoint = Vector2.new(0, 0.5)
-	panel.Position = UDim2.fromScale(0.72, 0.52)
-	panel.Size = UDim2.fromOffset(300, 560)
-	panel.BackgroundColor3 = Color3.fromRGB(39, 47, 52)
+	panel.Position = UDim2.fromScale(0.71, 0.52)
+	panel.Size = UDim2.fromOffset(340, 620)
+	panel.BackgroundColor3 = themes[currentTheme].panel
 	panel.BorderSizePixel = 0
-	panel.Parent = background
+	panel.Parent = backgroundFrame
+	sidePanel = panel
 
 	local panelCorner = Instance.new("UICorner")
 	panelCorner.CornerRadius = UDim.new(0, 8)
 	panelCorner.Parent = panel
 
-	makeText(panel, "Chess.JP", UDim2.fromOffset(260, 50), UDim2.fromOffset(22, 22), 34)
-	statusLabel = makeText(panel, "", UDim2.fromOffset(260, 90), UDim2.fromOffset(22, 90), 20)
-	capturedLabel = makeText(panel, "", UDim2.fromOffset(260, 120), UDim2.fromOffset(22, 190), 18)
+	makeText(panel, "Classical-chess.jp", UDim2.fromOffset(290, 22), UDim2.fromOffset(22, 18), 14, Color3.fromRGB(177, 190, 183))
+	makeText(panel, "Chess.JP", UDim2.fromOffset(290, 48), UDim2.fromOffset(22, 42), 36)
+	statusLabel = makeText(panel, "", UDim2.fromOffset(290, 46), UDim2.fromOffset(22, 90), 18)
 
-	local restart = Instance.new("TextButton")
-	restart.Name = "Restart"
-	restart.Size = UDim2.fromOffset(250, 54)
-	restart.Position = UDim2.fromOffset(22, 470)
-	restart.BackgroundColor3 = Color3.fromRGB(86, 150, 229)
-	restart.BorderSizePixel = 0
-	restart.Font = Enum.Font.GothamBold
-	restart.Text = "Restart"
-	restart.TextSize = 22
-	restart.TextColor3 = Color3.fromRGB(255, 255, 255)
-	restart.Parent = panel
-	restart.MouseButton1Click:Connect(resetGame)
+	local modePanel = makePanel(panel, "ModePanel", UDim2.fromOffset(296, 74), UDim2.fromOffset(22, 136))
+	makeText(modePanel, "Mode", UDim2.fromOffset(260, 20), UDim2.fromOffset(12, 8), 14, Color3.fromRGB(177, 190, 183))
+	makeButton(modePanel, "Human", UDim2.fromOffset(84, 32), UDim2.fromOffset(12, 34), function()
+		setStatus("Human mode is active.")
+	end)
+	makeButton(modePanel, "Bot", UDim2.fromOffset(84, 32), UDim2.fromOffset(106, 34), function()
+		setStatus("Bot mode will be added next.")
+	end)
+	makeButton(modePanel, "Puzzle", UDim2.fromOffset(84, 32), UDim2.fromOffset(200, 34), function()
+		setStatus("Puzzle mode will be ported from GitHub next.")
+	end)
 
-	local restartCorner = Instance.new("UICorner")
-	restartCorner.CornerRadius = UDim.new(0, 6)
-	restartCorner.Parent = restart
+	local settingsPanel = makePanel(panel, "SettingsPanel", UDim2.fromOffset(296, 78), UDim2.fromOffset(22, 222))
+	makeText(settingsPanel, "Settings", UDim2.fromOffset(260, 20), UDim2.fromOffset(12, 8), 14, Color3.fromRGB(177, 190, 183))
+	themeLabel = makeText(settingsPanel, "", UDim2.fromOffset(160, 26), UDim2.fromOffset(12, 40), 16)
+	makeButton(settingsPanel, "Theme", UDim2.fromOffset(90, 34), UDim2.fromOffset(194, 32), cycleTheme)
+
+	local ratingPanel = makePanel(panel, "RatingPanel", UDim2.fromOffset(142, 74), UDim2.fromOffset(22, 312))
+	makeText(ratingPanel, "Move Rating", UDim2.fromOffset(118, 20), UDim2.fromOffset(12, 8), 14, Color3.fromRGB(177, 190, 183))
+	ratingLabel = makeText(ratingPanel, "-", UDim2.fromOffset(118, 34), UDim2.fromOffset(12, 34), 24)
+
+	local capturedPanel = makePanel(panel, "CapturedPanel", UDim2.fromOffset(142, 74), UDim2.fromOffset(176, 312))
+	makeText(capturedPanel, "Captured", UDim2.fromOffset(118, 20), UDim2.fromOffset(12, 8), 14, Color3.fromRGB(177, 190, 183))
+	capturedLabel = makeText(capturedPanel, "", UDim2.fromOffset(118, 44), UDim2.fromOffset(12, 30), 13)
+
+	local controlsPanel = makePanel(panel, "ControlsPanel", UDim2.fromOffset(296, 72), UDim2.fromOffset(22, 398))
+	makeText(controlsPanel, "Controls", UDim2.fromOffset(260, 20), UDim2.fromOffset(12, 8), 14, Color3.fromRGB(177, 190, 183))
+	makeButton(controlsPanel, "Restart", UDim2.fromOffset(84, 32), UDim2.fromOffset(12, 32), resetGame)
+	makeButton(controlsPanel, "Reload", UDim2.fromOffset(84, 32), UDim2.fromOffset(106, 32), resetGame)
+	makeButton(controlsPanel, "Resign", UDim2.fromOffset(84, 32), UDim2.fromOffset(200, 32), function()
+		setStatus((turn == "w" and "White" or "Black") .. " resigned.")
+	end)
+
+	local historyPanel = makePanel(panel, "HistoryPanel", UDim2.fromOffset(296, 118), UDim2.fromOffset(22, 482))
+	makeText(historyPanel, "Move History", UDim2.fromOffset(260, 20), UDim2.fromOffset(12, 8), 14, Color3.fromRGB(177, 190, 183))
+	moveHistoryLabel = makeText(historyPanel, "No moves yet.", UDim2.fromOffset(260, 82), UDim2.fromOffset(12, 32), 14)
 
 	resetGame()
 end

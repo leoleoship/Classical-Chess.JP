@@ -25,7 +25,9 @@ This folder contains Roblox Studio starter versions of Chess.JP.
 
 ## What This Version Has
 
-- A 2D screen chessboard.
+- A 2D screen chessboard styled like the GitHub Chess.JP app.
+- A Chess.JP side panel with mode buttons, settings, move rating, captured pieces, controls, and move history.
+- Classic, Candyland, and Sunburst themes.
 - Click pieces and squares to move.
 - White and black turns.
 - Normal movement for pawns, knights, bishops, rooks, queens, and kings.
@@ -38,6 +40,7 @@ This folder contains Roblox Studio starter versions of Chess.JP.
 
 - Check and checkmate are not enforced yet.
 - Castling and en passant are not implemented yet.
+- Bot, online, puzzle, and account buttons are UI placeholders for now.
 - The 2D version uses simple letters for pieces instead of final art.
 - The optional 3D version uses simple generated Roblox shapes, not final custom models yet.
 
