@@ -118,9 +118,42 @@ const minimalPieceGlyphs = {
   bk: "K",
 };
 
+const solidPieceGlyphs = {
+  wp: "♟",
+  wn: "♞",
+  wb: "♝",
+  wr: "♜",
+  wq: "♛",
+  wk: "♚",
+  bp: "♟",
+  bn: "♞",
+  bb: "♝",
+  br: "♜",
+  bq: "♛",
+  bk: "♚",
+};
+
+const outlinePieceGlyphs = {
+  wp: "♙",
+  wn: "♘",
+  wb: "♗",
+  wr: "♖",
+  wq: "♕",
+  wk: "♔",
+  bp: "♙",
+  bn: "♘",
+  bb: "♗",
+  br: "♖",
+  bq: "♕",
+  bk: "♔",
+};
+
 function pieceGlyph(piece) {
   const key = `${piece.color}${piece.type}`;
-  return pieceTypeSelect?.value === "minimal" ? minimalPieceGlyphs[key] : pieceGlyphs[key];
+  if (pieceTypeSelect?.value === "minimal") return minimalPieceGlyphs[key];
+  if (pieceTypeSelect?.value === "staunton") return solidPieceGlyphs[key];
+  if (pieceTypeSelect?.value === "heritage") return outlinePieceGlyphs[key];
+  return pieceGlyphs[key];
 }
 
 const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9 };

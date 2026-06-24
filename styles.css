@@ -914,38 +914,38 @@ body[data-piece-type="tournament"] .piece {
 }
 
 body[data-piece-type="staunton"] .piece {
-  font-family: Georgia, "Times New Roman", "Segoe UI Symbol", serif;
-  font-weight: 700;
-  transform: scale(1.04);
+  font-family: "Arial Unicode MS", "Segoe UI Symbol", sans-serif;
+  font-weight: 800;
+  transform: scale(1.08);
 }
 
 body[data-piece-type="staunton"] .piece.white,
 body[data-piece-type="staunton"] .piece.black {
   filter:
-    drop-shadow(0 0 1px rgb(30 22 16 / 72%))
-    drop-shadow(0 3px 1px rgb(0 0 0 / 38%));
+    drop-shadow(0 0 1px rgb(255 248 226 / 35%))
+    drop-shadow(0 3px 1px rgb(0 0 0 / 52%));
 }
 
 body[data-piece-type="heritage"] .piece {
   font-family: "Times New Roman", Georgia, "Segoe UI Symbol", serif;
-  font-weight: 400;
+  font-weight: 700;
   text-shadow:
-    0.018em 0 currentColor,
-    -0.018em 0 currentColor,
-    0 0.018em currentColor;
-  transform: scale(1.06);
+    0.012em 0 currentColor,
+    -0.012em 0 currentColor,
+    0 0.012em currentColor;
+  transform: scale(1.03);
 }
 
 body[data-piece-type="heritage"] .piece.white {
   filter:
-    drop-shadow(0 0 1px rgb(70 45 28 / 75%))
-    drop-shadow(0 2px 1px rgb(0 0 0 / 44%));
+    drop-shadow(0 0 1px rgb(70 45 28 / 82%))
+    drop-shadow(0 2px 1px rgb(0 0 0 / 34%));
 }
 
 body[data-piece-type="heritage"] .piece.black {
   filter:
-    drop-shadow(0 0 1px rgb(255 244 217 / 55%))
-    drop-shadow(0 2px 1px rgb(0 0 0 / 38%));
+    drop-shadow(0 0 1px rgb(255 244 217 / 68%))
+    drop-shadow(0 2px 1px rgb(0 0 0 / 32%));
 }
 
 body[data-piece-type="bold"] .piece.black.piece-k,
