@@ -1,5 +1,5 @@
 (async () => {
-const { Chess } = await import("https://esm.sh/chess.js@1.2.0");
+const { Chess } = await import("./vendor/chess.mjs?v=1.2.0");
 
 const SUPABASE_URL = "https://dwyoebbskkhayjcutzvb.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -140,6 +140,7 @@ const i18n = {
     blackCaptured: "黒が取った駒",
     boardRegion: "チェス盤",
     boardSkin: "盤スキン",
+    boxwoodColors: "アンティーク・ボックスウッド",
     boldPieces: "ボールド",
     botSide: "自分の色",
     botMode: "Bot戦",
@@ -159,6 +160,7 @@ const i18n = {
     classicBoard: "クラシック",
     classicColors: "クラシック",
     classicPieces: "クラシック",
+    clubBoard: "チェスクラブ・グリーン",
     candylandBoard: "キャンディランド",
     clearBoard: "全消去",
     copyFen: "FENをコピー",
@@ -170,6 +172,7 @@ const i18n = {
     demoWin: "デモ勝利 +15",
     draw: "ドローです。",
     easy: "Easy",
+    ebonyColors: "エボニー",
     elo: "ELO",
     erase: "消す",
     fenError: "FENを読み込めませんでした。",
@@ -180,6 +183,7 @@ const i18n = {
     grandmaster: "Grandmaster",
     good: "Good",
     hard: "Hard",
+    heritagePieces: "ヘリテージ",
     humanMode: "対人戦",
     intermediate: "Intermediate",
     ivoryColors: "アイボリー＆オニキス",
@@ -190,6 +194,7 @@ const i18n = {
     loadingTitle: "Chess.JP",
     loadBoard: "読込",
     loadCurrent: "現在の局面",
+    mahoganyBoard: "マホガニー",
     mode: "モード",
     medium: "Medium",
     mistake: "Mistake",
@@ -259,6 +264,7 @@ const i18n = {
     reloadBoard: "盤面を再読込",
     resign: "投了",
     resigned: "{loser}が投了しました。{winner}の勝ちです。",
+    rosewoodColors: "ローズウッド",
     royalBoard: "ロイヤルマーブル",
     royalColors: "ロイヤル",
     settings: "設定",
@@ -267,6 +273,7 @@ const i18n = {
     savedBoards: "保存盤面",
     soso: "So-So",
     soundFx: "効果音",
+    stauntonPieces: "スタントン・プリント",
     sunburstBoard: "サンバースト",
     thinking: "{mode}: Botが考えています。",
     title: "Chess.JP",
@@ -274,6 +281,7 @@ const i18n = {
     turn: "{mode}: {side}番です。",
     undo: "一手戻す",
     volume: "音量",
+    walnutBoard: "ウォールナット",
     white: "白",
     whiteCaptured: "白が取った駒",
   },
@@ -288,6 +296,7 @@ const i18n = {
     blackCaptured: "Black captured",
     boardRegion: "Chess board",
     boardSkin: "Board skin",
+    boxwoodColors: "Antique Boxwood",
     boldPieces: "Bold",
     botSide: "Your side",
     botMode: "Bot",
@@ -307,6 +316,7 @@ const i18n = {
     classicBoard: "Classic",
     classicColors: "Classic",
     classicPieces: "Classic",
+    clubBoard: "Chess Club Green",
     candylandBoard: "Candyland",
     clearBoard: "Clear board",
     copyFen: "Copy FEN",
@@ -318,6 +328,7 @@ const i18n = {
     demoWin: "Demo win +15",
     draw: "Draw.",
     easy: "Easy",
+    ebonyColors: "Ebony",
     elo: "ELO",
     erase: "Erase",
     fenError: "Could not load that FEN.",
@@ -328,6 +339,7 @@ const i18n = {
     grandmaster: "Grandmaster",
     good: "Good",
     hard: "Hard",
+    heritagePieces: "Heritage",
     humanMode: "Human",
     intermediate: "Intermediate",
     ivoryColors: "Ivory & Onyx",
@@ -338,6 +350,7 @@ const i18n = {
     loadingTitle: "Chess.JP",
     loadBoard: "Load board",
     loadCurrent: "Load current",
+    mahoganyBoard: "Mahogany",
     mode: "Mode",
     medium: "Medium",
     mistake: "Mistake",
@@ -407,6 +420,7 @@ const i18n = {
     reloadBoard: "Reload board",
     resign: "Resign",
     resigned: "{loser} resigned. {winner} wins.",
+    rosewoodColors: "Rosewood",
     royalBoard: "Royal Marble",
     royalColors: "Royal",
     settings: "Settings",
@@ -415,6 +429,7 @@ const i18n = {
     savedBoards: "Saved boards",
     soso: "So-So",
     soundFx: "Sound FX",
+    stauntonPieces: "Staunton Print",
     sunburstBoard: "Sunburst",
     thinking: "{mode}: Bot is thinking.",
     title: "Chess.JP",
@@ -422,6 +437,7 @@ const i18n = {
     turn: "{mode}: {side} to move.",
     undo: "Undo",
     volume: "Volume",
+    walnutBoard: "Walnut",
     white: "White",
     whiteCaptured: "White captured",
   },
@@ -1496,7 +1512,7 @@ async function restoreActiveOnlineMatch() {
   flipped = onlineMyColor === "b";
   onlineStatus.textContent = t("onlineRejoined");
   await ensureOnlineLobby();
-  await subscribeOnlineMatch(onlineMatch.roomId);
+  if (lobbyChannel) await subscribeOnlineMatch(onlineMatch.roomId);
   saveActiveOnlineMatch();
   return true;
 }
@@ -4094,5 +4110,5 @@ render();
   document.body.classList.add("loading-done");
   document.body.classList.remove("is-loading");
   const status = document.querySelector("#status");
-  if (status) status.textContent = "Chess engine could not load. Please open the HTTPS site or localhost.";
+  if (status) status.textContent = "Chess.JP could not start. Please reload the page.";
 });
