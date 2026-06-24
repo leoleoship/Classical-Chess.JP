@@ -950,6 +950,7 @@ body[data-piece-type="heritage"] .piece.black {
 
 body[data-piece-type="geometric"] .piece {
   position: relative;
+  z-index: 0;
   display: grid;
   width: 72%;
   aspect-ratio: 1;
@@ -958,6 +959,17 @@ body[data-piece-type="geometric"] .piece {
   font-size: 0.64em;
   line-height: 1;
   transform: none;
+}
+
+body[data-piece-type="geometric"] .piece::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--geometric-fill);
+  box-shadow:
+    inset 0 0 0 0.045em currentColor,
+    0 3px 0 rgb(0 0 0 / 32%);
+  content: "";
 }
 
 body[data-piece-type="geometric"] .piece::after,
@@ -990,46 +1002,40 @@ body[data-piece-type="crests"] .piece.black::after {
 }
 
 body[data-piece-type="geometric"] .piece.white {
+  --geometric-fill: var(--piece-white-fill, #4a7d75);
   color: var(--piece-white-contrast, #fffdf5);
-  background: var(--piece-white-fill, #4a7d75);
-  box-shadow:
-    inset 0 0 0 0.045em currentColor,
-    0 3px 0 rgb(0 0 0 / 28%);
   filter: none;
 }
 
 body[data-piece-type="geometric"] .piece.black {
+  --geometric-fill: var(--piece-black-fill, #263238);
   color: var(--piece-black-contrast, #f7e9cf);
-  background: var(--piece-black-fill, #263238);
-  box-shadow:
-    inset 0 0 0 0.045em currentColor,
-    0 3px 0 rgb(0 0 0 / 38%);
   filter: none;
 }
 
-body[data-piece-type="geometric"] .piece-p {
+body[data-piece-type="geometric"] .piece-p::before {
   border-radius: 50%;
 }
 
-body[data-piece-type="geometric"] .piece-n {
+body[data-piece-type="geometric"] .piece-n::before {
   clip-path: polygon(50% 0, 96% 34%, 79% 100%, 21% 100%, 4% 34%);
 }
 
-body[data-piece-type="geometric"] .piece-b {
+body[data-piece-type="geometric"] .piece-b::before {
   border-radius: 12% 50% 12% 50%;
 }
 
-body[data-piece-type="geometric"] .piece-r {
+body[data-piece-type="geometric"] .piece-r::before {
   border-radius: 4px;
 }
 
-body[data-piece-type="geometric"] .piece-q {
+body[data-piece-type="geometric"] .piece-q::before {
   border-radius: 50% 50% 20% 20%;
   outline: 0.035em double currentColor;
   outline-offset: -0.11em;
 }
 
-body[data-piece-type="geometric"] .piece-k {
+body[data-piece-type="geometric"] .piece-k::before {
   border-radius: 18%;
   clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0 65%, 0 35%, 35% 35%);
 }
