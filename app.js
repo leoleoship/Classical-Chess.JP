@@ -102,6 +102,26 @@ const pieceGlyphs = {
   bk: "♚",
 };
 
+const minimalPieceGlyphs = {
+  wp: "P",
+  wn: "N",
+  wb: "B",
+  wr: "R",
+  wq: "Q",
+  wk: "K",
+  bp: "P",
+  bn: "N",
+  bb: "B",
+  br: "R",
+  bq: "Q",
+  bk: "K",
+};
+
+function pieceGlyph(piece) {
+  const key = `${piece.color}${piece.type}`;
+  return pieceSkinSelect?.value === "minimal" ? minimalPieceGlyphs[key] : pieceGlyphs[key];
+}
+
 const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9 };
 const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const ranks = ["8", "7", "6", "5", "4", "3", "2", "1"];
@@ -171,12 +191,16 @@ const i18n = {
     mode: "モード",
     medium: "Medium",
     mistake: "Mistake",
+    medallionPieces: "ロイヤルメダリオン",
     midnightBoard: "ミッドナイト",
+    minimalPieces: "ミニマル文字",
     moveCount: "{count}手",
     moveRating: "手の評価",
     moves: "棋譜",
     newGame: "新規対局",
     nightLight: "ナイト",
+    neonBoard: "ネオングリッド",
+    neonPieces: "ネオンアーケード",
     noCastle: "キャスリングなし",
     noEnPassant: "アンパッサンなし",
     noPawnDouble: "ポーンの2マス移動なし",
@@ -200,6 +224,7 @@ const i18n = {
     onlineSyncError: "オンライン接続に失敗しました。Supabase設定を確認してください。",
     onlineTurnWait: "相手の手番です。",
     onlineWin: "オンラインELOが15上がりました。",
+    oceanBoard: "オーシャングラス",
     openingDrills: "オープニング",
     openingNumber: "オープニング {number}",
     openingObjective: "{side}のオープニング練習。正しい手を{moves}回指そう。",
@@ -230,6 +255,7 @@ const i18n = {
     reloadBoard: "盤面を再読込",
     resign: "投了",
     resigned: "{loser}が投了しました。{winner}の勝ちです。",
+    royalBoard: "ロイヤルマーブル",
     settings: "設定",
     save: "保存",
     saveBoard: "保存",
@@ -309,12 +335,16 @@ const i18n = {
     mode: "Mode",
     medium: "Medium",
     mistake: "Mistake",
+    medallionPieces: "Royal Medallions",
     midnightBoard: "Midnight",
+    minimalPieces: "Minimal Letters",
     moveCount: "{count} moves",
     moveRating: "Move rating",
     moves: "Moves",
     newGame: "New game",
     nightLight: "Night",
+    neonBoard: "Neon Grid",
+    neonPieces: "Neon Arcade",
     noCastle: "No castling",
     noEnPassant: "No en passant",
     noPawnDouble: "No two-square pawn move",
@@ -338,6 +368,7 @@ const i18n = {
     onlineSyncError: "Online connection failed. Check the Supabase settings.",
     onlineTurnWait: "Waiting for your opponent.",
     onlineWin: "Online ELO increased by 15.",
+    oceanBoard: "Ocean Glass",
     openingDrills: "Openings",
     openingNumber: "Opening {number}",
     openingObjective: "{side} opening drill. Play {moves} correct moves.",
@@ -368,6 +399,7 @@ const i18n = {
     reloadBoard: "Reload board",
     resign: "Resign",
     resigned: "{loser} resigned. {winner} wins.",
+    royalBoard: "Royal Marble",
     settings: "Settings",
     save: "Save",
     saveBoard: "Save board",
@@ -3217,7 +3249,7 @@ function renderBoard() {
       if (piece) {
         const span = document.createElement("span");
         span.className = `piece ${piece.color === "w" ? "white" : "black"} piece-${piece.type}`;
-        span.textContent = pieceGlyphs[`${piece.color}${piece.type}`];
+        span.textContent = pieceGlyph(piece);
         if (lastMove?.to === square) {
           span.classList.add("move-in");
           span.style.setProperty("--move-x", `${lastMoveVector?.x || 0}px`);
@@ -3969,6 +4001,7 @@ boardSkinSelect.addEventListener("change", () => {
 pieceSkinSelect.addEventListener("change", () => {
   document.body.dataset.pieceSkin = pieceSkinSelect.value;
   localStorage.setItem("chessJpPieceSkin", pieceSkinSelect.value);
+  render();
 });
 
 soundToggle.addEventListener("change", () => {
