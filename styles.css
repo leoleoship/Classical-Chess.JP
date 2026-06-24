@@ -36,6 +36,34 @@ body[data-theme="night"] {
   --shadow: 0 18px 48px rgb(0 0 0 / 28%);
 }
 
+body[data-board-skin="classic"] {
+  --board-light: #eadfca;
+  --board-dark: #59736d;
+  --board-dark-hover: #4d6761;
+  --board-frame: #2f3a35;
+}
+
+body[data-board-skin="candyland"] {
+  --board-light: #ffddec;
+  --board-dark: #79c9d3;
+  --board-dark-hover: #5eb7c4;
+  --board-frame: #704f7c;
+}
+
+body[data-board-skin="sunburst"] {
+  --board-light: #ffe89a;
+  --board-dark: #d96f4b;
+  --board-dark-hover: #c45b3c;
+  --board-frame: #74462f;
+}
+
+body[data-board-skin="midnight"] {
+  --board-light: #aebbc2;
+  --board-dark: #374853;
+  --board-dark-hover: #455c69;
+  --board-frame: #17242c;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -448,7 +476,7 @@ select {
   padding: 12px;
   border: 1px solid rgb(72 60 45 / 28%);
   border-radius: 8px;
-  background: #2f3a35;
+  background: var(--board-frame, #2f3a35);
   box-shadow: var(--shadow);
 }
 
@@ -544,15 +572,15 @@ select {
 }
 
 .square.light {
-  background: var(--light);
+  background: var(--board-light, var(--light));
 }
 
 .square.dark {
-  background: var(--dark);
+  background: var(--board-dark, var(--dark));
 }
 
 .square:hover {
-  background: var(--dark-hover);
+  background: var(--board-dark-hover, var(--dark-hover));
 }
 
 .square.selected {
@@ -785,6 +813,7 @@ select {
 
 .piece {
   display: inline-block;
+  transform-origin: center;
 }
 
 .piece.white {
@@ -798,6 +827,71 @@ select {
 }
 
 .piece.black.piece-k {
+  transform: scale(1.09);
+}
+
+body[data-piece-skin="bold"] .piece {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 900;
+  transform: scale(1.09);
+}
+
+body[data-piece-skin="bold"] .piece.white {
+  color: #ffffff;
+  filter:
+    drop-shadow(0 0 1px #1d2528)
+    drop-shadow(0 3px 1px rgb(0 0 0 / 62%));
+}
+
+body[data-piece-skin="bold"] .piece.black {
+  color: #172126;
+  filter:
+    drop-shadow(0 0 1px #ffffff)
+    drop-shadow(0 2px 1px rgb(255 255 255 / 35%));
+}
+
+body[data-piece-skin="ivory"] .piece {
+  font-family: Georgia, "Times New Roman", serif;
+  transform: scale(1.04);
+}
+
+body[data-piece-skin="ivory"] .piece.white {
+  color: #fff1c9;
+  filter:
+    drop-shadow(0 0 1px #6c5334)
+    drop-shadow(0 3px 2px rgb(40 24 12 / 58%));
+}
+
+body[data-piece-skin="ivory"] .piece.black {
+  color: #172022;
+  filter:
+    drop-shadow(0 0 1px #b9905c)
+    drop-shadow(0 3px 2px rgb(0 0 0 / 55%));
+}
+
+body[data-piece-skin="tournament"] .piece {
+  font-family: "Arial Unicode MS", "Segoe UI Symbol", sans-serif;
+  font-weight: 700;
+  transform: scale(1.07);
+}
+
+body[data-piece-skin="tournament"] .piece.white {
+  color: #f7f7f2;
+  filter:
+    drop-shadow(0 0 1px #293238)
+    drop-shadow(0 2px 0 #293238);
+}
+
+body[data-piece-skin="tournament"] .piece.black {
+  color: #26333a;
+  filter:
+    drop-shadow(0 0 1px #e7eceb)
+    drop-shadow(0 2px 0 rgb(0 0 0 / 36%));
+}
+
+body[data-piece-skin="bold"] .piece.black.piece-k,
+body[data-piece-skin="ivory"] .piece.black.piece-k,
+body[data-piece-skin="tournament"] .piece.black.piece-k {
   transform: scale(1.09);
 }
 

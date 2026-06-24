@@ -81,6 +81,8 @@ const ruleMandatoryCapture = document.querySelector("#ruleMandatoryCapture");
 const ruleNoRepeatPiece = document.querySelector("#ruleNoRepeatPiece");
 const languageSelect = document.querySelector("#languageSelect");
 const themeSelect = document.querySelector("#themeSelect");
+const boardSkinSelect = document.querySelector("#boardSkinSelect");
+const pieceSkinSelect = document.querySelector("#pieceSkinSelect");
 const soundToggle = document.querySelector("#soundToggle");
 const musicSelect = document.querySelector("#musicSelect");
 const volumeRange = document.querySelector("#volumeRange");
@@ -116,6 +118,8 @@ const i18n = {
     black: "黒",
     blackCaptured: "黒が取った駒",
     boardRegion: "チェス盤",
+    boardSkin: "盤スキン",
+    boldPieces: "ボールド",
     botSide: "自分の色",
     botMode: "Bot戦",
     bgm: "BGM",
@@ -131,6 +135,9 @@ const i18n = {
     checkmatePuzzles: "メイト問題",
     checkmate: "チェックメイト。{side}の負けです。",
     classicLight: "クラシック",
+    classicBoard: "クラシック",
+    classicPieces: "クラシック",
+    candylandBoard: "キャンディランド",
     clearBoard: "全消去",
     copyFen: "FENをコピー",
     copiedFen: "FENをコピーしました。",
@@ -153,6 +160,7 @@ const i18n = {
     hard: "Hard",
     humanMode: "対人戦",
     intermediate: "Intermediate",
+    ivoryPieces: "アイボリー＆オニキス",
     language: "言語",
     light: "ライト",
     load: "読込",
@@ -163,6 +171,7 @@ const i18n = {
     mode: "モード",
     medium: "Medium",
     mistake: "Mistake",
+    midnightBoard: "ミッドナイト",
     moveCount: "{count}手",
     moveRating: "手の評価",
     moves: "棋譜",
@@ -211,6 +220,7 @@ const i18n = {
     restartPuzzle: "やり直す",
     nextPuzzle: "次のパズル",
     piecePalette: "駒パレット",
+    pieceSkin: "駒スキン",
     playMusic: "Play Music",
     playWhite: "白で遊ぶ",
     playBlack: "黒で遊ぶ",
@@ -226,8 +236,10 @@ const i18n = {
     savedBoards: "保存盤面",
     soso: "So-So",
     soundFx: "効果音",
+    sunburstBoard: "サンバースト",
     thinking: "{mode}: Botが考えています。",
     title: "Chess.JP",
+    tournamentPieces: "トーナメント",
     turn: "{mode}: {side}番です。",
     undo: "一手戻す",
     volume: "音量",
@@ -244,6 +256,8 @@ const i18n = {
     black: "Black",
     blackCaptured: "Black captured",
     boardRegion: "Chess board",
+    boardSkin: "Board skin",
+    boldPieces: "Bold",
     botSide: "Your side",
     botMode: "Bot",
     bgm: "BGM",
@@ -259,6 +273,9 @@ const i18n = {
     checkmatePuzzles: "Checkmates",
     checkmate: "Checkmate. {side} loses.",
     classicLight: "Classic",
+    classicBoard: "Classic",
+    classicPieces: "Classic",
+    candylandBoard: "Candyland",
     clearBoard: "Clear board",
     copyFen: "Copy FEN",
     copiedFen: "FEN copied.",
@@ -281,6 +298,7 @@ const i18n = {
     hard: "Hard",
     humanMode: "Human",
     intermediate: "Intermediate",
+    ivoryPieces: "Ivory & Onyx",
     language: "Language",
     light: "Light",
     load: "Load",
@@ -291,6 +309,7 @@ const i18n = {
     mode: "Mode",
     medium: "Medium",
     mistake: "Mistake",
+    midnightBoard: "Midnight",
     moveCount: "{count} moves",
     moveRating: "Move rating",
     moves: "Moves",
@@ -339,6 +358,7 @@ const i18n = {
     restartPuzzle: "Restart",
     nextPuzzle: "Next puzzle",
     piecePalette: "Piece palette",
+    pieceSkin: "Piece skin",
     playMusic: "Play Music",
     playWhite: "Play White",
     playBlack: "Play Black",
@@ -354,8 +374,10 @@ const i18n = {
     savedBoards: "Saved boards",
     soso: "So-So",
     soundFx: "Sound FX",
+    sunburstBoard: "Sunburst",
     thinking: "{mode}: Bot is thinking.",
     title: "Chess.JP",
+    tournamentPieces: "Tournament",
     turn: "{mode}: {side} to move.",
     undo: "Undo",
     volume: "Volume",
@@ -3936,6 +3958,17 @@ languageSelect.addEventListener("change", () => {
 
 themeSelect.addEventListener("change", () => {
   document.body.dataset.theme = themeSelect.value;
+  localStorage.setItem("chessJpTheme", themeSelect.value);
+});
+
+boardSkinSelect.addEventListener("change", () => {
+  document.body.dataset.boardSkin = boardSkinSelect.value;
+  localStorage.setItem("chessJpBoardSkin", boardSkinSelect.value);
+});
+
+pieceSkinSelect.addEventListener("change", () => {
+  document.body.dataset.pieceSkin = pieceSkinSelect.value;
+  localStorage.setItem("chessJpPieceSkin", pieceSkinSelect.value);
 });
 
 soundToggle.addEventListener("change", () => {
@@ -3974,7 +4007,21 @@ fenForm.addEventListener("submit", (event) => {
   }
 });
 
+const savedTheme = localStorage.getItem("chessJpTheme");
+const savedBoardSkin = localStorage.getItem("chessJpBoardSkin");
+const savedPieceSkin = localStorage.getItem("chessJpPieceSkin");
+if (savedTheme && [...themeSelect.options].some((option) => option.value === savedTheme)) {
+  themeSelect.value = savedTheme;
+}
+if (savedBoardSkin && [...boardSkinSelect.options].some((option) => option.value === savedBoardSkin)) {
+  boardSkinSelect.value = savedBoardSkin;
+}
+if (savedPieceSkin && [...pieceSkinSelect.options].some((option) => option.value === savedPieceSkin)) {
+  pieceSkinSelect.value = savedPieceSkin;
+}
 document.body.dataset.theme = themeSelect.value;
+document.body.dataset.boardSkin = boardSkinSelect.value;
+document.body.dataset.pieceSkin = pieceSkinSelect.value;
 applyLanguage();
 await restoreActiveOnlineMatch();
 render();
