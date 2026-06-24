@@ -3328,6 +3328,7 @@ function renderBoard() {
       if (piece) {
         const span = document.createElement("span");
         span.className = `piece ${piece.color === "w" ? "white" : "black"} piece-${piece.type}`;
+        span.dataset.pieceLabel = piece.type.toUpperCase();
         span.textContent = pieceGlyph(piece);
         if (lastMove?.to === square) {
           span.classList.add("move-in");

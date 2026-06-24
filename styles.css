@@ -949,6 +949,7 @@ body[data-piece-type="heritage"] .piece.black {
 }
 
 body[data-piece-type="geometric"] .piece {
+  position: relative;
   display: grid;
   width: 72%;
   aspect-ratio: 1;
@@ -957,6 +958,35 @@ body[data-piece-type="geometric"] .piece {
   font-size: 0.64em;
   line-height: 1;
   transform: none;
+}
+
+body[data-piece-type="geometric"] .piece::after,
+body[data-piece-type="crests"] .piece::after {
+  position: absolute;
+  top: -12%;
+  left: 50%;
+  z-index: 3;
+  min-width: 1.25em;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0.08em 0.22em;
+  background: rgb(25 30 32 / 78%);
+  color: #fffdf5;
+  content: attr(data-piece-label);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0;
+  pointer-events: none;
+  text-shadow: none;
+  transform: translateX(-50%);
+}
+
+body[data-piece-type="geometric"] .piece.black::after,
+body[data-piece-type="crests"] .piece.black::after {
+  background: rgb(245 239 222 / 88%);
+  color: #1c2225;
 }
 
 body[data-piece-type="geometric"] .piece.white {
@@ -1026,6 +1056,10 @@ body[data-piece-type="crests"] .piece::before {
   background: var(--crest-fill);
   box-shadow: 0 3px 0 rgb(0 0 0 / 28%);
   content: "";
+}
+
+body[data-piece-type="crests"] .piece::after {
+  top: -4%;
 }
 
 body[data-piece-type="crests"] .piece.white {
