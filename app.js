@@ -148,9 +148,26 @@ const outlinePieceGlyphs = {
   bk: "♔",
 };
 
+const geometricPieceGlyphs = {
+  wp: "●",
+  wn: "▲",
+  wb: "◆",
+  wr: "■",
+  wq: "✦",
+  wk: "✚",
+  bp: "●",
+  bn: "▲",
+  bb: "◆",
+  br: "■",
+  bq: "✦",
+  bk: "✚",
+};
+
 function pieceGlyph(piece) {
   const key = `${piece.color}${piece.type}`;
   if (pieceTypeSelect?.value === "minimal") return minimalPieceGlyphs[key];
+  if (pieceTypeSelect?.value === "crests") return minimalPieceGlyphs[key];
+  if (pieceTypeSelect?.value === "geometric") return geometricPieceGlyphs[key];
   if (pieceTypeSelect?.value === "staunton") return solidPieceGlyphs[key];
   if (pieceTypeSelect?.value === "heritage") return outlinePieceGlyphs[key];
   return pieceGlyphs[key];
@@ -198,6 +215,7 @@ const i18n = {
     clearBoard: "全消去",
     copyFen: "FENをコピー",
     copiedFen: "FENをコピーしました。",
+    crestPieces: "ヘラルディック・クレスト",
     customMode: "個人ルール",
     deleteBoard: "削除",
     difficulty: "難易度",
@@ -213,6 +231,7 @@ const i18n = {
     forced: "Forced",
     gameInfo: "ゲーム情報",
     gameMode: "対局モード",
+    geometricPieces: "ジオメトリック・アーミー",
     grandmaster: "Grandmaster",
     good: "Good",
     hard: "Hard",
@@ -354,6 +373,7 @@ const i18n = {
     clearBoard: "Clear board",
     copyFen: "Copy FEN",
     copiedFen: "FEN copied.",
+    crestPieces: "Heraldic Crests",
     customMode: "Custom",
     deleteBoard: "Delete",
     difficulty: "Difficulty",
@@ -369,6 +389,7 @@ const i18n = {
     forced: "Forced",
     gameInfo: "Game info",
     gameMode: "Game mode",
+    geometricPieces: "Geometric Army",
     grandmaster: "Grandmaster",
     good: "Good",
     hard: "Hard",

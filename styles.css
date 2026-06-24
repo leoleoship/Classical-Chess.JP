@@ -948,11 +948,133 @@ body[data-piece-type="heritage"] .piece.black {
     drop-shadow(0 2px 1px rgb(0 0 0 / 32%));
 }
 
+body[data-piece-type="geometric"] .piece {
+  display: grid;
+  width: 72%;
+  aspect-ratio: 1;
+  place-items: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.64em;
+  line-height: 1;
+  transform: none;
+}
+
+body[data-piece-type="geometric"] .piece.white {
+  color: var(--piece-white-contrast, #fffdf5);
+  background: var(--piece-white-fill, #4a7d75);
+  box-shadow:
+    inset 0 0 0 0.045em currentColor,
+    0 3px 0 rgb(0 0 0 / 28%);
+  filter: none;
+}
+
+body[data-piece-type="geometric"] .piece.black {
+  color: var(--piece-black-contrast, #f7e9cf);
+  background: var(--piece-black-fill, #263238);
+  box-shadow:
+    inset 0 0 0 0.045em currentColor,
+    0 3px 0 rgb(0 0 0 / 38%);
+  filter: none;
+}
+
+body[data-piece-type="geometric"] .piece-p {
+  border-radius: 50%;
+}
+
+body[data-piece-type="geometric"] .piece-n {
+  clip-path: polygon(50% 0, 96% 34%, 79% 100%, 21% 100%, 4% 34%);
+}
+
+body[data-piece-type="geometric"] .piece-b {
+  border-radius: 12% 50% 12% 50%;
+}
+
+body[data-piece-type="geometric"] .piece-r {
+  border-radius: 4px;
+}
+
+body[data-piece-type="geometric"] .piece-q {
+  border-radius: 50% 50% 20% 20%;
+  outline: 0.035em double currentColor;
+  outline-offset: -0.11em;
+}
+
+body[data-piece-type="geometric"] .piece-k {
+  border-radius: 18%;
+  clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0 65%, 0 35%, 35% 35%);
+}
+
+body[data-piece-type="crests"] .piece {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  width: 72%;
+  aspect-ratio: 0.82;
+  place-items: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.42em;
+  font-weight: 900;
+  line-height: 1;
+  transform: none;
+}
+
+body[data-piece-type="crests"] .piece::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 0.06em solid currentColor;
+  background: var(--crest-fill);
+  box-shadow: 0 3px 0 rgb(0 0 0 / 28%);
+  content: "";
+}
+
+body[data-piece-type="crests"] .piece.white {
+  --crest-fill: var(--piece-white-fill, #4a7d75);
+  color: var(--piece-white-contrast, #fffdf5);
+  filter: none;
+}
+
+body[data-piece-type="crests"] .piece.black {
+  --crest-fill: var(--piece-black-fill, #263238);
+  color: var(--piece-black-contrast, #f7e9cf);
+  filter: none;
+}
+
+body[data-piece-type="crests"] .piece-p::before {
+  border-radius: 50% 50% 42% 42%;
+}
+
+body[data-piece-type="crests"] .piece-n::before {
+  clip-path: polygon(50% 0, 92% 20%, 82% 78%, 50% 100%, 18% 78%, 8% 20%);
+}
+
+body[data-piece-type="crests"] .piece-b::before {
+  border-radius: 50% 50% 12% 12%;
+  clip-path: polygon(50% 0, 92% 42%, 78% 100%, 22% 100%, 8% 42%);
+}
+
+body[data-piece-type="crests"] .piece-r::before {
+  clip-path: polygon(0 0, 24% 0, 24% 20%, 40% 20%, 40% 0, 60% 0, 60% 20%, 76% 20%, 76% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+body[data-piece-type="crests"] .piece-q::before {
+  clip-path: polygon(0 24%, 18% 0, 36% 22%, 50% 0, 64% 22%, 82% 0, 100% 24%, 82% 100%, 18% 100%);
+}
+
+body[data-piece-type="crests"] .piece-k::before {
+  clip-path: polygon(38% 0, 62% 0, 62% 18%, 80% 18%, 80% 38%, 62% 38%, 62% 52%, 92% 68%, 78% 100%, 22% 100%, 8% 68%, 38% 52%, 38% 38%, 20% 38%, 20% 18%, 38% 18%);
+}
+
 body[data-piece-type="bold"] .piece.black.piece-k,
 body[data-piece-type="tournament"] .piece.black.piece-k,
 body[data-piece-type="staunton"] .piece.black.piece-k,
 body[data-piece-type="heritage"] .piece.black.piece-k {
   transform: scale(1.09);
+}
+
+body[data-piece-type="geometric"] .piece.black.piece-k,
+body[data-piece-type="crests"] .piece.black.piece-k {
+  transform: none;
 }
 
 body[data-piece-type="minimal"] .piece {
@@ -1014,7 +1136,7 @@ body[data-piece-type="medallion"] .piece.black {
   filter: none;
 }
 
-body[data-piece-color="neon"]:not([data-piece-type="minimal"]):not([data-piece-type="medallion"]) .piece.white {
+body[data-piece-color="neon"]:not([data-piece-type="minimal"]):not([data-piece-type="medallion"]):not([data-piece-type="geometric"]):not([data-piece-type="crests"]) .piece.white {
   color: #68f7ff;
   filter:
     drop-shadow(0 0 3px #68f7ff)
@@ -1022,7 +1144,7 @@ body[data-piece-color="neon"]:not([data-piece-type="minimal"]):not([data-piece-t
     drop-shadow(0 2px 1px #071117);
 }
 
-body[data-piece-color="neon"]:not([data-piece-type="minimal"]):not([data-piece-type="medallion"]) .piece.black {
+body[data-piece-color="neon"]:not([data-piece-type="minimal"]):not([data-piece-type="medallion"]):not([data-piece-type="geometric"]):not([data-piece-type="crests"]) .piece.black {
   color: #ff65ce;
   filter:
     drop-shadow(0 0 3px #ff65ce)
