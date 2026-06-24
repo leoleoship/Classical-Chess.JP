@@ -82,7 +82,8 @@ const ruleNoRepeatPiece = document.querySelector("#ruleNoRepeatPiece");
 const languageSelect = document.querySelector("#languageSelect");
 const themeSelect = document.querySelector("#themeSelect");
 const boardSkinSelect = document.querySelector("#boardSkinSelect");
-const pieceSkinSelect = document.querySelector("#pieceSkinSelect");
+const pieceTypeSelect = document.querySelector("#pieceTypeSelect");
+const pieceColorSelect = document.querySelector("#pieceColorSelect");
 const soundToggle = document.querySelector("#soundToggle");
 const musicSelect = document.querySelector("#musicSelect");
 const volumeRange = document.querySelector("#volumeRange");
@@ -119,7 +120,7 @@ const minimalPieceGlyphs = {
 
 function pieceGlyph(piece) {
   const key = `${piece.color}${piece.type}`;
-  return pieceSkinSelect?.value === "minimal" ? minimalPieceGlyphs[key] : pieceGlyphs[key];
+  return pieceTypeSelect?.value === "minimal" ? minimalPieceGlyphs[key] : pieceGlyphs[key];
 }
 
 const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9 };
@@ -156,6 +157,7 @@ const i18n = {
     checkmate: "チェックメイト。{side}の負けです。",
     classicLight: "クラシック",
     classicBoard: "クラシック",
+    classicColors: "クラシック",
     classicPieces: "クラシック",
     candylandBoard: "キャンディランド",
     clearBoard: "全消去",
@@ -180,7 +182,7 @@ const i18n = {
     hard: "Hard",
     humanMode: "対人戦",
     intermediate: "Intermediate",
-    ivoryPieces: "アイボリー＆オニキス",
+    ivoryColors: "アイボリー＆オニキス",
     language: "言語",
     light: "ライト",
     load: "読込",
@@ -200,7 +202,7 @@ const i18n = {
     newGame: "新規対局",
     nightLight: "ナイト",
     neonBoard: "ネオングリッド",
-    neonPieces: "ネオンアーケード",
+    neonColors: "ネオン",
     noCastle: "キャスリングなし",
     noEnPassant: "アンパッサンなし",
     noPawnDouble: "ポーンの2マス移動なし",
@@ -225,6 +227,7 @@ const i18n = {
     onlineTurnWait: "相手の手番です。",
     onlineWin: "オンラインELOが15上がりました。",
     oceanBoard: "オーシャングラス",
+    oceanColors: "オーシャン",
     openingDrills: "オープニング",
     openingNumber: "オープニング {number}",
     openingObjective: "{side}のオープニング練習。正しい手を{moves}回指そう。",
@@ -245,7 +248,8 @@ const i18n = {
     restartPuzzle: "やり直す",
     nextPuzzle: "次のパズル",
     piecePalette: "駒パレット",
-    pieceSkin: "駒スキン",
+    pieceColor: "駒カラー",
+    pieceType: "駒タイプ",
     playMusic: "Play Music",
     playWhite: "白で遊ぶ",
     playBlack: "黒で遊ぶ",
@@ -256,6 +260,7 @@ const i18n = {
     resign: "投了",
     resigned: "{loser}が投了しました。{winner}の勝ちです。",
     royalBoard: "ロイヤルマーブル",
+    royalColors: "ロイヤル",
     settings: "設定",
     save: "保存",
     saveBoard: "保存",
@@ -300,6 +305,7 @@ const i18n = {
     checkmate: "Checkmate. {side} loses.",
     classicLight: "Classic",
     classicBoard: "Classic",
+    classicColors: "Classic",
     classicPieces: "Classic",
     candylandBoard: "Candyland",
     clearBoard: "Clear board",
@@ -324,7 +330,7 @@ const i18n = {
     hard: "Hard",
     humanMode: "Human",
     intermediate: "Intermediate",
-    ivoryPieces: "Ivory & Onyx",
+    ivoryColors: "Ivory & Onyx",
     language: "Language",
     light: "Light",
     load: "Load",
@@ -344,7 +350,7 @@ const i18n = {
     newGame: "New game",
     nightLight: "Night",
     neonBoard: "Neon Grid",
-    neonPieces: "Neon Arcade",
+    neonColors: "Neon",
     noCastle: "No castling",
     noEnPassant: "No en passant",
     noPawnDouble: "No two-square pawn move",
@@ -369,6 +375,7 @@ const i18n = {
     onlineTurnWait: "Waiting for your opponent.",
     onlineWin: "Online ELO increased by 15.",
     oceanBoard: "Ocean Glass",
+    oceanColors: "Ocean",
     openingDrills: "Openings",
     openingNumber: "Opening {number}",
     openingObjective: "{side} opening drill. Play {moves} correct moves.",
@@ -389,7 +396,8 @@ const i18n = {
     restartPuzzle: "Restart",
     nextPuzzle: "Next puzzle",
     piecePalette: "Piece palette",
-    pieceSkin: "Piece skin",
+    pieceColor: "Piece color",
+    pieceType: "Piece type",
     playMusic: "Play Music",
     playWhite: "Play White",
     playBlack: "Play Black",
@@ -400,6 +408,7 @@ const i18n = {
     resign: "Resign",
     resigned: "{loser} resigned. {winner} wins.",
     royalBoard: "Royal Marble",
+    royalColors: "Royal",
     settings: "Settings",
     save: "Save",
     saveBoard: "Save board",
@@ -3998,9 +4007,15 @@ boardSkinSelect.addEventListener("change", () => {
   localStorage.setItem("chessJpBoardSkin", boardSkinSelect.value);
 });
 
-pieceSkinSelect.addEventListener("change", () => {
-  document.body.dataset.pieceSkin = pieceSkinSelect.value;
-  localStorage.setItem("chessJpPieceSkin", pieceSkinSelect.value);
+pieceTypeSelect.addEventListener("change", () => {
+  document.body.dataset.pieceType = pieceTypeSelect.value;
+  localStorage.setItem("chessJpPieceType", pieceTypeSelect.value);
+  render();
+});
+
+pieceColorSelect.addEventListener("change", () => {
+  document.body.dataset.pieceColor = pieceColorSelect.value;
+  localStorage.setItem("chessJpPieceColor", pieceColorSelect.value);
   render();
 });
 
@@ -4042,19 +4057,35 @@ fenForm.addEventListener("submit", (event) => {
 
 const savedTheme = localStorage.getItem("chessJpTheme");
 const savedBoardSkin = localStorage.getItem("chessJpBoardSkin");
-const savedPieceSkin = localStorage.getItem("chessJpPieceSkin");
+const legacyPieceSkin = localStorage.getItem("chessJpPieceSkin");
+const legacyPieceSettings = {
+  bold: ["bold", "classic"],
+  ivory: ["classic", "ivory"],
+  tournament: ["tournament", "classic"],
+  minimal: ["minimal", "classic"],
+  medallion: ["medallion", "royal"],
+  neon: ["classic", "neon"],
+};
+const savedPieceType =
+  localStorage.getItem("chessJpPieceType") || legacyPieceSettings[legacyPieceSkin]?.[0];
+const savedPieceColor =
+  localStorage.getItem("chessJpPieceColor") || legacyPieceSettings[legacyPieceSkin]?.[1];
 if (savedTheme && [...themeSelect.options].some((option) => option.value === savedTheme)) {
   themeSelect.value = savedTheme;
 }
 if (savedBoardSkin && [...boardSkinSelect.options].some((option) => option.value === savedBoardSkin)) {
   boardSkinSelect.value = savedBoardSkin;
 }
-if (savedPieceSkin && [...pieceSkinSelect.options].some((option) => option.value === savedPieceSkin)) {
-  pieceSkinSelect.value = savedPieceSkin;
+if (savedPieceType && [...pieceTypeSelect.options].some((option) => option.value === savedPieceType)) {
+  pieceTypeSelect.value = savedPieceType;
+}
+if (savedPieceColor && [...pieceColorSelect.options].some((option) => option.value === savedPieceColor)) {
+  pieceColorSelect.value = savedPieceColor;
 }
 document.body.dataset.theme = themeSelect.value;
 document.body.dataset.boardSkin = boardSkinSelect.value;
-document.body.dataset.pieceSkin = pieceSkinSelect.value;
+document.body.dataset.pieceType = pieceTypeSelect.value;
+document.body.dataset.pieceColor = pieceColorSelect.value;
 applyLanguage();
 await restoreActiveOnlineMatch();
 render();
